@@ -1,0 +1,27 @@
+{
+  "name": "universal-mozu-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "node --nolazy -r esm --inspect-brk=9229 generate",
+    "generate": "node -r esm generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "flat": "^4.1.0",
+    "fluture": "^10.3.0",
+    "ramda": "^0.26.1",
+    "sanctuary-maybe": "^1.0.0"
+  },
+  "devDependencies": {
+    "esm": "^3.0.84",
+    "mozu-node-sdk": "^2.12.3",
+    "prettier": "^1.15.3",
+    "rollup": "^0.68.0"
+  }
+}
