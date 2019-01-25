@@ -39,7 +39,7 @@ function walk(dir) {
                       .split('')
                       .reduce((acc, char) => {
                         if (acc.result) return acc
-                        acc.stack.map(array => array.push(char))
+                        acc.stack.forEach(array => array.push(char))
                         if (char === '{') acc.stack.push(['{'])
                         if (char === '}') {
                           try {
@@ -58,7 +58,7 @@ function walk(dir) {
                       [
                         filepath
                         .replace(/[\\\/]/g, '.')
-                        .replace(/node_modules\.mozu-node-sdk\.clients\./, 'api.')
+                        .replace(/node_modules\.mozu-node-sdk\.clients\./, '')
                         .replace('.js', '')
                       ]: result
                     }) : null
@@ -80,5 +80,4 @@ walk('./node_modules/mozu-node-sdk/clients')
   .then(result => {
     return nodeBackToPromise(fs.writeFile)('./definition.json', JSON.stringify(unflatten(result), null, 2))
   })
-  .then(console.log)
   .catch(console.error)
