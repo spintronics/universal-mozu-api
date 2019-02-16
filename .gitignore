@@ -1,7 +1,12 @@
-mozu.test.config.json
+mozu.test.app.config.json
+mozu.test.user.config.json
+definition.json
+
 auth-cache.json
 /example-requests
 /node_modules
 *.orig
 .tmp
 fixture.js
+index-compiled.js
+index-transpiled.js

@@ -22,7 +22,7 @@ MASTERCATALOG |= TENANT
 CATALOG |= MASTERCATALOG
 SHOPPER |= SITE | CATALOG
 
-module.exports = {
+export default {
   scopes: {
     APP_REQUIRED: APP_REQUIRED,
     DEVELOPER: DEVELOPER,
@@ -60,5 +60,7 @@ module.exports = {
   baseUrl: 'https://home.mozu.com/',
   basePciUrl: 'https://pmts.mozu.com/',
   capabilityTimeoutInSeconds: 180,
-  version: version
+  version: version,
+  templateBraceRegex: /\{([^}]+)\}/g,
+  urlTemplateSplitRegex: /[\/\?=\&~]/g
 }

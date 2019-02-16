@@ -1,36 +1,41 @@
 {
-  "name": "universal-mozu-api",
+  "name": "un",
   "version": "1.0.0",
   "description": "",
-  "main": "api.js",
+  "main": "index.min.js",
   "scripts": {
-    "test": "tape -r esm test/node/*.js",
-    "testWatch": "nodemon --ignore auth-cache.json --exec npm test",
-    "debug": "MODE=debug node --nolazy -r esm --inspect-brk=9229 -- api",
-    "generate": "node -r esm generate"
+    "test": "node -r esm ./test/node.js",
+    "debugg": "node --nolazy -r esm --inspect-brk=9229 ./generate.js",
+    "debug": "node --nolazy -r esm --inspect-brk=9229 ./test/node.js",
+    "generate": "node -r esm generate",
+    "build": "rollup -c && uglifyjs index.js -c -m -o index.min.js",
+    "dev": "node watch.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "assert": "^1.4.1",
     "axios": "^0.18.0",
-    "flat": "^4.1.0",
+    "circular-json": "^0.5.9",
     "fluture": "^10.3.0",
-    "ramda": "^0.26.1",
-    "sanctuary-maybe": "^1.0.0"
+    "ramda": "^0.26.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
     "babel-core": "^6.26.3",
-    "circular-json": "^0.5.9",
     "esm": "^3.0.84",
-    "jort": "^1.3.0",
-    "mocha": "^5.2.0",
     "mozu-node-sdk": "^2.12.3",
-    "nodemon": "^1.18.9",
+    "nodemon": "^1.18.10",
     "prettier": "^1.15.3",
     "rollup": "^0.68.0",
-    "sinon": "^7.2.2",
-    "tape": "^4.9.2"
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "uglify-js": "^3.4.9"
   }
 }
