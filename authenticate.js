@@ -1,9 +1,7 @@
 import constants from './constants'
 import R from './ramda'
 import Future from 'fluture'
-import { log, logWith, testIsServer, isFn, isObj } from './util'
-
-let isServer = testIsServer()
+import { testIsServer, isObj } from './util'
 
 export default api => {
   let auth = {}
@@ -138,9 +136,7 @@ export default api => {
       )
         .chain(readline => {
           return api.newTask((reject, resolve) => {
-            // return resolve('23@#pimpin')
             readline.question('developer password: ', answer => {
-              // readline.close()
               if (!answer) {
                 readline.output.write(
                   "\ni don't think your password is an empty string\n"
