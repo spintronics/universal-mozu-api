@@ -1,4 +1,11 @@
-(function(global,factory){typeof exports==='object'&&typeof module!=='undefined'?module.exports=factory():typeof define==='function'&&define.amd?define(factory):global['mozu-universal-api']=factory();}(typeof self!=='undefined'?self:this,function(){'use strict';function _defineProperty(obj, key, value) {
+'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var axiosClient = _interopDefault(require('axios'));
+var Future = _interopDefault(require('fluture'));
+
+function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -17,8 +24,24 @@ function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
 }
 
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+}
+
 function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
 }
 
 function _iterableToArrayLimit(arr, i) {
@@ -47,43 +70,67 @@ function _iterableToArrayLimit(arr, i) {
   return _arr;
 }
 
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
+}
+
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance");
-}function createCommonjsModule(fn, module) {
+}
+
+function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}var _global = createCommonjsModule(function (module) {
+}
+
+var _global = createCommonjsModule(function (module) {
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 var global = module.exports = typeof window != 'undefined' && window.Math == Math
   ? window : typeof self != 'undefined' && self.Math == Math ? self
   // eslint-disable-next-line no-new-func
   : Function('return this')();
 if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
-});var _core = createCommonjsModule(function (module) {
+});
+
+var _core = createCommonjsModule(function (module) {
 var core = module.exports = { version: '2.6.4' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 });
-var _core_1 = _core.version;var _isObject = function (it) {
+var _core_1 = _core.version;
+
+var _isObject = function (it) {
   return typeof it === 'object' ? it !== null : typeof it === 'function';
-};var _anObject = function (it) {
+};
+
+var _anObject = function (it) {
   if (!_isObject(it)) throw TypeError(it + ' is not an object!');
   return it;
-};var _fails = function (exec) {
+};
+
+var _fails = function (exec) {
   try {
     return !!exec();
   } catch (e) {
     return true;
   }
-};// Thank's IE8 for his funny defineProperty
+};
+
+// Thank's IE8 for his funny defineProperty
 var _descriptors = !_fails(function () {
   return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
-});var document$1 = _global.document;
+});
+
+var document$1 = _global.document;
 // typeof document.createElement is 'object' in old IE
 var is = _isObject(document$1) && _isObject(document$1.createElement);
 var _domCreate = function (it) {
   return is ? document$1.createElement(it) : {};
-};var _ie8DomDefine = !_descriptors && !_fails(function () {
+};
+
+var _ie8DomDefine = !_descriptors && !_fails(function () {
   return Object.defineProperty(_domCreate('div'), 'a', { get: function () { return 7; } }).a != 7;
-});// 7.1.1 ToPrimitive(input [, PreferredType])
+});
+
+// 7.1.1 ToPrimitive(input [, PreferredType])
 
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
@@ -94,7 +141,9 @@ var _toPrimitive$1 = function (it, S) {
   if (typeof (fn = it.valueOf) == 'function' && !_isObject(val = fn.call(it))) return val;
   if (!S && typeof (fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) return val;
   throw TypeError("Can't convert object to primitive value");
-};var dP = Object.defineProperty;
+};
+
+var dP = Object.defineProperty;
 
 var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes) {
   _anObject(O);
@@ -110,26 +159,38 @@ var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Att
 
 var _objectDp = {
 	f: f
-};var _propertyDesc = function (bitmap, value) {
+};
+
+var _propertyDesc = function (bitmap, value) {
   return {
     enumerable: !(bitmap & 1),
     configurable: !(bitmap & 2),
     writable: !(bitmap & 4),
     value: value
   };
-};var _hide = _descriptors ? function (object, key, value) {
+};
+
+var _hide = _descriptors ? function (object, key, value) {
   return _objectDp.f(object, key, _propertyDesc(1, value));
 } : function (object, key, value) {
   object[key] = value;
   return object;
-};var hasOwnProperty = {}.hasOwnProperty;
+};
+
+var hasOwnProperty = {}.hasOwnProperty;
 var _has = function (it, key) {
   return hasOwnProperty.call(it, key);
-};var id$1 = 0;
+};
+
+var id$1 = 0;
 var px = Math.random();
 var _uid = function (key) {
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id$1 + px).toString(36));
-};var _library = false;var _shared = createCommonjsModule(function (module) {
+};
+
+var _library = false;
+
+var _shared = createCommonjsModule(function (module) {
 var SHARED = '__core-js_shared__';
 var store = _global[SHARED] || (_global[SHARED] = {});
 
@@ -140,7 +201,11 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   mode: 'global',
   copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
 });
-});var _functionToString = _shared('native-function-to-string', Function.toString);var _redefine = createCommonjsModule(function (module) {
+});
+
+var _functionToString = _shared('native-function-to-string', Function.toString);
+
+var _redefine = createCommonjsModule(function (module) {
 var SRC = _uid('src');
 
 var TO_STRING = 'toString';
@@ -169,10 +234,14 @@ _core.inspectSource = function (it) {
 })(Function.prototype, TO_STRING, function toString() {
   return typeof this == 'function' && this[SRC] || _functionToString.call(this);
 });
-});var _aFunction = function (it) {
+});
+
+var _aFunction = function (it) {
   if (typeof it != 'function') throw TypeError(it + ' is not a function!');
   return it;
-};// optional / simple context binding
+};
+
+// optional / simple context binding
 
 var _ctx = function (fn, that, length) {
   _aFunction(fn);
@@ -191,7 +260,9 @@ var _ctx = function (fn, that, length) {
   return function (/* ...args */) {
     return fn.apply(that, arguments);
   };
-};var PROTOTYPE = 'prototype';
+};
+
+var PROTOTYPE = 'prototype';
 
 var $export = function (type, name, source) {
   var IS_FORCED = type & $export.F;
@@ -228,40 +299,56 @@ $export.B = 16;  // bind
 $export.W = 32;  // wrap
 $export.U = 64;  // safe
 $export.R = 128; // real proto method for `library`
-var _export = $export;var toString = {}.toString;
+var _export = $export;
+
+var toString = {}.toString;
 
 var _cof = function (it) {
   return toString.call(it).slice(8, -1);
-};// fallback for non-array-like ES3 and non-enumerable old V8 strings
+};
+
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
 
 // eslint-disable-next-line no-prototype-builtins
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return _cof(it) == 'String' ? it.split('') : Object(it);
-};// 7.2.1 RequireObjectCoercible(argument)
+};
+
+// 7.2.1 RequireObjectCoercible(argument)
 var _defined = function (it) {
   if (it == undefined) throw TypeError("Can't call method on  " + it);
   return it;
-};// to indexed object, toObject with fallback for non-array-like ES3 strings
+};
+
+// to indexed object, toObject with fallback for non-array-like ES3 strings
 
 
 var _toIobject = function (it) {
   return _iobject(_defined(it));
-};// 7.1.4 ToInteger
+};
+
+// 7.1.4 ToInteger
 var ceil = Math.ceil;
 var floor = Math.floor;
 var _toInteger = function (it) {
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-};// 7.1.15 ToLength
+};
+
+// 7.1.15 ToLength
 
 var min = Math.min;
 var _toLength = function (it) {
   return it > 0 ? min(_toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-};var max = Math.max;
+};
+
+var max = Math.max;
 var min$1 = Math.min;
 var _toAbsoluteIndex = function (index, length) {
   index = _toInteger(index);
   return index < 0 ? max(index + length, 0) : min$1(index, length);
-};// false -> Array#indexOf
+};
+
+// false -> Array#indexOf
 // true  -> Array#includes
 
 
@@ -283,11 +370,15 @@ var _arrayIncludes = function (IS_INCLUDES) {
       if (O[index] === el) return IS_INCLUDES || index || 0;
     } return !IS_INCLUDES && -1;
   };
-};var shared = _shared('keys');
+};
+
+var shared = _shared('keys');
 
 var _sharedKey = function (key) {
   return shared[key] || (shared[key] = _uid(key));
-};var arrayIndexOf = _arrayIncludes(false);
+};
+
+var arrayIndexOf = _arrayIncludes(false);
 var IE_PROTO = _sharedKey('IE_PROTO');
 
 var _objectKeysInternal = function (object, names) {
@@ -301,20 +392,28 @@ var _objectKeysInternal = function (object, names) {
     ~arrayIndexOf(result, key) || result.push(key);
   }
   return result;
-};// IE 8- don't enum bug keys
+};
+
+// IE 8- don't enum bug keys
 var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
-).split(',');// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+).split(',');
+
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
 
 
 
 var _objectKeys = Object.keys || function keys(O) {
   return _objectKeysInternal(O, _enumBugKeys);
-};var f$1 = {}.propertyIsEnumerable;
+};
+
+var f$1 = {}.propertyIsEnumerable;
 
 var _objectPie = {
 	f: f$1
-};var isEnum = _objectPie.f;
+};
+
+var isEnum = _objectPie.f;
 var _objectToArray = function (isEntries) {
   return function (it) {
     var O = _toIobject(it);
@@ -327,7 +426,9 @@ var _objectToArray = function (isEntries) {
       result.push(isEntries ? [key, O[key]] : O[key]);
     } return result;
   };
-};// https://github.com/tc39/proposal-object-values-entries
+};
+
+// https://github.com/tc39/proposal-object-values-entries
 
 var $values = _objectToArray(false);
 
@@ -335,71 +436,9 @@ _export(_export.S, 'Object', {
   values: function values(it) {
     return $values(it);
   }
-});var _wks = createCommonjsModule(function (module) {
-var store = _shared('wks');
-
-var Symbol = _global.Symbol;
-var USE_SYMBOL = typeof Symbol == 'function';
-
-var $exports = module.exports = function (name) {
-  return store[name] || (store[name] =
-    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : _uid)('Symbol.' + name));
-};
-
-$exports.store = store;
-});// 22.1.3.31 Array.prototype[@@unscopables]
-var UNSCOPABLES = _wks('unscopables');
-var ArrayProto = Array.prototype;
-if (ArrayProto[UNSCOPABLES] == undefined) _hide(ArrayProto, UNSCOPABLES, {});
-var _addToUnscopables = function (key) {
-  ArrayProto[UNSCOPABLES][key] = true;
-};// https://github.com/tc39/Array.prototype.includes
-
-var $includes = _arrayIncludes(true);
-
-_export(_export.P, 'Array', {
-  includes: function includes(el /* , fromIndex = 0 */) {
-    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-  }
 });
 
-_addToUnscopables('includes');// 7.2.8 IsRegExp(argument)
-
-
-var MATCH = _wks('match');
-var _isRegexp = function (it) {
-  var isRegExp;
-  return _isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : _cof(it) == 'RegExp');
-};// helper for String#{startsWith, endsWith, includes}
-
-
-
-var _stringContext = function (that, searchString, NAME) {
-  if (_isRegexp(searchString)) throw TypeError('String#' + NAME + " doesn't accept regex!");
-  return String(_defined(that));
-};var MATCH$1 = _wks('match');
-var _failsIsRegexp = function (KEY) {
-  var re = /./;
-  try {
-    '/./'[KEY](re);
-  } catch (e) {
-    try {
-      re[MATCH$1] = false;
-      return !'/./'[KEY](re);
-    } catch (f) { /* empty */ }
-  } return true;
-};var INCLUDES = 'includes';
-
-_export(_export.P + _export.F * _failsIsRegexp(INCLUDES), 'String', {
-  includes: function includes(searchString /* , position = 0 */) {
-    return !!~_stringContext(this, searchString, INCLUDES)
-      .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});// 7.1.13 ToObject(argument)
-
-var _toObject = function (it) {
-  return Object(_defined(it));
-};// true  -> String#at
+// true  -> String#at
 // false -> String#codePointAt
 var _stringAt = function (TO_STRING) {
   return function (that, pos) {
@@ -413,13 +452,31 @@ var _stringAt = function (TO_STRING) {
       ? TO_STRING ? s.charAt(i) : a
       : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
-};var at = _stringAt(true);
+};
+
+var at = _stringAt(true);
 
  // `AdvanceStringIndex` abstract operation
 // https://tc39.github.io/ecma262/#sec-advancestringindex
 var _advanceStringIndex = function (S, index, unicode) {
   return index + (unicode ? at(S, index).length : 1);
-};// getting tag from 19.1.3.6 Object.prototype.toString()
+};
+
+var _wks = createCommonjsModule(function (module) {
+var store = _shared('wks');
+
+var Symbol = _global.Symbol;
+var USE_SYMBOL = typeof Symbol == 'function';
+
+var $exports = module.exports = function (name) {
+  return store[name] || (store[name] =
+    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : _uid)('Symbol.' + name));
+};
+
+$exports.store = store;
+});
+
+// getting tag from 19.1.3.6 Object.prototype.toString()
 
 var TAG = _wks('toStringTag');
 // ES3 wrong here
@@ -441,7 +498,9 @@ var _classof = function (it) {
     : ARG ? _cof(O)
     // ES3 arguments fallback
     : (B = _cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
-};var builtinExec = RegExp.prototype.exec;
+};
+
+var builtinExec = RegExp.prototype.exec;
 
  // `RegExpExec` abstract operation
 // https://tc39.github.io/ecma262/#sec-regexpexec
@@ -458,7 +517,9 @@ var _regexpExecAbstract = function (R, S) {
     throw new TypeError('RegExp#exec called on incompatible receiver');
   }
   return builtinExec.call(R, S);
-};// 21.2.5.3 get RegExp.prototype.flags
+};
+
+// 21.2.5.3 get RegExp.prototype.flags
 
 var _flags = function () {
   var that = _anObject(this);
@@ -469,7 +530,9 @@ var _flags = function () {
   if (that.unicode) result += 'u';
   if (that.sticky) result += 'y';
   return result;
-};var nativeExec = RegExp.prototype.exec;
+};
+
+var nativeExec = RegExp.prototype.exec;
 // This always refers to the native implementation, because the
 // String#replace polyfill uses ./fix-regexp-well-known-symbol-logic.js,
 // which loads this file before patching the method.
@@ -522,13 +585,17 @@ if (PATCH) {
   };
 }
 
-var _regexpExec = patchedExec;_export({
+var _regexpExec = patchedExec;
+
+_export({
   target: 'RegExp',
   proto: true,
   forced: _regexpExec !== /./.exec
 }, {
   exec: _regexpExec
-});var SPECIES = _wks('species');
+});
+
+var SPECIES = _wks('species');
 
 var REPLACE_SUPPORTS_NAMED_GROUPS = !_fails(function () {
   // #replace needs built-in support for named groups.
@@ -614,7 +681,130 @@ var _fixReWks = function (KEY, length, exec) {
       : function (string) { return rxfn.call(string, this); }
     );
   }
-};var max$1 = Math.max;
+};
+
+// @@match logic
+_fixReWks('match', 1, function (defined, MATCH, $match, maybeCallNative) {
+  return [
+    // `String.prototype.match` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.match
+    function match(regexp) {
+      var O = defined(this);
+      var fn = regexp == undefined ? undefined : regexp[MATCH];
+      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
+    },
+    // `RegExp.prototype[@@match]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@match
+    function (regexp) {
+      var res = maybeCallNative($match, regexp, this);
+      if (res.done) return res.value;
+      var rx = _anObject(regexp);
+      var S = String(this);
+      if (!rx.global) return _regexpExecAbstract(rx, S);
+      var fullUnicode = rx.unicode;
+      rx.lastIndex = 0;
+      var A = [];
+      var n = 0;
+      var result;
+      while ((result = _regexpExecAbstract(rx, S)) !== null) {
+        var matchStr = String(result[0]);
+        A[n] = matchStr;
+        if (matchStr === '') rx.lastIndex = _advanceStringIndex(S, _toLength(rx.lastIndex), fullUnicode);
+        n++;
+      }
+      return n === 0 ? null : A;
+    }
+  ];
+});
+
+// 22.1.3.31 Array.prototype[@@unscopables]
+var UNSCOPABLES = _wks('unscopables');
+var ArrayProto = Array.prototype;
+if (ArrayProto[UNSCOPABLES] == undefined) _hide(ArrayProto, UNSCOPABLES, {});
+var _addToUnscopables = function (key) {
+  ArrayProto[UNSCOPABLES][key] = true;
+};
+
+// https://github.com/tc39/Array.prototype.includes
+
+var $includes = _arrayIncludes(true);
+
+_export(_export.P, 'Array', {
+  includes: function includes(el /* , fromIndex = 0 */) {
+    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+_addToUnscopables('includes');
+
+// 7.2.8 IsRegExp(argument)
+
+
+var MATCH = _wks('match');
+var _isRegexp = function (it) {
+  var isRegExp;
+  return _isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : _cof(it) == 'RegExp');
+};
+
+// helper for String#{startsWith, endsWith, includes}
+
+
+
+var _stringContext = function (that, searchString, NAME) {
+  if (_isRegexp(searchString)) throw TypeError('String#' + NAME + " doesn't accept regex!");
+  return String(_defined(that));
+};
+
+var MATCH$1 = _wks('match');
+var _failsIsRegexp = function (KEY) {
+  var re = /./;
+  try {
+    '/./'[KEY](re);
+  } catch (e) {
+    try {
+      re[MATCH$1] = false;
+      return !'/./'[KEY](re);
+    } catch (f) { /* empty */ }
+  } return true;
+};
+
+var INCLUDES = 'includes';
+
+_export(_export.P + _export.F * _failsIsRegexp(INCLUDES), 'String', {
+  includes: function includes(searchString /* , position = 0 */) {
+    return !!~_stringContext(this, searchString, INCLUDES)
+      .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+// 7.1.13 ToObject(argument)
+
+var _toObject = function (it) {
+  return Object(_defined(it));
+};
+
+// most Object methods by ES6 should accept primitives
+
+
+
+var _objectSap = function (KEY, exec) {
+  var fn = (_core.Object || {})[KEY] || Object[KEY];
+  var exp = {};
+  exp[KEY] = exec(fn);
+  _export(_export.S + _export.F * _fails(function () { fn(1); }), 'Object', exp);
+};
+
+// 19.1.2.14 Object.keys(O)
+
+
+
+_objectSap('keys', function () {
+  return function keys(it) {
+    return _objectKeys(_toObject(it));
+  };
+});
+
+var max$1 = Math.max;
 var min$2 = Math.min;
 var floor$1 = Math.floor;
 var SUBSTITUTION_SYMBOLS = /\$([$&`']|\d\d?|<[^>]*>)/g;
@@ -723,9 +913,15 @@ _fixReWks('replace', 2, function (defined, REPLACE, $replace, maybeCallNative) {
       return capture === undefined ? '' : capture;
     });
   }
-});var _iterStep = function (done, value) {
+});
+
+var _iterStep = function (done, value) {
   return { value: value, done: !!done };
-};var _iterators = {};var _objectDps = _descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
+};
+
+var _iterators = {};
+
+var _objectDps = _descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
   _anObject(O);
   var keys = _objectKeys(Properties);
   var length = keys.length;
@@ -733,8 +929,12 @@ _fixReWks('replace', 2, function (defined, REPLACE, $replace, maybeCallNative) {
   var P;
   while (length > i) _objectDp.f(O, P = keys[i++], Properties[P]);
   return O;
-};var document$2 = _global.document;
-var _html = document$2 && document$2.documentElement;// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+};
+
+var document$2 = _global.document;
+var _html = document$2 && document$2.documentElement;
+
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 
 
 
@@ -774,13 +974,17 @@ var _objectCreate = Object.create || function create(O, Properties) {
     result[IE_PROTO$1] = O;
   } else result = createDict();
   return Properties === undefined ? result : _objectDps(result, Properties);
-};var def = _objectDp.f;
+};
+
+var def = _objectDp.f;
 
 var TAG$1 = _wks('toStringTag');
 
 var _setToStringTag = function (it, tag, stat) {
   if (it && !_has(it = stat ? it : it.prototype, TAG$1)) def(it, TAG$1, { configurable: true, value: tag });
-};var IteratorPrototype = {};
+};
+
+var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
 _hide(IteratorPrototype, _wks('iterator'), function () { return this; });
@@ -788,7 +992,9 @@ _hide(IteratorPrototype, _wks('iterator'), function () { return this; });
 var _iterCreate = function (Constructor, NAME, next) {
   Constructor.prototype = _objectCreate(IteratorPrototype, { next: _propertyDesc(1, next) });
   _setToStringTag(Constructor, NAME + ' Iterator');
-};// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
+};
+
+// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
 
 
 var IE_PROTO$2 = _sharedKey('IE_PROTO');
@@ -800,7 +1006,9 @@ var _objectGpo = Object.getPrototypeOf || function (O) {
   if (typeof O.constructor == 'function' && O instanceof O.constructor) {
     return O.constructor.prototype;
   } return O instanceof Object ? ObjectProto : null;
-};var ITERATOR = _wks('iterator');
+};
+
+var ITERATOR = _wks('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
 var KEYS = 'keys';
@@ -859,7 +1067,9 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     } else _export(_export.P + _export.F * (BUGGY || VALUES_BUG), NAME, methods);
   }
   return methods;
-};// 22.1.3.4 Array.prototype.entries()
+};
+
+// 22.1.3.4 Array.prototype.entries()
 // 22.1.3.13 Array.prototype.keys()
 // 22.1.3.29 Array.prototype.values()
 // 22.1.3.30 Array.prototype[@@iterator]()
@@ -886,7 +1096,9 @@ _iterators.Arguments = _iterators.Array;
 
 _addToUnscopables('keys');
 _addToUnscopables('values');
-_addToUnscopables('entries');var ITERATOR$1 = _wks('iterator');
+_addToUnscopables('entries');
+
+var ITERATOR$1 = _wks('iterator');
 var TO_STRING_TAG = _wks('toStringTag');
 var ArrayValues = _iterators.Array;
 
@@ -936,7 +1148,9 @@ for (var collections = _objectKeys(DOMIterables), i = 0; i < collections.length;
     _iterators[NAME] = ArrayValues;
     if (explicit) for (key in es6_array_iterator) if (!proto[key]) _redefine(proto, key, es6_array_iterator[key], true);
   }
-}var $at = _stringAt(true);
+}
+
+var $at = _stringAt(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
 _iterDefine(String, 'String', function (iterated) {
@@ -951,11 +1165,15 @@ _iterDefine(String, 'String', function (iterated) {
   point = $at(O, index);
   this._i += point.length;
   return { value: point, done: false };
-});var _anInstance = function (it, Constructor, name, forbiddenField) {
+});
+
+var _anInstance = function (it, Constructor, name, forbiddenField) {
   if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
     throw TypeError(name + ': incorrect invocation!');
   } return it;
-};// call something on iterator step with safe closing on error
+};
+
+// call something on iterator step with safe closing on error
 
 var _iterCall = function (iterator, fn, value, entries) {
   try {
@@ -966,20 +1184,26 @@ var _iterCall = function (iterator, fn, value, entries) {
     if (ret !== undefined) _anObject(ret.call(iterator));
     throw e;
   }
-};// check on default Array iterator
+};
+
+// check on default Array iterator
 
 var ITERATOR$2 = _wks('iterator');
 var ArrayProto$1 = Array.prototype;
 
 var _isArrayIter = function (it) {
   return it !== undefined && (_iterators.Array === it || ArrayProto$1[ITERATOR$2] === it);
-};var ITERATOR$3 = _wks('iterator');
+};
+
+var ITERATOR$3 = _wks('iterator');
 
 var core_getIteratorMethod = _core.getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR$3]
     || it['@@iterator']
     || _iterators[_classof(it)];
-};var _forOf = createCommonjsModule(function (module) {
+};
+
+var _forOf = createCommonjsModule(function (module) {
 var BREAK = {};
 var RETURN = {};
 var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) {
@@ -999,7 +1223,9 @@ var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) 
 };
 exports.BREAK = BREAK;
 exports.RETURN = RETURN;
-});// 7.3.20 SpeciesConstructor(O, defaultConstructor)
+});
+
+// 7.3.20 SpeciesConstructor(O, defaultConstructor)
 
 
 var SPECIES$1 = _wks('species');
@@ -1007,7 +1233,9 @@ var _speciesConstructor = function (O, D) {
   var C = _anObject(O).constructor;
   var S;
   return C === undefined || (S = _anObject(C)[SPECIES$1]) == undefined ? D : _aFunction(S);
-};// fast apply, http://jsperf.lnkit.com/fast-apply/5
+};
+
+// fast apply, http://jsperf.lnkit.com/fast-apply/5
 var _invoke = function (fn, args, that) {
   var un = that === undefined;
   switch (args.length) {
@@ -1022,7 +1250,9 @@ var _invoke = function (fn, args, that) {
     case 4: return un ? fn(args[0], args[1], args[2], args[3])
                       : fn.call(that, args[0], args[1], args[2], args[3]);
   } return fn.apply(that, args);
-};var process$1 = _global.process;
+};
+
+var process$1 = _global.process;
 var setTask = _global.setImmediate;
 var clearTask = _global.clearImmediate;
 var MessageChannel = _global.MessageChannel;
@@ -1100,7 +1330,9 @@ if (!setTask || !clearTask) {
 var _task = {
   set: setTask,
   clear: clearTask
-};var macrotask = _task.set;
+};
+
+var macrotask = _task.set;
 var Observer = _global.MutationObserver || _global.WebKitMutationObserver;
 var process$2 = _global.process;
 var Promise$1 = _global.Promise;
@@ -1167,7 +1399,9 @@ var _microtask = function () {
       notify();
     } last = task;
   };
-};// 25.4.1.5 NewPromiseCapability(C)
+};
+
+// 25.4.1.5 NewPromiseCapability(C)
 
 
 function PromiseCapability(C) {
@@ -1187,25 +1421,35 @@ var f$2 = function (C) {
 
 var _newPromiseCapability = {
 	f: f$2
-};var _perform = function (exec) {
+};
+
+var _perform = function (exec) {
   try {
     return { e: false, v: exec() };
   } catch (e) {
     return { e: true, v: e };
   }
-};var navigator$1 = _global.navigator;
+};
 
-var _userAgent = navigator$1 && navigator$1.userAgent || '';var _promiseResolve = function (C, x) {
+var navigator = _global.navigator;
+
+var _userAgent = navigator && navigator.userAgent || '';
+
+var _promiseResolve = function (C, x) {
   _anObject(C);
   if (_isObject(x) && x.constructor === C) return x;
   var promiseCapability = _newPromiseCapability.f(C);
   var resolve = promiseCapability.resolve;
   resolve(x);
   return promiseCapability.promise;
-};var _redefineAll = function (target, src, safe) {
+};
+
+var _redefineAll = function (target, src, safe) {
   for (var key in src) _redefine(target, key, src[key], safe);
   return target;
-};var SPECIES$2 = _wks('species');
+};
+
+var SPECIES$2 = _wks('species');
 
 var _setSpecies = function (KEY) {
   var C = _global[KEY];
@@ -1213,7 +1457,9 @@ var _setSpecies = function (KEY) {
     configurable: true,
     get: function () { return this; }
   });
-};var ITERATOR$4 = _wks('iterator');
+};
+
+var ITERATOR$4 = _wks('iterator');
 var SAFE_CLOSING = false;
 
 try {
@@ -1232,7 +1478,9 @@ var _iterDetect = function (exec, skipClosing) {
     exec(arr);
   } catch (e) { /* empty */ }
   return safe;
-};var task = _task.set;
+};
+
+var task = _task.set;
 var microtask = _microtask();
 
 
@@ -1506,7 +1754,9 @@ _export(_export.S + _export.F * !(USE_NATIVE && _iterDetect(function (iter) {
     if (result.e) reject(result.v);
     return capability.promise;
   }
-});var $min = Math.min;
+});
+
+var $min = Math.min;
 var $push = [].push;
 var $SPLIT = 'split';
 var LENGTH = 'length';
@@ -1629,3754 +1879,9 @@ _fixReWks('split', 2, function (defined, SPLIT, $split, maybeCallNative) {
       return A;
     }
   ];
-});var bind = function bind(fn, thisArg) {
-  return function wrap() {
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-    return fn.apply(thisArg, args);
-  };
-};/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-var isBuffer_1 = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-};
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}/*global toString:true*/
-
-// utils is a library of generic helper functions non-specific to axios
-
-var toString$1 = Object.prototype.toString;
-
-/**
- * Determine if a value is an Array
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an Array, otherwise false
- */
-function isArray(val) {
-  return toString$1.call(val) === '[object Array]';
-}
-
-/**
- * Determine if a value is an ArrayBuffer
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an ArrayBuffer, otherwise false
- */
-function isArrayBuffer(val) {
-  return toString$1.call(val) === '[object ArrayBuffer]';
-}
-
-/**
- * Determine if a value is a FormData
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an FormData, otherwise false
- */
-function isFormData(val) {
-  return (typeof FormData !== 'undefined') && (val instanceof FormData);
-}
-
-/**
- * Determine if a value is a view on an ArrayBuffer
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
- */
-function isArrayBufferView(val) {
-  var result;
-  if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuffer.isView)) {
-    result = ArrayBuffer.isView(val);
-  } else {
-    result = (val) && (val.buffer) && (val.buffer instanceof ArrayBuffer);
-  }
-  return result;
-}
-
-/**
- * Determine if a value is a String
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a String, otherwise false
- */
-function isString(val) {
-  return typeof val === 'string';
-}
-
-/**
- * Determine if a value is a Number
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Number, otherwise false
- */
-function isNumber(val) {
-  return typeof val === 'number';
-}
-
-/**
- * Determine if a value is undefined
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if the value is undefined, otherwise false
- */
-function isUndefined(val) {
-  return typeof val === 'undefined';
-}
-
-/**
- * Determine if a value is an Object
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an Object, otherwise false
- */
-function isObject(val) {
-  return val !== null && typeof val === 'object';
-}
-
-/**
- * Determine if a value is a Date
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Date, otherwise false
- */
-function isDate(val) {
-  return toString$1.call(val) === '[object Date]';
-}
-
-/**
- * Determine if a value is a File
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a File, otherwise false
- */
-function isFile(val) {
-  return toString$1.call(val) === '[object File]';
-}
-
-/**
- * Determine if a value is a Blob
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Blob, otherwise false
- */
-function isBlob(val) {
-  return toString$1.call(val) === '[object Blob]';
-}
-
-/**
- * Determine if a value is a Function
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Function, otherwise false
- */
-function isFunction(val) {
-  return toString$1.call(val) === '[object Function]';
-}
-
-/**
- * Determine if a value is a Stream
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Stream, otherwise false
- */
-function isStream(val) {
-  return isObject(val) && isFunction(val.pipe);
-}
-
-/**
- * Determine if a value is a URLSearchParams object
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a URLSearchParams object, otherwise false
- */
-function isURLSearchParams(val) {
-  return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams;
-}
-
-/**
- * Trim excess whitespace off the beginning and end of a string
- *
- * @param {String} str The String to trim
- * @returns {String} The String freed of excess whitespace
- */
-function trim(str) {
-  return str.replace(/^\s*/, '').replace(/\s*$/, '');
-}
-
-/**
- * Determine if we're running in a standard browser environment
- *
- * This allows axios to run in a web worker, and react-native.
- * Both environments support XMLHttpRequest, but not fully standard globals.
- *
- * web workers:
- *  typeof window -> undefined
- *  typeof document -> undefined
- *
- * react-native:
- *  navigator.product -> 'ReactNative'
- */
-function isStandardBrowserEnv() {
-  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
-    return false;
-  }
-  return (
-    typeof window !== 'undefined' &&
-    typeof document !== 'undefined'
-  );
-}
-
-/**
- * Iterate over an Array or an Object invoking a function for each item.
- *
- * If `obj` is an Array callback will be called passing
- * the value, index, and complete array for each item.
- *
- * If 'obj' is an Object callback will be called passing
- * the value, key, and complete object for each property.
- *
- * @param {Object|Array} obj The object to iterate
- * @param {Function} fn The callback to invoke for each item
- */
-function forEach(obj, fn) {
-  // Don't bother if no value provided
-  if (obj === null || typeof obj === 'undefined') {
-    return;
-  }
-
-  // Force an array if not already something iterable
-  if (typeof obj !== 'object') {
-    /*eslint no-param-reassign:0*/
-    obj = [obj];
-  }
-
-  if (isArray(obj)) {
-    // Iterate over array values
-    for (var i = 0, l = obj.length; i < l; i++) {
-      fn.call(null, obj[i], i, obj);
-    }
-  } else {
-    // Iterate over object keys
-    for (var key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        fn.call(null, obj[key], key, obj);
-      }
-    }
-  }
-}
-
-/**
- * Accepts varargs expecting each argument to be an object, then
- * immutably merges the properties of each object and returns result.
- *
- * When multiple objects contain the same key the later object in
- * the arguments list will take precedence.
- *
- * Example:
- *
- * ```js
- * var result = merge({foo: 123}, {foo: 456});
- * console.log(result.foo); // outputs 456
- * ```
- *
- * @param {Object} obj1 Object to merge
- * @returns {Object} Result of all merge properties
- */
-function merge(/* obj1, obj2, obj3, ... */) {
-  var result = {};
-  function assignValue(val, key) {
-    if (typeof result[key] === 'object' && typeof val === 'object') {
-      result[key] = merge(result[key], val);
-    } else {
-      result[key] = val;
-    }
-  }
-
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    forEach(arguments[i], assignValue);
-  }
-  return result;
-}
-
-/**
- * Extends object a by mutably adding to it the properties of object b.
- *
- * @param {Object} a The object to be extended
- * @param {Object} b The object to copy properties from
- * @param {Object} thisArg The object to bind function to
- * @return {Object} The resulting value of object a
- */
-function extend(a, b, thisArg) {
-  forEach(b, function assignValue(val, key) {
-    if (thisArg && typeof val === 'function') {
-      a[key] = bind(val, thisArg);
-    } else {
-      a[key] = val;
-    }
-  });
-  return a;
-}
-
-var utils = {
-  isArray: isArray,
-  isArrayBuffer: isArrayBuffer,
-  isBuffer: isBuffer_1,
-  isFormData: isFormData,
-  isArrayBufferView: isArrayBufferView,
-  isString: isString,
-  isNumber: isNumber,
-  isObject: isObject,
-  isUndefined: isUndefined,
-  isDate: isDate,
-  isFile: isFile,
-  isBlob: isBlob,
-  isFunction: isFunction,
-  isStream: isStream,
-  isURLSearchParams: isURLSearchParams,
-  isStandardBrowserEnv: isStandardBrowserEnv,
-  forEach: forEach,
-  merge: merge,
-  extend: extend,
-  trim: trim
-};var normalizeHeaderName = function normalizeHeaderName(headers, normalizedName) {
-  utils.forEach(headers, function processHeader(value, name) {
-    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-      headers[normalizedName] = value;
-      delete headers[name];
-    }
-  });
-};/**
- * Update an Error with the specified config, error code, and response.
- *
- * @param {Error} error The error to update.
- * @param {Object} config The config.
- * @param {string} [code] The error code (for example, 'ECONNABORTED').
- * @param {Object} [request] The request.
- * @param {Object} [response] The response.
- * @returns {Error} The error.
- */
-var enhanceError = function enhanceError(error, config, code, request, response) {
-  error.config = config;
-  if (code) {
-    error.code = code;
-  }
-  error.request = request;
-  error.response = response;
-  return error;
-};/**
- * Create an Error with the specified message, config, error code, request and response.
- *
- * @param {string} message The error message.
- * @param {Object} config The config.
- * @param {string} [code] The error code (for example, 'ECONNABORTED').
- * @param {Object} [request] The request.
- * @param {Object} [response] The response.
- * @returns {Error} The created error.
- */
-var createError = function createError(message, config, code, request, response) {
-  var error = new Error(message);
-  return enhanceError(error, config, code, request, response);
-};/**
- * Resolve or reject a Promise based on response status.
- *
- * @param {Function} resolve A function that resolves the promise.
- * @param {Function} reject A function that rejects the promise.
- * @param {object} response The response.
- */
-var settle = function settle(resolve, reject, response) {
-  var validateStatus = response.config.validateStatus;
-  // Note: status is not exposed by XDomainRequest
-  if (!response.status || !validateStatus || validateStatus(response.status)) {
-    resolve(response);
-  } else {
-    reject(createError(
-      'Request failed with status code ' + response.status,
-      response.config,
-      null,
-      response.request,
-      response
-    ));
-  }
-};function encode(val) {
-  return encodeURIComponent(val).
-    replace(/%40/gi, '@').
-    replace(/%3A/gi, ':').
-    replace(/%24/g, '$').
-    replace(/%2C/gi, ',').
-    replace(/%20/g, '+').
-    replace(/%5B/gi, '[').
-    replace(/%5D/gi, ']');
-}
-
-/**
- * Build a URL by appending params to the end
- *
- * @param {string} url The base of the url (e.g., http://www.google.com)
- * @param {object} [params] The params to be appended
- * @returns {string} The formatted url
- */
-var buildURL = function buildURL(url, params, paramsSerializer) {
-  /*eslint no-param-reassign:0*/
-  if (!params) {
-    return url;
-  }
-
-  var serializedParams;
-  if (paramsSerializer) {
-    serializedParams = paramsSerializer(params);
-  } else if (utils.isURLSearchParams(params)) {
-    serializedParams = params.toString();
-  } else {
-    var parts = [];
-
-    utils.forEach(params, function serialize(val, key) {
-      if (val === null || typeof val === 'undefined') {
-        return;
-      }
-
-      if (utils.isArray(val)) {
-        key = key + '[]';
-      } else {
-        val = [val];
-      }
-
-      utils.forEach(val, function parseValue(v) {
-        if (utils.isDate(v)) {
-          v = v.toISOString();
-        } else if (utils.isObject(v)) {
-          v = JSON.stringify(v);
-        }
-        parts.push(encode(key) + '=' + encode(v));
-      });
-    });
-
-    serializedParams = parts.join('&');
-  }
-
-  if (serializedParams) {
-    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
-  }
-
-  return url;
-};// Headers whose duplicates are ignored by node
-// c.f. https://nodejs.org/api/http.html#http_message_headers
-var ignoreDuplicateOf = [
-  'age', 'authorization', 'content-length', 'content-type', 'etag',
-  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
-  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
-  'referer', 'retry-after', 'user-agent'
-];
-
-/**
- * Parse headers into an object
- *
- * ```
- * Date: Wed, 27 Aug 2014 08:58:49 GMT
- * Content-Type: application/json
- * Connection: keep-alive
- * Transfer-Encoding: chunked
- * ```
- *
- * @param {String} headers Headers needing to be parsed
- * @returns {Object} Headers parsed into an object
- */
-var parseHeaders = function parseHeaders(headers) {
-  var parsed = {};
-  var key;
-  var val;
-  var i;
-
-  if (!headers) { return parsed; }
-
-  utils.forEach(headers.split('\n'), function parser(line) {
-    i = line.indexOf(':');
-    key = utils.trim(line.substr(0, i)).toLowerCase();
-    val = utils.trim(line.substr(i + 1));
-
-    if (key) {
-      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-        return;
-      }
-      if (key === 'set-cookie') {
-        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-      } else {
-        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
-      }
-    }
-  });
-
-  return parsed;
-};var isURLSameOrigin = (
-  utils.isStandardBrowserEnv() ?
-
-  // Standard browser envs have full support of the APIs needed to test
-  // whether the request URL is of the same origin as current location.
-  (function standardBrowserEnv() {
-    var msie = /(msie|trident)/i.test(navigator.userAgent);
-    var urlParsingNode = document.createElement('a');
-    var originURL;
-
-    /**
-    * Parse a URL to discover it's components
-    *
-    * @param {String} url The URL to be parsed
-    * @returns {Object}
-    */
-    function resolveURL(url) {
-      var href = url;
-
-      if (msie) {
-        // IE needs attribute set twice to normalize properties
-        urlParsingNode.setAttribute('href', href);
-        href = urlParsingNode.href;
-      }
-
-      urlParsingNode.setAttribute('href', href);
-
-      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-      return {
-        href: urlParsingNode.href,
-        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-        host: urlParsingNode.host,
-        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-        hostname: urlParsingNode.hostname,
-        port: urlParsingNode.port,
-        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-                  urlParsingNode.pathname :
-                  '/' + urlParsingNode.pathname
-      };
-    }
-
-    originURL = resolveURL(window.location.href);
-
-    /**
-    * Determine if a URL shares the same origin as the current location
-    *
-    * @param {String} requestURL The URL to test
-    * @returns {boolean} True if URL shares the same origin, otherwise false
-    */
-    return function isURLSameOrigin(requestURL) {
-      var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-      return (parsed.protocol === originURL.protocol &&
-            parsed.host === originURL.host);
-    };
-  })() :
-
-  // Non standard browser envs (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return function isURLSameOrigin() {
-      return true;
-    };
-  })()
-);// btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
-
-var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-function E() {
-  this.message = 'String contains an invalid character';
-}
-E.prototype = new Error;
-E.prototype.code = 5;
-E.prototype.name = 'InvalidCharacterError';
-
-function btoa(input) {
-  var str = String(input);
-  var output = '';
-  for (
-    // initialize result and counter
-    var block, charCode, idx = 0, map = chars;
-    // if the next str index does not exist:
-    //   change the mapping table to "="
-    //   check if d has no fractional digits
-    str.charAt(idx | 0) || (map = '=', idx % 1);
-    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
-    output += map.charAt(63 & block >> 8 - idx % 1 * 8)
-  ) {
-    charCode = str.charCodeAt(idx += 3 / 4);
-    if (charCode > 0xFF) {
-      throw new E();
-    }
-    block = block << 8 | charCode;
-  }
-  return output;
-}
-
-var btoa_1 = btoa;var cookies = (
-  utils.isStandardBrowserEnv() ?
-
-  // Standard browser envs support document.cookie
-  (function standardBrowserEnv() {
-    return {
-      write: function write(name, value, expires, path, domain, secure) {
-        var cookie = [];
-        cookie.push(name + '=' + encodeURIComponent(value));
-
-        if (utils.isNumber(expires)) {
-          cookie.push('expires=' + new Date(expires).toGMTString());
-        }
-
-        if (utils.isString(path)) {
-          cookie.push('path=' + path);
-        }
-
-        if (utils.isString(domain)) {
-          cookie.push('domain=' + domain);
-        }
-
-        if (secure === true) {
-          cookie.push('secure');
-        }
-
-        document.cookie = cookie.join('; ');
-      },
-
-      read: function read(name) {
-        var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-        return (match ? decodeURIComponent(match[3]) : null);
-      },
-
-      remove: function remove(name) {
-        this.write(name, '', Date.now() - 86400000);
-      }
-    };
-  })() :
-
-  // Non standard browser env (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return {
-      write: function write() {},
-      read: function read() { return null; },
-      remove: function remove() {}
-    };
-  })()
-);var btoa$1 = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || btoa_1;
-
-var xhr = function xhrAdapter(config) {
-  return new Promise(function dispatchXhrRequest(resolve, reject) {
-    var requestData = config.data;
-    var requestHeaders = config.headers;
-
-    if (utils.isFormData(requestData)) {
-      delete requestHeaders['Content-Type']; // Let the browser set it
-    }
-
-    var request = new XMLHttpRequest();
-    var loadEvent = 'onreadystatechange';
-    var xDomain = false;
-
-    // For IE 8/9 CORS support
-    // Only supports POST and GET calls and doesn't returns the response headers.
-    // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
-    if (process.env.NODE_ENV !== 'test' &&
-        typeof window !== 'undefined' &&
-        window.XDomainRequest && !('withCredentials' in request) &&
-        !isURLSameOrigin(config.url)) {
-      request = new window.XDomainRequest();
-      loadEvent = 'onload';
-      xDomain = true;
-      request.onprogress = function handleProgress() {};
-      request.ontimeout = function handleTimeout() {};
-    }
-
-    // HTTP basic authentication
-    if (config.auth) {
-      var username = config.auth.username || '';
-      var password = config.auth.password || '';
-      requestHeaders.Authorization = 'Basic ' + btoa$1(username + ':' + password);
-    }
-
-    request.open(config.method.toUpperCase(), buildURL(config.url, config.params, config.paramsSerializer), true);
-
-    // Set the request timeout in MS
-    request.timeout = config.timeout;
-
-    // Listen for ready state
-    request[loadEvent] = function handleLoad() {
-      if (!request || (request.readyState !== 4 && !xDomain)) {
-        return;
-      }
-
-      // The request errored out and we didn't get a response, this will be
-      // handled by onerror instead
-      // With one exception: request that using file: protocol, most browsers
-      // will return status as 0 even though it's a successful request
-      if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-        return;
-      }
-
-      // Prepare the response
-      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-      var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
-      var response = {
-        data: responseData,
-        // IE sends 1223 instead of 204 (https://github.com/axios/axios/issues/201)
-        status: request.status === 1223 ? 204 : request.status,
-        statusText: request.status === 1223 ? 'No Content' : request.statusText,
-        headers: responseHeaders,
-        config: config,
-        request: request
-      };
-
-      settle(resolve, reject, response);
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle low level network errors
-    request.onerror = function handleError() {
-      // Real errors are hidden from us by the browser
-      // onerror should only fire if it's a network error
-      reject(createError('Network Error', config, null, request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle timeout
-    request.ontimeout = function handleTimeout() {
-      reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED',
-        request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Add xsrf header
-    // This is only done if running in a standard browser environment.
-    // Specifically not if we're in a web worker, or react-native.
-    if (utils.isStandardBrowserEnv()) {
-      var cookies$$1 = cookies;
-
-      // Add xsrf header
-      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
-          cookies$$1.read(config.xsrfCookieName) :
-          undefined;
-
-      if (xsrfValue) {
-        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-      }
-    }
-
-    // Add headers to the request
-    if ('setRequestHeader' in request) {
-      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-          // Remove Content-Type if data is undefined
-          delete requestHeaders[key];
-        } else {
-          // Otherwise add header to the request
-          request.setRequestHeader(key, val);
-        }
-      });
-    }
-
-    // Add withCredentials to request if needed
-    if (config.withCredentials) {
-      request.withCredentials = true;
-    }
-
-    // Add responseType to request if needed
-    if (config.responseType) {
-      try {
-        request.responseType = config.responseType;
-      } catch (e) {
-        // Expected DOMException thrown by browsers not compatible XMLHttpRequest Level 2.
-        // But, this can be suppressed for 'json' type as it can be parsed by default 'transformResponse' function.
-        if (config.responseType !== 'json') {
-          throw e;
-        }
-      }
-    }
-
-    // Handle progress if needed
-    if (typeof config.onDownloadProgress === 'function') {
-      request.addEventListener('progress', config.onDownloadProgress);
-    }
-
-    // Not all browsers support upload events
-    if (typeof config.onUploadProgress === 'function' && request.upload) {
-      request.upload.addEventListener('progress', config.onUploadProgress);
-    }
-
-    if (config.cancelToken) {
-      // Handle cancellation
-      config.cancelToken.promise.then(function onCanceled(cancel) {
-        if (!request) {
-          return;
-        }
-
-        request.abort();
-        reject(cancel);
-        // Clean up request
-        request = null;
-      });
-    }
-
-    if (requestData === undefined) {
-      requestData = null;
-    }
-
-    // Send the request
-    request.send(requestData);
-  });
-};var DEFAULT_CONTENT_TYPE = {
-  'Content-Type': 'application/x-www-form-urlencoded'
-};
-
-function setContentTypeIfUnset(headers, value) {
-  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-    headers['Content-Type'] = value;
-  }
-}
-
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = xhr;
-  } else if (typeof process !== 'undefined') {
-    // For node use HTTP adapter
-    adapter = xhr;
-  }
-  return adapter;
-}
-
-var defaults = {
-  adapter: getDefaultAdapter(),
-
-  transformRequest: [function transformRequest(data, headers) {
-    normalizeHeaderName(headers, 'Content-Type');
-    if (utils.isFormData(data) ||
-      utils.isArrayBuffer(data) ||
-      utils.isBuffer(data) ||
-      utils.isStream(data) ||
-      utils.isFile(data) ||
-      utils.isBlob(data)
-    ) {
-      return data;
-    }
-    if (utils.isArrayBufferView(data)) {
-      return data.buffer;
-    }
-    if (utils.isURLSearchParams(data)) {
-      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-      return data.toString();
-    }
-    if (utils.isObject(data)) {
-      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
-      return JSON.stringify(data);
-    }
-    return data;
-  }],
-
-  transformResponse: [function transformResponse(data) {
-    /*eslint no-param-reassign:0*/
-    if (typeof data === 'string') {
-      try {
-        data = JSON.parse(data);
-      } catch (e) { /* Ignore */ }
-    }
-    return data;
-  }],
-
-  /**
-   * A timeout in milliseconds to abort a request. If set to 0 (default) a
-   * timeout is not created.
-   */
-  timeout: 0,
-
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-
-  maxContentLength: -1,
-
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  }
-};
-
-defaults.headers = {
-  common: {
-    'Accept': 'application/json, text/plain, */*'
-  }
-};
-
-utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-  defaults.headers[method] = {};
 });
 
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-});
-
-var defaults_1 = defaults;function InterceptorManager() {
-  this.handlers = [];
-}
-
-/**
- * Add a new interceptor to the stack
- *
- * @param {Function} fulfilled The function to handle `then` for a `Promise`
- * @param {Function} rejected The function to handle `reject` for a `Promise`
- *
- * @return {Number} An ID used to remove interceptor later
- */
-InterceptorManager.prototype.use = function use(fulfilled, rejected) {
-  this.handlers.push({
-    fulfilled: fulfilled,
-    rejected: rejected
-  });
-  return this.handlers.length - 1;
-};
-
-/**
- * Remove an interceptor from the stack
- *
- * @param {Number} id The ID that was returned by `use`
- */
-InterceptorManager.prototype.eject = function eject(id) {
-  if (this.handlers[id]) {
-    this.handlers[id] = null;
-  }
-};
-
-/**
- * Iterate over all the registered interceptors
- *
- * This method is particularly useful for skipping over any
- * interceptors that may have become `null` calling `eject`.
- *
- * @param {Function} fn The function to call for each interceptor
- */
-InterceptorManager.prototype.forEach = function forEach(fn) {
-  utils.forEach(this.handlers, function forEachHandler(h) {
-    if (h !== null) {
-      fn(h);
-    }
-  });
-};
-
-var InterceptorManager_1 = InterceptorManager;/**
- * Transform the data for a request or a response
- *
- * @param {Object|String} data The data to be transformed
- * @param {Array} headers The headers for the request or response
- * @param {Array|Function} fns A single function or Array of functions
- * @returns {*} The resulting transformed data
- */
-var transformData = function transformData(data, headers, fns) {
-  /*eslint no-param-reassign:0*/
-  utils.forEach(fns, function transform(fn) {
-    data = fn(data, headers);
-  });
-
-  return data;
-};var isCancel = function isCancel(value) {
-  return !!(value && value.__CANCEL__);
-};/**
- * Determines whether the specified URL is absolute
- *
- * @param {string} url The URL to test
- * @returns {boolean} True if the specified URL is absolute, otherwise false
- */
-var isAbsoluteURL = function isAbsoluteURL(url) {
-  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-  // by any combination of letters, digits, plus, period, or hyphen.
-  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-};/**
- * Creates a new URL by combining the specified URLs
- *
- * @param {string} baseURL The base URL
- * @param {string} relativeURL The relative URL
- * @returns {string} The combined URL
- */
-var combineURLs = function combineURLs(baseURL, relativeURL) {
-  return relativeURL
-    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
-    : baseURL;
-};/**
- * Throws a `Cancel` if cancellation has been requested.
- */
-function throwIfCancellationRequested(config) {
-  if (config.cancelToken) {
-    config.cancelToken.throwIfRequested();
-  }
-}
-
-/**
- * Dispatch a request to the server using the configured adapter.
- *
- * @param {object} config The config that is to be used for the request
- * @returns {Promise} The Promise to be fulfilled
- */
-var dispatchRequest = function dispatchRequest(config) {
-  throwIfCancellationRequested(config);
-
-  // Support baseURL config
-  if (config.baseURL && !isAbsoluteURL(config.url)) {
-    config.url = combineURLs(config.baseURL, config.url);
-  }
-
-  // Ensure headers exist
-  config.headers = config.headers || {};
-
-  // Transform request data
-  config.data = transformData(
-    config.data,
-    config.headers,
-    config.transformRequest
-  );
-
-  // Flatten headers
-  config.headers = utils.merge(
-    config.headers.common || {},
-    config.headers[config.method] || {},
-    config.headers || {}
-  );
-
-  utils.forEach(
-    ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
-    function cleanHeaderConfig(method) {
-      delete config.headers[method];
-    }
-  );
-
-  var adapter = config.adapter || defaults_1.adapter;
-
-  return adapter(config).then(function onAdapterResolution(response) {
-    throwIfCancellationRequested(config);
-
-    // Transform response data
-    response.data = transformData(
-      response.data,
-      response.headers,
-      config.transformResponse
-    );
-
-    return response;
-  }, function onAdapterRejection(reason) {
-    if (!isCancel(reason)) {
-      throwIfCancellationRequested(config);
-
-      // Transform response data
-      if (reason && reason.response) {
-        reason.response.data = transformData(
-          reason.response.data,
-          reason.response.headers,
-          config.transformResponse
-        );
-      }
-    }
-
-    return Promise.reject(reason);
-  });
-};/**
- * Create a new instance of Axios
- *
- * @param {Object} instanceConfig The default config for the instance
- */
-function Axios(instanceConfig) {
-  this.defaults = instanceConfig;
-  this.interceptors = {
-    request: new InterceptorManager_1(),
-    response: new InterceptorManager_1()
-  };
-}
-
-/**
- * Dispatch a request
- *
- * @param {Object} config The config specific for this request (merged with this.defaults)
- */
-Axios.prototype.request = function request(config) {
-  /*eslint no-param-reassign:0*/
-  // Allow for axios('example/url'[, config]) a la fetch API
-  if (typeof config === 'string') {
-    config = utils.merge({
-      url: arguments[0]
-    }, arguments[1]);
-  }
-
-  config = utils.merge(defaults_1, {method: 'get'}, this.defaults, config);
-  config.method = config.method.toLowerCase();
-
-  // Hook up interceptors middleware
-  var chain = [dispatchRequest, undefined];
-  var promise = Promise.resolve(config);
-
-  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-    chain.unshift(interceptor.fulfilled, interceptor.rejected);
-  });
-
-  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-    chain.push(interceptor.fulfilled, interceptor.rejected);
-  });
-
-  while (chain.length) {
-    promise = promise.then(chain.shift(), chain.shift());
-  }
-
-  return promise;
-};
-
-// Provide aliases for supported request methods
-utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
-  /*eslint func-names:0*/
-  Axios.prototype[method] = function(url, config) {
-    return this.request(utils.merge(config || {}, {
-      method: method,
-      url: url
-    }));
-  };
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  /*eslint func-names:0*/
-  Axios.prototype[method] = function(url, data, config) {
-    return this.request(utils.merge(config || {}, {
-      method: method,
-      url: url,
-      data: data
-    }));
-  };
-});
-
-var Axios_1 = Axios;/**
- * A `Cancel` is an object that is thrown when an operation is canceled.
- *
- * @class
- * @param {string=} message The message.
- */
-function Cancel(message) {
-  this.message = message;
-}
-
-Cancel.prototype.toString = function toString() {
-  return 'Cancel' + (this.message ? ': ' + this.message : '');
-};
-
-Cancel.prototype.__CANCEL__ = true;
-
-var Cancel_1 = Cancel;/**
- * A `CancelToken` is an object that can be used to request cancellation of an operation.
- *
- * @class
- * @param {Function} executor The executor function.
- */
-function CancelToken(executor) {
-  if (typeof executor !== 'function') {
-    throw new TypeError('executor must be a function.');
-  }
-
-  var resolvePromise;
-  this.promise = new Promise(function promiseExecutor(resolve) {
-    resolvePromise = resolve;
-  });
-
-  var token = this;
-  executor(function cancel(message) {
-    if (token.reason) {
-      // Cancellation has already been requested
-      return;
-    }
-
-    token.reason = new Cancel_1(message);
-    resolvePromise(token.reason);
-  });
-}
-
-/**
- * Throws a `Cancel` if cancellation has been requested.
- */
-CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-  if (this.reason) {
-    throw this.reason;
-  }
-};
-
-/**
- * Returns an object that contains a new `CancelToken` and a function that, when called,
- * cancels the `CancelToken`.
- */
-CancelToken.source = function source() {
-  var cancel;
-  var token = new CancelToken(function executor(c) {
-    cancel = c;
-  });
-  return {
-    token: token,
-    cancel: cancel
-  };
-};
-
-var CancelToken_1 = CancelToken;/**
- * Syntactic sugar for invoking a function and expanding an array for arguments.
- *
- * Common use case would be to use `Function.prototype.apply`.
- *
- *  ```js
- *  function f(x, y, z) {}
- *  var args = [1, 2, 3];
- *  f.apply(null, args);
- *  ```
- *
- * With `spread` this example can be re-written.
- *
- *  ```js
- *  spread(function(x, y, z) {})([1, 2, 3]);
- *  ```
- *
- * @param {Function} callback
- * @returns {Function}
- */
-var spread = function spread(callback) {
-  return function wrap(arr) {
-    return callback.apply(null, arr);
-  };
-};/**
- * Create an instance of Axios
- *
- * @param {Object} defaultConfig The default config for the instance
- * @return {Axios} A new instance of Axios
- */
-function createInstance(defaultConfig) {
-  var context = new Axios_1(defaultConfig);
-  var instance = bind(Axios_1.prototype.request, context);
-
-  // Copy axios.prototype to instance
-  utils.extend(instance, Axios_1.prototype, context);
-
-  // Copy context to instance
-  utils.extend(instance, context);
-
-  return instance;
-}
-
-// Create the default instance to be exported
-var axios = createInstance(defaults_1);
-
-// Expose Axios class to allow class inheritance
-axios.Axios = Axios_1;
-
-// Factory for creating new instances
-axios.create = function create(instanceConfig) {
-  return createInstance(utils.merge(defaults_1, instanceConfig));
-};
-
-// Expose Cancel & CancelToken
-axios.Cancel = Cancel_1;
-axios.CancelToken = CancelToken_1;
-axios.isCancel = isCancel;
-
-// Expose all/spread
-axios.all = function all(promises) {
-  return Promise.all(promises);
-};
-axios.spread = spread;
-
-var axios_1 = axios;
-
-// Allow use of default import syntax in TypeScript
-var default_1 = axios;
-axios_1.default = default_1;var axios$1 = axios_1;var sanctuaryShow = createCommonjsModule(function (module) {
-//. # sanctuary-show
-//.
-//. Haskell has a `show` function which can be applied to a compatible value to
-//. produce a descriptive string representation of that value. The idea is that
-//. the string representation should, if possible, be an expression which would
-//. produce the original value if evaluated.
-//.
-//. This library provides a similar [`show`](#show) function.
-//.
-//. In general, this property should hold: `eval (show (x)) = x`. In some cases
-//. parens are necessary to ensure correct interpretation (`{}`, for example,
-//. is an empty block rather than an empty object in some contexts). Thus the
-//. property is more accurately stated `eval ('(' + show (x) + ')') = x`.
-//.
-//. One can make values of a custom type compatible with [`show`](#show) by
-//. defining a `@@show` method. For example:
-//.
-//. ```javascript
-//. //# Maybe#@@show :: Maybe a ~> () -> String
-//. //.
-//. //. ```javascript
-//. //. > show (Nothing)
-//. //. 'Nothing'
-//. //.
-//. //. > show (Just (['foo', 'bar', 'baz']))
-//. //. 'Just (["foo", "bar", "baz"])'
-//. //. ```
-//. Maybe.prototype['@@show'] = function() {
-//.   return this.isNothing ? 'Nothing' : 'Just (' + show (this.value) + ')';
-//. };
-//. ```
-
-(function(f) {
-
-  /* istanbul ignore else */
-  {
-    module.exports = f();
-  }
-
-}(function() {
-
-  //  $$show :: String
-  var $$show = '@@show';
-
-  //  seen :: Array Any
-  var seen = [];
-
-  //  entry :: Object -> String -> String
-  function entry(o) {
-    return function(k) {
-      return show(k) + ': ' + show(o[k]);
-    };
-  }
-
-  //# show :: Showable a => a -> String
-  //.
-  //. Returns a useful string representation of the given value.
-  //.
-  //. Dispatches to the value's `@@show` method if present.
-  //.
-  //. Where practical, `show (eval ('(' + show (x) + ')')) = show (x)`.
-  //.
-  //. ```javascript
-  //. > show (null)
-  //. 'null'
-  //.
-  //. > show (undefined)
-  //. 'undefined'
-  //.
-  //. > show (true)
-  //. 'true'
-  //.
-  //. > show (new Boolean (false))
-  //. 'new Boolean (false)'
-  //.
-  //. > show (-0)
-  //. '-0'
-  //.
-  //. > show (NaN)
-  //. 'NaN'
-  //.
-  //. > show (new Number (Infinity))
-  //. 'new Number (Infinity)'
-  //.
-  //. > show ('foo\n"bar"\nbaz\n')
-  //. '"foo\\n\\"bar\\"\\nbaz\\n"'
-  //.
-  //. > show (new String (''))
-  //. 'new String ("")'
-  //.
-  //. > show (['foo', 'bar', 'baz'])
-  //. '["foo", "bar", "baz"]'
-  //.
-  //. > show ([[[[[0]]]]])
-  //. '[[[[[0]]]]]'
-  //.
-  //. > show ({x: [1, 2], y: [3, 4], z: [5, 6]})
-  //. '{"x": [1, 2], "y": [3, 4], "z": [5, 6]}'
-  //. ```
-  function show(x) {
-    if (seen.indexOf(x) >= 0) return '<Circular>';
-
-    switch (Object.prototype.toString.call(x)) {
-
-      case '[object Boolean]':
-        return typeof x === 'object' ?
-          'new Boolean (' + show(x.valueOf()) + ')' :
-          x.toString();
-
-      case '[object Number]':
-        return typeof x === 'object' ?
-          'new Number (' + show(x.valueOf()) + ')' :
-          1 / x === -Infinity ? '-0' : x.toString(10);
-
-      case '[object String]':
-        return typeof x === 'object' ?
-          'new String (' + show(x.valueOf()) + ')' :
-          JSON.stringify(x);
-
-      case '[object Date]':
-        return 'new Date (' +
-               show(isNaN(x.valueOf()) ? NaN : x.toISOString()) +
-               ')';
-
-      case '[object Error]':
-        return 'new ' + x.name + ' (' + show(x.message) + ')';
-
-      case '[object Arguments]':
-        return 'function () { return arguments; } (' +
-               Array.prototype.map.call(x, show).join(', ') +
-               ')';
-
-      case '[object Array]':
-        seen.push(x);
-        try {
-          return '[' + x.map(show).concat(
-            Object.keys(x)
-            .sort()
-            .filter(function(k) { return !/^\d+$/.test(k); })
-            .map(entry(x))
-          ).join(', ') + ']';
-        } finally {
-          seen.pop();
-        }
-
-      case '[object Object]':
-        seen.push(x);
-        try {
-          return (
-            $$show in x &&
-            (x.constructor == null || x.constructor.prototype !== x) ?
-              x[$$show]() :
-              '{' + Object.keys(x).sort().map(entry(x)).join(', ') + '}'
-          );
-        } finally {
-          seen.pop();
-        }
-
-      default:
-        return String(x);
-
-    }
-  }
-
-  return show;
-
-}));
-});var sanctuaryTypeIdentifiers = createCommonjsModule(function (module) {
-/*
-        @@@@@@@            @@@@@@@         @@
-      @@       @@        @@       @@      @@@
-    @@   @@@ @@  @@    @@   @@@ @@  @@   @@@@@@ @@   @@@  @@ @@@      @@@@
-   @@  @@   @@@   @@  @@  @@   @@@   @@   @@@   @@   @@@  @@@   @@  @@@   @@
-   @@  @@   @@@   @@  @@  @@   @@@   @@   @@@   @@   @@@  @@@   @@  @@@@@@@@
-   @@  @@   @@@  @@   @@  @@   @@@  @@    @@@   @@   @@@  @@@   @@  @@@
-    @@   @@@ @@@@@     @@   @@@ @@@@@      @@@    @@@ @@  @@@@@@      @@@@@
-      @@                 @@                           @@  @@
-        @@@@@@@            @@@@@@@               @@@@@    @@
-                                                          */
-//. # sanctuary-type-identifiers
-//.
-//. A type is a set of values. Boolean, for example, is the type comprising
-//. `true` and `false`. A value may be a member of multiple types (`42` is a
-//. member of Number, PositiveNumber, Integer, and many other types).
-//.
-//. In certain situations it is useful to divide JavaScript values into
-//. non-overlapping types. The language provides two constructs for this
-//. purpose: the [`typeof`][1] operator and [`Object.prototype.toString`][2].
-//. Each has pros and cons, but neither supports user-defined types.
-//.
-//. sanctuary-type-identifiers comprises:
-//.
-//.   - an npm and browser -compatible package for deriving the
-//.     _type identifier_ of a JavaScript value; and
-//.   - a specification which authors may follow to specify type
-//.     identifiers for their types.
-//.
-//. ### Specification
-//.
-//. For a type to be compatible with the algorithm:
-//.
-//.   - every member of the type MUST have a `constructor` property
-//.     pointing to an object known as the _type representative_;
-//.
-//.   - the type representative MUST have a `@@type` property
-//.     (the _type identifier_); and
-//.
-//.   - the type identifier MUST be a string primitive and SHOULD have
-//.     format `'<namespace>/<name>[@<version>]'`, where:
-//.
-//.       - `<namespace>` MUST consist of one or more characters, and
-//.         SHOULD equal the name of the npm package which defines the
-//.         type (including [scope][3] where appropriate);
-//.
-//.       - `<name>` MUST consist of one or more characters, and SHOULD
-//.         be the unique name of the type; and
-//.
-//.       - `<version>` MUST consist of one or more digits, and SHOULD
-//.         represent the version of the type.
-//.
-//. If the type identifier does not conform to the format specified above,
-//. it is assumed that the entire string represents the _name_ of the type;
-//. _namespace_ will be `null` and _version_ will be `0`.
-//.
-//. If the _version_ is not given, it is assumed to be `0`.
-//.
-//. For example:
-//.
-//. ```javascript
-//. //  Identity :: a -> Identity a
-//. function Identity(x) {
-//.   if (!(this instanceof Identity)) return new Identity(x);
-//.   this.value = x;
-//. }
-//.
-//. Identity['@@type'] = 'my-package/Identity';
-//. ```
-//.
-//. Note that by using a constructor function the `constructor` property is set
-//. implicitly for each value created. Constructor functions are convenient for
-//. this reason, but are not required. This definition is also valid:
-//.
-//. ```javascript
-//. //  IdentityTypeRep :: TypeRep Identity
-//. var IdentityTypeRep = {
-//.   '@@type': 'my-package/Identity'
-//. };
-//.
-//. //  Identity :: a -> Identity a
-//. function Identity(x) {
-//.   return {constructor: IdentityTypeRep, value: x};
-//. }
-//. ```
-
-(function(f) {
-
-  {
-    module.exports = f();
-  }
-
-}(function() {
-
-  //  $$type :: String
-  var $$type = '@@type';
-
-  //  pattern :: RegExp
-  var pattern = new RegExp(
-    '^'
-  + '([\\s\\S]+)'   //  <namespace>
-  + '/'             //  SOLIDUS (U+002F)
-  + '([\\s\\S]+?)'  //  <name>
-  + '(?:'           //  optional non-capturing group {
-  +   '@'           //    COMMERCIAL AT (U+0040)
-  +   '([0-9]+)'    //    <version>
-  + ')?'            //  }
-  + '$'
-  );
-
-  //. ### Usage
-  //.
-  //. ```javascript
-  //. const type = require('sanctuary-type-identifiers');
-  //. ```
-  //.
-  //. ```javascript
-  //. > function Identity(x) {
-  //. .   if (!(this instanceof Identity)) return new Identity(x);
-  //. .   this.value = x;
-  //. . }
-  //. . Identity['@@type'] = 'my-package/Identity@1';
-  //.
-  //. > type.parse(type(Identity(0)))
-  //. {namespace: 'my-package', name: 'Identity', version: 1}
-  //. ```
-  //.
-  //. ### API
-  //.
-  //# type :: Any -> String
-  //.
-  //. Takes any value and returns a string which identifies its type. If the
-  //. value conforms to the [specification][4], the custom type identifier is
-  //. returned.
-  //.
-  //. ```javascript
-  //. > type(null)
-  //. 'Null'
-  //.
-  //. > type(true)
-  //. 'Boolean'
-  //.
-  //. > type(Identity(0))
-  //. 'my-package/Identity@1'
-  //. ```
-  function type(x) {
-    return x != null &&
-           x.constructor != null &&
-           x.constructor.prototype !== x &&
-           typeof x.constructor[$$type] === 'string' ?
-      x.constructor[$$type] :
-      Object.prototype.toString.call(x).slice('[object '.length, -']'.length);
-  }
-
-  //# type.parse :: String -> { namespace :: Nullable String, name :: String, version :: Number }
-  //.
-  //. Takes any string and parses it according to the [specification][4],
-  //. returning an object with `namespace`, `name`, and `version` fields.
-  //.
-  //. ```javascript
-  //. > type.parse('my-package/List@2')
-  //. {namespace: 'my-package', name: 'List', version: 2}
-  //.
-  //. > type.parse('nonsense!')
-  //. {namespace: null, name: 'nonsense!', version: 0}
-  //.
-  //. > type.parse(Identity['@@type'])
-  //. {namespace: 'my-package', name: 'Identity', version: 1}
-  //. ```
-  type.parse = function parse(s) {
-    var groups = pattern.exec(s);
-    return {
-      namespace: groups == null || groups[1] == null ? null : groups[1],
-      name:      groups == null                      ? s    : groups[2],
-      version:   groups == null || groups[3] == null ? 0    : Number(groups[3])
-    };
-  };
-
-  return type;
-
-}));
-
-//. [1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof
-//. [2]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString
-//. [3]: https://docs.npmjs.com/misc/scope
-//. [4]: #specification
-});var concurrify = createCommonjsModule(function (module) {
-//. # Concurrify
-//.
-//. [![Chat](https://badges.gitter.im/fluture-js/concurrify.svg)](https://gitter.im/fluture-js/fluture)
-//. [![NPM Version](https://badge.fury.io/js/concurrify.svg)](https://www.npmjs.com/package/concurrify)
-//. [![Dependencies](https://david-dm.org/fluture-js/concurrify.svg)](https://david-dm.org/fluture-js/concurrify)
-//. [![Build Status](https://travis-ci.org/fluture-js/concurrify.svg?branch=master)](https://travis-ci.org/fluture-js/concurrify)
-//. [![Code Coverage](https://codecov.io/gh/fluture-js/concurrify/branch/master/graph/badge.svg)](https://codecov.io/gh/fluture-js/concurrify)
-//.
-//. Turn non-concurrent [FantasyLand 3][FL3] Applicatives concurrent.
-//.
-//. Most time-dependent applicatives are very useful as Monads, because it
-//. gives them the ability to run sequentially, where each step depends on the
-//. previous. However, they lose the ability to run concurrently. This library
-//. allows one to wrap a [`Monad`][FL:Monad] (with sequential `ap`) in an
-//. [`Alternative`][FL:Alternative] (with parallel `ap`).
-//.
-//. ## Usage
-//.
-//. ```js
-//. // The concurrify function takes four arguments, explained below.
-//. const concurrify = require ('concurrify');
-//.
-//. // The Type Representative of the Applicative we want to transform.
-//. const Future = require ('fluture');
-//.
-//. // A "zero" instance and an "alt" function for "Alternative".
-//. const zero = Future (() => {});
-//. const alt = Future.race;
-//.
-//. // An override "ap" function that runs the Applicatives concurrently.
-//. const ap = (mx, mf) => (Future.both (mx, mf)).map (([x, f]) => f (x));
-//.
-//. // A new Type Representative created by concurrify.
-//. const ConcurrentFuture = concurrify (Future, zero, alt, ap);
-//.
-//. // We can use our type as such:
-//. const par = ConcurrentFuture (Future.of (1));
-//. const seq = par.sequential;
-//. seq.fork (console.error, console.log);
-//. ```
-//.
-//. ## Interoperability
-//.
-//. * Implements [FantasyLand 3][FL3] `Alternative`
-//.   (`of`, `zero`, `map`, `ap`, `alt`).
-//. * Instances can be identified by, and are compared using,
-//.   [Sanctuary Type Identifiers][STI].
-//. * Instances can be converted to String representations according to
-//.   [Sanctuary Show][SS].
-//.
-//. ## API
-(function(f) {
-
-  /* istanbul ignore next */
-  {
-    module.exports = f (
-      sanctuaryShow,
-      sanctuaryTypeIdentifiers
-    );
-  }
-
-} (function(show, type) {
-
-  var $alt = 'fantasy-land/alt';
-  var $ap = 'fantasy-land/ap';
-  var $map = 'fantasy-land/map';
-  var $of = 'fantasy-land/of';
-  var $zero = 'fantasy-land/zero';
-  var $$type = '@@type';
-  var $$show = '@@show';
-  var ordinal = ['first', 'second', 'third', 'fourth', 'fifth'];
-
-  //       isFunction :: Any -> Boolean
-  function isFunction(f) {
-    return typeof f === 'function';
-  }
-
-  //       isBinary :: Function -> Boolean
-  function isBinary(f) {
-    return f.length >= 2;
-  }
-
-  //       isApplicativeRepr :: TypeRepr -> Boolean
-  function isApplicativeRepr(Repr) {
-    return typeof Repr[$of] === 'function' &&
-           typeof Repr[$of] ()[$ap] === 'function';
-  }
-
-  //       invalidArgument :: (String, Number, String, String) -> !Undefined
-  function invalidArgument(it, at, expected, actual) {
-    throw new TypeError (
-      it
-      + ' expects its '
-      + ordinal[at]
-      + ' argument to '
-      + expected
-      + '\n  Actual: '
-      + show (actual)
-    );
-  }
-
-  //       invalidContext :: (String, String, String) -> !Undefined
-  function invalidContext(it, actual, an) {
-    throw new TypeError (
-      it
-      + ' was invoked outside the context of a '
-      + an
-      + '. \n  Called on: '
-      + show (actual)
-    );
-  }
-
-  //       getTypeIdentifier :: TypeRepresentative -> String
-  function getTypeIdentifier(Repr) {
-    return Repr[$$type] || Repr.name || 'Anonymous';
-  }
-
-  //       generateTypeIdentifier :: String -> String
-  function generateTypeIdentifier(identifier) {
-    var o = type.parse (identifier);
-    return (
-      (o.namespace || 'concurrify') + '/Concurrent' + o.name + '@' + o.version
-    );
-  }
-
-  //# concurrify :: (Applicative f, Alternative (m f)) => (TypeRep f, f a, (f a, f a) -> f a, (f a, f (a -> b)) -> f b) -> f c -> m f c
-  return function concurrify(Repr, zero, alt, ap) {
-
-    var INNERTYPE = getTypeIdentifier (Repr);
-    var OUTERTYPE = generateTypeIdentifier (INNERTYPE);
-    var INNERNAME = (type.parse (INNERTYPE)).name;
-    var OUTERNAME = (type.parse (OUTERTYPE)).name;
-
-    function Concurrently(sequential) {
-      this.sequential = sequential;
-    }
-
-    function isInner(x) {
-      return (
-        (x instanceof Repr) ||
-        (Boolean (x) && x.constructor === Repr) ||
-        (type (x) === Repr[$$type])
-      );
-    }
-
-    function isOuter(x) {
-      return (
-        (x instanceof Concurrently) ||
-        (Boolean (x) && x.constructor === Concurrently) ||
-        (type (x) === OUTERTYPE)
-      );
-    }
-
-    function construct(x) {
-      if (!isInner (x)) {
-        invalidArgument (OUTERNAME, 0, 'be of type "' + INNERNAME + '"', x);
-      }
-      return new Concurrently (x);
-    }
-
-    if (!isApplicativeRepr (Repr)) {
-      invalidArgument ('concurrify', 0, 'represent an Applicative', Repr);
-    }
-
-    if (!isInner (zero)) {
-      invalidArgument
-        ('concurrify', 1, 'be of type "' + INNERNAME + '"', zero);
-    }
-
-    if (!isFunction (alt)) {
-      invalidArgument ('concurrify', 2, 'be a function', alt);
-    }
-
-    if (!isBinary (alt)) {
-      invalidArgument ('concurrify', 2, 'be binary', alt);
-    }
-
-    if (!isFunction (ap)) {
-      invalidArgument ('concurrify', 3, 'be a function', ap);
-    }
-
-    if (!isBinary (ap)) {
-      invalidArgument ('concurrify', 3, 'be binary', ap);
-    }
-
-    var proto =
-    Concurrently.prototype =
-    construct.prototype = {constructor: construct};
-
-    construct[$$type] = OUTERTYPE;
-
-    var mzero = new Concurrently (zero);
-
-    construct[$zero] = function Concurrently$zero() {
-      return mzero;
-    };
-
-    construct[$of] = function Concurrently$of(value) {
-      return new Concurrently (Repr[$of] (value));
-    };
-
-    proto[$map] = function Concurrently$map(mapper) {
-      if (!isOuter (this)) {
-        invalidContext (OUTERNAME + '#map', this, OUTERNAME);
-      }
-
-      if (!isFunction (mapper)) {
-        invalidArgument (OUTERNAME + '#map', 0, 'be a function', mapper);
-      }
-
-      return new Concurrently (this.sequential[$map] (mapper));
-    };
-
-    proto[$ap] = function Concurrently$ap(m) {
-      if (!isOuter (this)) {
-        invalidContext (OUTERNAME + '#ap', this, OUTERNAME);
-      }
-
-      if (!isOuter (m)) {
-        invalidArgument (OUTERNAME + '#ap', 0, 'be a ' + OUTERNAME, m);
-      }
-
-      return new Concurrently (ap (this.sequential, m.sequential));
-    };
-
-    proto[$alt] = function Concurrently$alt(m) {
-      if (!isOuter (this)) {
-        invalidContext (OUTERNAME + '#alt', this, OUTERNAME);
-      }
-
-      if (!isOuter (m)) {
-        invalidArgument (OUTERNAME + '#alt', 0, 'be a ' + OUTERNAME, m);
-      }
-
-      return new Concurrently (alt (this.sequential, m.sequential));
-    };
-
-    proto[$$show] = function Concurrently$show() {
-      return OUTERNAME + '(' + show (this.sequential) + ')';
-    };
-
-    proto.toString = function Concurrently$toString() {
-      if (!isOuter (this)) {
-        invalidContext (OUTERNAME + '#toString', this, OUTERNAME);
-      }
-      return this[$$show] ();
-    };
-
-    return construct;
-
-  };
-
-}));
-
-//. [FL3]: https://github.com/fantasyland/fantasy-land/
-//. [FL:Monad]: https://github.com/fantasyland/fantasy-land/#monad
-//. [FL:Alternative]: https://github.com/fantasyland/fantasy-land/#alternative
-//. [STI]: https://github.com/sanctuary-js/sanctuary-type-identifiers
-//. [SS]: https://github.com/sanctuary-js/sanctuary-show
-});function noop(){}
-function moop(){ return this }
-function padf(sf, s){ return s.replace(/^/gm, sf).replace(sf, '') }
-function showf(f){ return padf('  ', sanctuaryShow(f)) }
-
-function partial1(f, a){
-  return function bound1(b, c, d){
-    switch(arguments.length){
-      case 1: return f(a, b);
-      case 2: return f(a, b, c);
-      default: return f(a, b, c, d);
-    }
-  };
-}
-
-function partial2(f, a, b){
-  return function bound2(c, d){
-    return arguments.length === 1 ? f(a, b, c) : f(a, b, c, d);
-  };
-}
-
-function raise(x){
-  throw x;
-}var FL = {
-  alt: 'fantasy-land/alt',
-  ap: 'fantasy-land/ap',
-  bimap: 'fantasy-land/bimap',
-  chain: 'fantasy-land/chain',
-  chainRec: 'fantasy-land/chainRec',
-  map: 'fantasy-land/map',
-  of: 'fantasy-land/of',
-  zero: 'fantasy-land/zero'
-};
-
-var ordinal = ['first', 'second', 'third', 'fourth', 'fifth'];
-
-var namespace = 'fluture';
-var name = 'Future';
-var version = 4;
-
-var $$type = namespace + '/' + name + '@' + version;var nil = {head: null};
-nil.tail = nil;
-
-function isNil(list){
-  return list.tail === list;
-}
-
-// cons :: (a, List a) -> List a
-//      -- O(1) append operation
-function cons(head, tail){
-  return {head: head, tail: tail};
-}
-
-// reverse :: List a -> List a
-//         -- O(n) list reversal
-function reverse(xs){
-  var ys = nil, tail = xs;
-  while(!isNil(tail)){
-    ys = cons(tail.head, ys);
-    tail = tail.tail;
-  }
-  return ys;
-}
-
-// cat :: (List a, List a) -> List a
-//     -- O(n) list concatenation
-function cat(xs, ys){
-  var zs = ys, tail = reverse(xs);
-  while(!isNil(tail)){
-    zs = cons(tail.head, zs);
-    tail = tail.tail;
-  }
-  return zs;
-}/* istanbul ignore next: non v8 compatibility */
-var captureStackTrace = Error.captureStackTrace || captureStackTraceFallback;
-var _debug = noop;
-
-function debug(fn){
-  return _debug(fn);
-}
-
-function captureContext(previous, tag, fn){
-  return debug(function debugCaptureContext(){
-    var context = {
-      tag: tag,
-      name: ' from ' + tag + ':',
-    };
-    captureStackTrace(context, fn);
-    return cat(previous, cons(context, nil));
-  }) || previous;
-}
-
-function captureStackTraceFallback(x){
-  var e = new Error;
-  /* istanbul ignore else: non v8 compatibility */
-  if(typeof e.stack === 'string'){
-    x.stack = x.name + '\n' + e.stack.split('\n').slice(1).join('\n');
-  }else{
-    x.stack = x.name;
-  }
-}function error(message){
-  return new Error(message);
-}
-
-function typeError(message){
-  return new TypeError(message);
-}
-
-function invalidArgument(it, at, expected, actual){
-  return typeError(
-    it + '() expects its ' + ordinal[at] + ' argument to ' + expected + '.' +
-    '\n  Actual: ' + sanctuaryShow(actual) + ' :: ' + sanctuaryTypeIdentifiers.parse(sanctuaryTypeIdentifiers(actual)).name
-  );
-}
-
-function invalidContext(it, actual){
-  return typeError(
-    it + '() was invoked outside the context of a Future. You might want to use'
-  + ' a dispatcher instead\n  Called on: ' + sanctuaryShow(actual)
-  );
-}
-
-function invalidNamespace(m, x){
-  return (
-    'The Future was not created by ' + namespace + '. '
-  + 'Make sure you transform other Futures to ' + namespace + ' Futures. '
-  + 'Got ' + (x ? ('a Future from ' + x) : 'an unscoped Future') + '.'
-  + '\n  See: https://github.com/fluture-js/Fluture#casting-futures'
-  );
-}
-
-function invalidVersion(m, x){
-  return (
-    'The Future was created by ' + (x < version ? 'an older' : 'a newer')
-  + ' version of ' + namespace + '. '
-  + 'This means that one of the sources which creates Futures is outdated. '
-  + 'Update this source, or transform its created Futures to be compatible.'
-  + '\n  See: https://github.com/fluture-js/Fluture#casting-futures'
-  );
-}
-
-function invalidFuture(it, at, m, s){
-  var id = sanctuaryTypeIdentifiers.parse(sanctuaryTypeIdentifiers(m));
-  var info = id.name === name ? '\n' + (
-    id.namespace !== namespace ? invalidNamespace(m, id.namespace)
-  : id.version !== version ? invalidVersion(m, id.version)
-  : 'Nothing seems wrong. Contact the Fluture maintainers.') : '';
-  return typeError(
-    it + '() expects ' +
-    (ordinal[at] ? 'its ' + ordinal[at] + ' argument to be a valid Future' : at) +
-    '.' + info + '\n  Actual: ' + sanctuaryShow(m) + ' :: ' + id.name + (s || '')
-  );
-}
-
-function ensureError(value, fn){
-  var message;
-  try{
-    if(value instanceof Error) return value;
-    message = 'A Non-Error was thrown from a Future: ' + sanctuaryShow(value);
-  }catch (_){
-    message = 'Something was thrown from a Future, but it could not be converted to String';
-  }
-  var e = error(message);
-  captureStackTrace(e, fn);
-  return e;
-}
-
-function makeError(caught, callingFuture, extraContext){
-  var origin = ensureError(caught, makeError);
-  var e = error(origin.message);
-  e.context = cat(origin.context || nil, extraContext || nil);
-  e.future = origin.future || callingFuture;
-  e.reason = origin.reason || origin;
-  e.stack = e.reason.stack + (isNil(e.context) ? '' : '\n' + contextToStackTrace(e.context));
-  return e;
-}
-
-function contextToStackTrace(context){
-  var stack = '', tail = context;
-  while(tail !== nil){
-    stack += tail.head.stack + '\n';
-    tail = tail.tail;
-  }
-  return stack;
-}function throwInvalidArgument(it, at, expected, actual){
-  throw invalidArgument(it, at, expected, actual);
-}
-
-function throwInvalidContext(it, actual){
-  throw invalidContext(it, actual);
-}
-
-function throwInvalidFuture(it, at, m, s){
-  throw invalidFuture(it, at, m, s);
-}function isFunction$1(f){
-  return typeof f === 'function';
-}
-
-function isThenable$1(m){
-  return m instanceof Promise || m != null && isFunction$1(m.then);
-}
-
-function isBoolean(f){
-  return typeof f === 'boolean';
-}
-
-function isObject$1(o){
-  return o !== null && typeof o === 'object';
-}
-
-function isIterator(i){
-  return isObject$1(i) && isFunction$1(i.next);
-}
-
-function hasMethod(method, x){
-  return x != null && isFunction$1(x[method]);
-}
-
-function isFunctor(x){
-  return hasMethod(FL.map, x);
-}
-
-function isAlt(x){
-  return isFunctor(x) && hasMethod(FL.alt, x);
-}
-
-function isApply(x){
-  return isFunctor(x) && hasMethod(FL.ap, x);
-}
-
-function isBifunctor(x){
-  return isFunctor(x) && hasMethod(FL.bimap, x);
-}
-
-function isChain(x){
-  return isApply(x) && hasMethod(FL.chain, x);
-}/*eslint no-cond-assign:0, no-constant-condition:0 */
-
-function Future(computation){
-  if(!isFunction$1(computation)) throwInvalidArgument('Future', 0, 'be a Function', computation);
-  return new Computation(computation);
-}
-
-function isFuture(x){
-  return x instanceof Future || sanctuaryTypeIdentifiers(x) === $$type;
-}
-
-Future['@@type'] = $$type;
-
-Future.prototype['@@show'] = function Future$show(){
-  return this.toString();
-};
-
-Future.prototype[FL.ap] = function Future$FL$ap(other){
-  return other._ap(this);
-};
-
-Future.prototype[FL.map] = function Future$FL$map(mapper){
-  return this._map(mapper);
-};
-
-Future.prototype[FL.bimap] = function Future$FL$bimap(lmapper, rmapper){
-  return this._bimap(lmapper, rmapper);
-};
-
-Future.prototype[FL.chain] = function Future$FL$chain(mapper){
-  return this._chain(mapper);
-};
-
-Future.prototype[FL.alt] = function Future$FL$alt(other){
-  return this._alt(other);
-};
-
-Future.prototype.pipe = function Future$pipe(f){
-  if(!isFuture(this)) throwInvalidContext('Future#pipe', this);
-  if(!isFunction$1(f)) throwInvalidArgument('Future#pipe', 0, 'be a Function', f);
-  return f(this);
-};
-
-Future.prototype.fork = function Future$fork(rej, res){
-  if(!isFuture(this)) throwInvalidContext('Future#fork', this);
-  if(!isFunction$1(rej)) throwInvalidArgument('Future#fork', 0, 'be a Function', rej);
-  if(!isFunction$1(res)) throwInvalidArgument('Future#fork', 1, 'be a Function', res);
-  return this._interpret(raise, rej, res);
-};
-
-Future.prototype.forkCatch = function Future$forkCatch(rec, rej, res){
-  if(!isFuture(this)) throwInvalidContext('Future#forkCatch', this);
-  if(!isFunction$1(rec)) throwInvalidArgument('Future#forkCatch', 0, 'be a Function', rec);
-  if(!isFunction$1(rej)) throwInvalidArgument('Future#forkCatch', 1, 'be a Function', rej);
-  if(!isFunction$1(res)) throwInvalidArgument('Future#forkCatch', 2, 'be a Function', res);
-  return this._interpret(rec, rej, res);
-};
-
-Future.prototype.value = function Future$value(res){
-  if(!isFuture(this)) throwInvalidContext('Future#value', this);
-  if(!isFunction$1(res)) throwInvalidArgument('Future#value', 0, 'be a Function', res);
-  var _this = this;
-  return _this._interpret(raise, function Future$value$rej(x){
-    raise(error(
-      'Future#value was called on a rejected Future\n' +
-      '  Rejection: ' + sanctuaryShow(x) + '\n' +
-      '  Future: ' + _this.toString()
-    ));
-  }, res);
-};
-
-Future.prototype.done = function Future$done(callback){
-  if(!isFuture(this)) throwInvalidContext('Future#done', this);
-  if(!isFunction$1(callback)) throwInvalidArgument('Future#done', 0, 'be a Function', callback);
-  return this._interpret(raise,
-                         function Future$done$rej(x){ callback(x); },
-                         function Future$done$res(x){ callback(null, x); });
-};
-
-Future.prototype.promise = function Future$promise(){
-  if(!isFuture(this)) throwInvalidContext('Future#promise', this);
-  var _this = this;
-  return new Promise(function Future$promise$computation(res, rej){
-    _this._interpret(raise, rej, res);
-  });
-};
-
-Future.prototype.extractLeft = function Future$extractLeft(){
-  return [];
-};
-
-Future.prototype.extractRight = function Future$extractRight(){
-  return [];
-};
-
-Future.prototype._transform = function Future$transform(action){
-  return new Transformation(this, cons(action, nil));
-};
-
-Future.prototype.context = nil;
-
-function Computation(computation){
-  this._computation = computation;
-  this.context = captureContext(nil, 'a Future created with the Future constructor', Future);
-}
-
-Computation.prototype = Object.create(Future.prototype);
-
-Computation.prototype._interpret = function Computation$interpret(rec, rej, res){
-  var open = false, cancel = noop, cont = function(){ open = true; };
-  var context = captureContext(this.context, 'consuming a Future', Computation$interpret);
-  try{
-    cancel = this._computation(function Computation$rej(x){
-      cont = function Computation$rej$cont(){
-        open = false;
-        rej(x);
-      };
-      if(open){
-        cont();
-      }
-    }, function Computation$res(x){
-      cont = function Computation$res$cont(){
-        open = false;
-        res(x);
-      };
-      if(open){
-        cont();
-      }
-    }) || noop;
-  }catch(e){
-    rec(makeError(e, this, context));
-    return noop;
-  }
-  if(!(isFunction$1(cancel) && cancel.length === 0)){
-    rec(makeError(typeError(
-      'The computation was expected to return a nullary function or void\n' +
-      '  Actual: ' + sanctuaryShow(cancel)
-    ), this, context));
-    return noop;
-  }
-  cont();
-  return function Computation$cancel(){
-    if(open){
-      open = false;
-      cancel && cancel();
-    }
-  };
-};
-
-Computation.prototype.toString = function Computation$toString(){
-  return 'Future(' + showf(this._computation) + ')';
-};
-
-function Transformation(spawn, actions){
-  this._spawn = spawn;
-  this._actions = actions;
-}
-
-Transformation.prototype = Object.create(Future.prototype);
-
-Transformation.prototype._transform = function Transformation$_transform(action){
-  return new Transformation(this._spawn, cons(action, this._actions));
-};
-
-Transformation.prototype._interpret = function Transformation$interpret(rec, rej, res){
-
-  //These are the cold, and hot, action stacks. The cold actions are those that
-  //have yet to run parallel computations, and hot are those that have.
-  var cold = nil, hot = nil;
-
-  //A linked list of stack traces, tracking context across ticks.
-  var context = captureContext(nil, 'consuming a transformed Future', Transformation$interpret);
-
-  //The context of the last action to run.
-  var asyncContext = nil;
-
-  //These combined variables define our current state.
-  // future  = the future we are currently forking
-  // action  = the action to be informed when the future settles
-  // cancel  = the cancel function of the current future
-  // settled = a boolean indicating whether a new tick should start
-  // async   = a boolean indicating whether we are awaiting a result asynchronously
-  var future, action, cancel = noop, settled, async = true, it;
-
-  //Takes an action from the top of the hot stack and returns it.
-  function nextHot(){
-    var x = hot.head;
-    hot = hot.tail;
-    return x;
-  }
-
-  //Takes an action from the top of the cold stack and returns it.
-  function nextCold(){
-    var x = cold.head;
-    cold = cold.tail;
-    return x;
-  }
-
-  //This function is called with a future to use in the next tick.
-  //Here we "flatten" the actions of another Sequence into our own actions,
-  //this is the magic that allows for infinitely stack safe recursion because
-  //actions like ChainAction will return a new Sequence.
-  //If we settled asynchronously, we call drain() directly to run the next tick.
-  function settle(m){
-    settled = true;
-    future = m;
-    if(future._spawn){
-      var tail = future._actions;
-      while(!isNil(tail)){
-        cold = cons(tail.head, cold);
-        tail = tail.tail;
-      }
-      future = future._spawn;
-    }
-    if(async) drain();
-  }
-
-  //This function serves as a rejection handler for our current future.
-  //It will tell the current action that the future rejected, and it will
-  //settle the current tick with the action's answer to that.
-  function rejected(x){
-    if(async) context = cat(future.context, cat(asyncContext, context));
-    settle(action.rejected(x));
-  }
-
-  //This function serves as a resolution handler for our current future.
-  //It will tell the current action that the future resolved, and it will
-  //settle the current tick with the action's answer to that.
-  function resolved(x){
-    if(async) context = cat(future.context, cat(asyncContext, context));
-    settle(action.resolved(x));
-  }
-
-  //This function is passed into actions when they are "warmed up".
-  //If the action decides that it has its result, without the need to await
-  //anything else, then it can call this function to force "early termination".
-  //When early termination occurs, all actions which were stacked prior to the
-  //terminator will be skipped. If they were already hot, they will also be
-  //sent a cancel signal so they can cancel their own concurrent computations,
-  //as their results are no longer needed.
-  function early(m, terminator){
-    context = cat(terminator.context, context);
-    cancel();
-    cold = nil;
-    if(async && action !== terminator){
-      action.cancel();
-      while((it = nextHot()) && it !== terminator) it.cancel();
-    }
-    settle(m);
-  }
-
-  //This will cancel the current Future, the current action, and all stacked hot actions.
-  function Sequence$cancel(){
-    cancel();
-    action && action.cancel();
-    while(it = nextHot()) it.cancel();
-  }
-
-  //This function is called when an exception is caught.
-  function exception(e){
-    Sequence$cancel();
-    settled = true;
-    cold = hot = nil;
-    var error$$1 = makeError(e, future, context);
-    future = never;
-    rec(error$$1);
-  }
-
-  //This function serves to kickstart concurrent computations.
-  //Takes all actions from the cold stack in reverse order, and calls run() on
-  //each of them, passing them the "early" function. If any of them settles (by
-  //calling early()), we abort. After warming up all actions in the cold queue,
-  //we warm up the current action as well.
-  function warmupActions(){
-    cold = reverse(cold);
-    while(cold !== nil){
-      it = cold.head.run(early);
-      if(settled) return;
-      hot = cons(it, hot);
-      cold = cold.tail;
-    }
-    action = action.run(early);
-  }
-
-  //This function represents our main execution loop. By "tick", we've been
-  //referring to the execution of one iteration in the while-loop below.
-  function drain(){
-    async = false;
-    while(true){
-      settled = false;
-      if(action) asyncContext = action.context;
-      if(action = nextCold()){
-        cancel = future._interpret(exception, rejected, resolved);
-        if(!settled) warmupActions();
-      }else if(action = nextHot()){
-        cancel = future._interpret(exception, rejected, resolved);
-      }else break;
-      if(settled) continue;
-      async = true;
-      return;
-    }
-    cancel = future._interpret(exception, rej, res);
-  }
-
-  //Start the execution loop.
-  settle(this);
-
-  //Return the cancellation function.
-  return Sequence$cancel;
-
-};
-
-Transformation.prototype.toString = function Transformation$toString(){
-  var str = '', tail = this._actions;
-
-  while(!isNil(tail)){
-    str = '.' + tail.head.toString() + str;
-    tail = tail.tail;
-  }
-
-  return this._spawn.toString() + str;
-};
-
-function Crashed(exception){
-  this._exception = exception;
-}
-
-Crashed.prototype = Object.create(Future.prototype);
-
-Crashed.prototype._interpret = function Crashed$interpret(rec){
-  rec(this._exception);
-  return noop;
-};
-
-Crashed.prototype.toString = function Crashed$toString(){
-  return 'Future(function crash(){ throw ' + sanctuaryShow(this._exception) + ' })';
-};
-
-function Rejected(value){
-  this._value = value;
-}
-
-Rejected.prototype = Object.create(Future.prototype);
-
-Rejected.prototype._interpret = function Rejected$interpret(rec, rej){
-  rej(this._value);
-  return noop;
-};
-
-Rejected.prototype.extractLeft = function Rejected$extractLeft(){
-  return [this._value];
-};
-
-Rejected.prototype.toString = function Rejected$toString(){
-  return 'reject(' + sanctuaryShow(this._value) + ')';
-};
-
-function reject(x){
-  return new Rejected(x);
-}
-
-function Resolved(value){
-  this._value = value;
-}
-
-Resolved.prototype = Object.create(Future.prototype);
-
-Resolved.prototype._interpret = function Resolved$interpret(rec, rej, res){
-  res(this._value);
-  return noop;
-};
-
-Resolved.prototype.extractRight = function Resolved$extractRight(){
-  return [this._value];
-};
-
-Resolved.prototype.toString = function Resolved$toString(){
-  return 'Future.of(' + sanctuaryShow(this._value) + ')';
-};
-
-function resolve(x){
-  return new Resolved(x);
-}
-
-function Never(){
-  this._isNever = true;
-}
-
-Never.prototype = Object.create(Future.prototype);
-
-Never.prototype._interpret = function Never$interpret(){
-  return noop;
-};
-
-Never.prototype.toString = function Never$toString(){
-  return 'never';
-};
-
-var never = new Never();
-
-function Eager(future){
-  var _this = this;
-  _this.rec = noop;
-  _this.rej = noop;
-  _this.res = noop;
-  _this.crashed = false;
-  _this.rejected = false;
-  _this.resolved = false;
-  _this.value = null;
-  _this.cancel = future._interpret(function Eager$crash(x){
-    _this.value = x;
-    _this.crashed = true;
-    _this.cancel = noop;
-    _this.rec(x);
-  }, function Eager$reject(x){
-    _this.value = x;
-    _this.rejected = true;
-    _this.cancel = noop;
-    _this.rej(x);
-  }, function Eager$resolve(x){
-    _this.value = x;
-    _this.resolved = true;
-    _this.cancel = noop;
-    _this.res(x);
-  });
-}
-
-Eager.prototype = Object.create(Future.prototype);
-
-Eager.prototype._interpret = function Eager$interpret(rec, rej, res){
-  if(this.crashed) rec(this.value);
-  else if(this.rejected) rej(this.value);
-  else if(this.resolved) res(this.value);
-  else{
-    this.rec = rec;
-    this.rej = rej;
-    this.res = res;
-  }
-  return this.cancel;
-};
-
-var Action = {
-  rejected: function Action$rejected(x){ this.cancel(); return new Rejected(x) },
-  resolved: function Action$resolved(x){ this.cancel(); return new Resolved(x) },
-  run: moop,
-  cancel: noop
-};
-
-function captureActionContext(name$$1, fn){
-  return captureContext(nil, 'a Future transformed with ' + name$$1, fn);
-}
-
-function nullaryActionToString(){
-  return this.name + '()';
-}
-
-function defineNullaryAction(name$$1, prototype){
-  var _name = '_' + name$$1;
-  function NullaryAction(context){ this.context = context; }
-  NullaryAction.prototype = Object.assign(Object.create(Action), prototype);
-  NullaryAction.prototype.name = name$$1;
-  NullaryAction.prototype.toString = nullaryActionToString;
-  Future.prototype[name$$1] = function checkedNullaryTransformation(){
-    if(!isFuture(this)) throwInvalidContext('Future#' + name$$1, this);
-    return this[_name]();
-  };
-  Future.prototype[_name] = function uncheckedNullaryTransformation(){
-    return this._transform(new NullaryAction(
-      captureActionContext(name$$1, uncheckedNullaryTransformation)
-    ));
-  };
-  return NullaryAction;
-}
-
-function mapperActionToString(){
-  return this.name + '(' + showf(this.mapper) + ')';
-}
-
-function defineMapperAction(name$$1, prototype){
-  var _name = '_' + name$$1;
-  function MapperAction(mapper, context){ this.mapper = mapper; this.context = context; }
-  MapperAction.prototype = Object.assign(Object.create(Action), prototype);
-  MapperAction.prototype.name = name$$1;
-  MapperAction.prototype.toString = mapperActionToString;
-  Future.prototype[name$$1] = function checkedMapperTransformation(mapper){
-    if(!isFuture(this)) throwInvalidContext('Future#' + name$$1, this);
-    if(!isFunction$1(mapper)) throwInvalidArgument('Future#' + name$$1, 0, 'be a Function', mapper);
-    return this[_name](mapper);
-  };
-  Future.prototype[_name] = function uncheckedMapperTransformation(mapper){
-    return this._transform(new MapperAction(
-      mapper,
-      captureActionContext(name$$1, uncheckedMapperTransformation)
-    ));
-  };
-  return MapperAction;
-}
-
-function bimapperActionToString(){
-  return this.name + '(' + showf(this.lmapper) + ', ' + showf(this.rmapper) + ')';
-}
-
-function defineBimapperAction(name$$1, prototype){
-  var _name = '_' + name$$1;
-  function BimapperAction(lmapper, rmapper, context){
-    this.lmapper = lmapper;
-    this.rmapper = rmapper;
-    this.context = context;
-  }
-  BimapperAction.prototype = Object.assign(Object.create(Action), prototype);
-  BimapperAction.prototype.name = name$$1;
-  BimapperAction.prototype.toString = bimapperActionToString;
-  Future.prototype[name$$1] = function checkedBimapperTransformation(lm, rm){
-    if(!isFuture(this)) throwInvalidContext('Future#' + name$$1, this);
-    if(!isFunction$1(lm)) throwInvalidArgument('Future#' + name$$1, 0, 'be a Function', lm);
-    if(!isFunction$1(rm)) throwInvalidArgument('Future#' + name$$1, 1, 'be a Function', rm);
-    return this[_name](lm, rm);
-  };
-  Future.prototype[_name] = function uncheckedBimapperTransformation(lmapper, rmapper){
-    return this._transform(new BimapperAction(
-      lmapper,
-      rmapper,
-      captureActionContext(name$$1, uncheckedBimapperTransformation)
-    ));
-  };
-  return BimapperAction;
-}
-
-function otherActionToString(){
-  return this.name + '(' + this.other.toString() + ')';
-}
-
-function defineOtherAction(name$$1, prototype){
-  var _name = '_' + name$$1;
-  function OtherAction(other, context){ this.other = other; this.context = context; }
-  OtherAction.prototype = Object.assign(Object.create(Action), prototype);
-  OtherAction.prototype.name = name$$1;
-  OtherAction.prototype.toString = otherActionToString;
-  Future.prototype[name$$1] = function checkedOtherTransformation(other){
-    if(!isFuture(this)) throwInvalidContext('Future#' + name$$1, this);
-    if(!isFuture(other)) throwInvalidFuture('Future#' + name$$1, 0, other);
-    return this[_name](other);
-  };
-  Future.prototype[_name] = function uncheckedOtherTransformation(other){
-    return this._transform(new OtherAction(
-      other,
-      captureActionContext(name$$1, uncheckedOtherTransformation)
-    ));
-  };
-  return OtherAction;
-}
-
-function defineParallelAction(name$$1, rec, rej, res, prototype){
-  var ParallelAction = defineOtherAction(name$$1, prototype);
-  ParallelAction.prototype.run = function ParallelAction$run(early){
-    var eager = new Eager(this.other);
-    var action = new ParallelAction(eager);
-    function ParallelAction$early(m){ early(m, action); }
-    action.context = captureContext(
-      this.context,
-      name$$1 + ' triggering a parallel Future',
-      ParallelAction$run
-    );
-    action.cancel = eager._interpret(
-      function ParallelAction$rec(x){ rec(ParallelAction$early, x); },
-      function ParallelAction$rej(x){ rej(ParallelAction$early, x); },
-      function ParallelAction$res(x){ res(ParallelAction$early, x); }
-    );
-    return action;
-  };
-  return ParallelAction;
-}
-
-function apActionHandler(f){
-  return isFunction$1(f) ?
-         this.other._map(function ApAction$resolved$mapper(x){ return f(x) }) :
-         new Crashed(makeError(typeError(
-           'Future#' + this.name + '() expects its first argument to be a Future of a Function\n' +
-           '  Actual: Future.of(' + sanctuaryShow(f) + ')'
-         ), null, this.context));
-}
-
-function chainActionHandler(x){
-  var m;
-  try{ m = this.mapper(x); }catch(e){ return new Crashed(makeError(e, null, this.context)) }
-  return isFuture(m) ? m : new Crashed(makeError(invalidFuture(
-    'Future#' + this.name,
-    'the function it\'s given to return a Future',
-    m,
-    '\n  From calling: ' + showf(this.mapper) + '\n  With: ' + sanctuaryShow(x)
-  ), null, this.context));
-}
-
-function returnOther(){
-  return this.other;
-}
-
-function mapWith(mapper, create, value, context){
-  var m;
-  try{ m = create(mapper(value)); }catch(e){ m = new Crashed(makeError(e, null, context)); }
-  return m;
-}
-
-function mapRight(value){
-  return mapWith(this.rmapper, resolve, value, this.context);
-}
-
-function earlyCrash(early, x){
-  early(new Crashed(x));
-}
-
-function earlyReject(early, x){
-  early(new Rejected(x));
-}
-
-function earlyResolve(early, x){
-  early(new Resolved(x));
-}
-
-defineOtherAction('ap', {
-  resolved: apActionHandler
-});
-
-defineMapperAction('map', {
-  resolved: function MapAction$resolved(x){
-    return mapWith(this.mapper, resolve, x, this.context);
-  }
-});
-
-defineBimapperAction('bimap', {
-  resolved: mapRight,
-  rejected: function BimapAction$rejected(x){
-    return mapWith(this.lmapper, reject, x, this.context);
-  }
-});
-
-defineMapperAction('chain', {
-  resolved: chainActionHandler
-});
-
-defineMapperAction('mapRej', {
-  rejected: function MapRejAction$rejected(x){
-    return mapWith(this.mapper, reject, x, this.context);
-  }
-});
-
-defineMapperAction('chainRej', {
-  rejected: chainActionHandler
-});
-
-defineNullaryAction('swap', {
-  rejected: Action.resolved,
-  resolved: Action.rejected
-});
-
-defineBimapperAction('fold', {
-  resolved: mapRight,
-  rejected: function FoldAction$rejected(x){
-    return mapWith(this.lmapper, resolve, x, this.context);
-  }
-});
-
-var finallyAction = {
-  rejected: function FinallyAction$rejected(x){ return this.other._and(new Rejected(x)) },
-  resolved: function FinallyAction$resolved(x){ return this.other._and(new Resolved(x)) }
-};
-
-defineOtherAction('finally', finallyAction);
-defineOtherAction('lastly', finallyAction);
-
-defineOtherAction('and', {
-  resolved: returnOther
-});
-
-var altAction = {
-  rejected: returnOther
-};
-
-defineOtherAction('or', altAction);
-defineOtherAction('alt', altAction);
-
-defineParallelAction('_parallelAp', earlyCrash, earlyReject, noop, {
-  resolved: apActionHandler
-});
-
-defineParallelAction('race', earlyCrash, earlyReject, earlyResolve, {});
-
-defineParallelAction('both', earlyCrash, earlyReject, noop, {
-  resolved: function BothAction$resolved(x){
-    return this.other._map(function BothAction$resolved$mapper(y){ return [x, y] });
-  }
-});function Next(x){
-  return {done: false, value: x};
-}
-
-function Done(x){
-  return {done: true, value: x};
-}
-
-function isIteration(x){
-  return isObject$1(x) && isBoolean(x.done);
-}function chainRec(step, init){
-  return resolve(Next(init))._chain(function chainRec$recur(o){
-    return o.done ? resolve(o.value) : step(Next, Done, o.value)._chain(chainRec$recur);
-  });
-}function ap$mval(mval, mfunc){
-  if(!isApply(mfunc)) throwInvalidArgument('ap', 1, 'be an Apply', mfunc);
-  return mfunc[FL.ap](mval);
-}
-
-function ap(mval, mfunc){
-  if(!isApply(mval)) throwInvalidArgument('ap', 0, 'be an Apply', mval);
-  if(arguments.length === 1) return partial1(ap$mval, mval);
-  return ap$mval(mval, mfunc);
-}function alt$left(left, right){
-  if(!isAlt(right)) throwInvalidArgument('alt', 1, 'be an Alt', right);
-  return left[FL.alt](right);
-}
-
-function alt(left, right){
-  if(!isAlt(left)) throwInvalidArgument('alt', 0, 'be an Alt', left);
-  if(arguments.length === 1) return partial1(alt$left, left);
-  return alt$left(left, right);
-}function map$mapper(mapper, m){
-  if(!isFunctor(m)) throwInvalidArgument('map', 1, 'be a Functor', m);
-  return m[FL.map](mapper);
-}
-
-function map(mapper, m){
-  if(!isFunction$1(mapper)) throwInvalidArgument('map', 0, 'be a Function', mapper);
-  if(arguments.length === 1) return partial1(map$mapper, mapper);
-  return map$mapper(mapper, m);
-}function bimap$lmapper$rmapper(lmapper, rmapper, m){
-  if(!isBifunctor(m)) throwInvalidArgument('bimap', 2, 'be a Bifunctor', m);
-  return m[FL.bimap](lmapper, rmapper);
-}
-
-function bimap$lmapper(lmapper, rmapper, m){
-  if(!isFunction$1(rmapper)) throwInvalidArgument('bimap', 1, 'be a Function', rmapper);
-  if(arguments.length === 2) return partial2(bimap$lmapper$rmapper, lmapper, rmapper);
-  return bimap$lmapper$rmapper(lmapper, rmapper, m);
-}
-
-function bimap(lmapper, rmapper, m){
-  if(!isFunction$1(lmapper)) throwInvalidArgument('bimap', 0, 'be a Function', lmapper);
-  if(arguments.length === 1) return partial1(bimap$lmapper, lmapper);
-  if(arguments.length === 2) return bimap$lmapper(lmapper, rmapper);
-  return bimap$lmapper(lmapper, rmapper, m);
-}function chain$chainer(chainer, m){
-  if(!isChain(m)) throwInvalidArgument('chain', 1, 'be a Chain', m);
-  return m[FL.chain](chainer);
-}
-
-function chain(chainer, m){
-  if(!isFunction$1(chainer)) throwInvalidArgument('chain', 0, 'be a Function', chainer);
-  if(arguments.length === 1) return partial1(chain$chainer, chainer);
-  return chain$chainer(chainer, m);
-}function race$right(right, left){
-  if(!isFuture(left)) throwInvalidFuture('race', 1, left);
-  return left.race(right);
-}
-
-function race(right, left){
-  if(!isFuture(right)) throwInvalidFuture('race', 0, right);
-  if(arguments.length === 1) return partial1(race$right, right);
-  return race$right(right, left);
-}function After(time, value){
-  this._time = time;
-  this._value = value;
-  this.context = captureContext(nil, 'a Future created with after', After);
-}
-
-After.prototype = Object.create(Future.prototype);
-
-After.prototype._interpret = function After$interpret(rec, rej, res){
-  var id = setTimeout(res, this._time, this._value);
-  return function After$cancel(){ clearTimeout(id); };
-};
-
-After.prototype.extractRight = function After$extractRight(){
-  return [this._value];
-};
-
-After.prototype.toString = function After$toString(){
-  return 'after(' + sanctuaryShow(this._time) + ', ' + sanctuaryShow(this._value) + ')';
-};
-
-function RejectAfter(time, value){
-  this._time = time;
-  this._value = value;
-  this.context = captureContext(nil, 'a Future created with rejectAfter', After);
-}
-
-RejectAfter.prototype = Object.create(Future.prototype);
-
-RejectAfter.prototype._interpret = function RejectAfter$interpret(rec, rej){
-  var id = setTimeout(rej, this._time, this._value);
-  return function RejectAfter$cancel(){ clearTimeout(id); };
-};
-
-RejectAfter.prototype.extractLeft = function RejectAfter$extractLeft(){
-  return [this._value];
-};
-
-RejectAfter.prototype.toString = function RejectAfter$toString(){
-  return 'rejectAfter(' + sanctuaryShow(this._time) + ', ' + sanctuaryShow(this._value) + ')';
-};function Attempt(fn){
-  this._fn = fn;
-  this.context = captureContext(nil, 'a Future created with attempt/try', Attempt);
-}
-
-Attempt.prototype = Object.create(Future.prototype);
-
-Attempt.prototype._interpret = function Attempt$interpret(rec, rej, res){
-  var r;
-  try{ r = this._fn(); }catch(e){ rej(e); return noop }
-  res(r);
-  return noop;
-};
-
-Attempt.prototype.toString = function Attempt$toString(){
-  return 'attempt(' + showf(this._fn) + ')';
-};var Cold = Cached.Cold = 0;
-var Pending = Cached.Pending = 1;
-var Crashed$1 = Cached.Crashed = 2;
-var Rejected$1 = Cached.Rejected = 3;
-var Resolved$1 = Cached.Resolved = 4;
-
-function Queued(rec, rej, res){
-  this[Crashed$1] = rec;
-  this[Rejected$1] = rej;
-  this[Resolved$1] = res;
-}
-
-function Cached(pure){
-  this._pure = pure;
-  this.reset();
-}
-
-Cached.prototype = Object.create(Future.prototype);
-
-Cached.prototype.extractLeft = function Cached$extractLeft(){
-  return this._state === Rejected$1 ? [this._value] : [];
-};
-
-Cached.prototype.extractRight = function Cached$extractRight(){
-  return this._state === Resolved$1 ? [this._value] : [];
-};
-
-Cached.prototype._addToQueue = function Cached$addToQueue(rec, rej, res){
-  var _this = this;
-  if(_this._state > Pending) return noop;
-  var i = _this._queue.push(new Queued(rec, rej, res)) - 1;
-  _this._queued = _this._queued + 1;
-
-  return function Cached$removeFromQueue(){
-    if(_this._state > Pending) return;
-    _this._queue[i] = undefined;
-    _this._queued = _this._queued - 1;
-    if(_this._queued === 0) _this.reset();
-  };
-};
-
-Cached.prototype._drainQueue = function Cached$drainQueue(){
-  if(this._state <= Pending) return;
-  if(this._queued === 0) return;
-  var queue = this._queue;
-  var length = queue.length;
-  var state = this._state;
-  var value = this._value;
-
-  for(var i = 0; i < length; i++){
-    queue[i] && queue[i][state](value);
-    queue[i] = undefined;
-  }
-
-  this._queue = undefined;
-  this._queued = 0;
-};
-
-Cached.prototype.crash = function Cached$crash(error){
-  if(this._state > Pending) return;
-  this._value = error;
-  this._state = Crashed$1;
-  this._drainQueue();
-};
-
-Cached.prototype.reject = function Cached$reject(reason){
-  if(this._state > Pending) return;
-  this._value = reason;
-  this._state = Rejected$1;
-  this._drainQueue();
-};
-
-Cached.prototype.resolve = function Cached$resolve(value){
-  if(this._state > Pending) return;
-  this._value = value;
-  this._state = Resolved$1;
-  this._drainQueue();
-};
-
-Cached.prototype.run = function Cached$run(){
-  var _this = this;
-  if(_this._state > Cold) return;
-  _this._state = Pending;
-  _this._cancel = _this._pure._interpret(
-    function Cached$fork$rec(x){ _this.crash(x); },
-    function Cached$fork$rej(x){ _this.reject(x); },
-    function Cached$fork$res(x){ _this.resolve(x); }
-  );
-};
-
-Cached.prototype.reset = function Cached$reset(){
-  if(this._state === Cold) return;
-  if(this._state === Pending) this._cancel();
-  this._cancel = noop;
-  this._queue = [];
-  this._queued = 0;
-  this._value = undefined;
-  this._state = Cold;
-};
-
-Cached.prototype._interpret = function Cached$interpret(rec, rej, res){
-  var cancel = noop;
-
-  switch(this._state){
-    case Pending: cancel = this._addToQueue(rec, rej, res); break;
-    case Crashed$1: rec(this._value); break;
-    case Rejected$1: rej(this._value); break;
-    case Resolved$1: res(this._value); break;
-    default: cancel = this._addToQueue(rec, rej, res); this.run();
-  }
-
-  return cancel;
-};
-
-Cached.prototype.toString = function Cached$toString(){
-  return 'cache(' + this._pure.toString() + ')';
-};function Encase(fn, a){
-  this._fn = fn;
-  this._a = a;
-  this.context = captureContext(nil, 'a Future created with encase', Encase);
-}
-
-Encase.prototype = Object.create(Future.prototype);
-
-Encase.prototype._interpret = function Encase$interpret(rec, rej, res){
-  var r;
-  try{ r = this._fn(this._a); }catch(e){ rej(e); return noop }
-  res(r);
-  return noop;
-};
-
-Encase.prototype.toString = function Encase$toString(){
-  return 'encase(' + showf(this._fn) + ', ' + sanctuaryShow(this._a) + ')';
-};function Encase2(fn, a, b){
-  this._fn = fn;
-  this._a = a;
-  this._b = b;
-  this.context = captureContext(nil, 'a Future created with encase2', Encase2);
-}
-
-Encase2.prototype = Object.create(Future.prototype);
-
-Encase2.prototype._interpret = function Encase2$interpret(rec, rej, res){
-  var r;
-  try{ r = this._fn(this._a, this._b); }catch(e){ rej(e); return noop }
-  res(r);
-  return noop;
-};
-
-Encase2.prototype.toString = function Encase2$toString(){
-  return 'encase2(' + showf(this._fn) + ', ' + sanctuaryShow(this._a) + ', ' + sanctuaryShow(this._b) + ')';
-};function Encase3(fn, a, b, c){
-  this._fn = fn;
-  this._a = a;
-  this._b = b;
-  this._c = c;
-  this.context = captureContext(nil, 'a Future created with encase3', Encase3);
-}
-
-Encase3.prototype = Object.create(Future.prototype);
-
-Encase3.prototype._interpret = function Encase3$interpret(rec, rej, res){
-  var r;
-  try{ r = this._fn(this._a, this._b, this._c); }catch(e){ rej(e); return noop }
-  res(r);
-  return noop;
-};
-
-Encase3.prototype.toString = function Encase3$toString(){
-  return 'encase3('
-       + showf(this._fn)
-       + ', '
-       + sanctuaryShow(this._a)
-       + ', '
-       + sanctuaryShow(this._b)
-       + ', '
-       + sanctuaryShow(this._c)
-       + ')';
-};function EncaseN(fn, a){
-  this._fn = fn;
-  this._a = a;
-  this.context = captureContext(nil, 'a Future created with encaseN', EncaseN);
-}
-
-EncaseN.prototype = Object.create(Future.prototype);
-
-EncaseN.prototype._interpret = function EncaseN$interpret(rec, rej, res){
-  var open = false, cont = function(){ open = true; };
-  var context = captureContext(this.context, 'consuming an encased Future', EncaseN$interpret);
-  try{
-    this._fn(this._a, function EncaseN$done(err, val){
-      cont = err ? function EncaseN3$rej(){
-        open = false;
-        rej(err);
-      } : function EncaseN3$res(){
-        open = false;
-        res(val);
-      };
-      if(open){
-        cont();
-      }
-    });
-  }catch(e){
-    rec(makeError(e, this, context));
-    open = false;
-    return noop;
-  }
-  cont();
-  return function EncaseN$cancel(){ open = false; };
-};
-
-EncaseN.prototype.toString = function EncaseN$toString(){
-  return 'encaseN(' + showf(this._fn) + ', ' + sanctuaryShow(this._a) + ')';
-};function EncaseN2(fn, a, b){
-  this._fn = fn;
-  this._a = a;
-  this._b = b;
-  this.context = captureContext(nil, 'a Future created with encaseN2', EncaseN2);
-}
-
-EncaseN2.prototype = Object.create(Future.prototype);
-
-EncaseN2.prototype._interpret = function EncaseN2$interpret(rec, rej, res){
-  var open = false, cont = function(){ open = true; };
-  var context = captureContext(this.context, 'consuming an encased Future', EncaseN2$interpret);
-  try{
-    this._fn(this._a, this._b, function EncaseN2$done(err, val){
-      cont = err ? function EncaseN2$rej(){
-        open = false;
-        rej(err);
-      } : function EncaseN2$res(){
-        open = false;
-        res(val);
-      };
-      if(open){
-        cont();
-      }
-    });
-  }catch(e){
-    rec(makeError(e, this, context));
-    open = false;
-    return noop;
-  }
-  cont();
-  return function EncaseN2$cancel(){ open = false; };
-};
-
-EncaseN2.prototype.toString = function EncaseN2$toString(){
-  return 'encaseN2(' + showf(this._fn) + ', ' + sanctuaryShow(this._a) + ', ' + sanctuaryShow(this._b) + ')';
-};function EncaseN3(fn, a, b, c){
-  this._fn = fn;
-  this._a = a;
-  this._b = b;
-  this._c = c;
-  this.context = captureContext(nil, 'a Future created with encaseN3', EncaseN3);
-}
-
-EncaseN3.prototype = Object.create(Future.prototype);
-
-EncaseN3.prototype._interpret = function EncaseN3$interpret(rec, rej, res){
-  var open = false, cont = function(){ open = true; };
-  var context = captureContext(this.context, 'consuming an encased Future', EncaseN3$interpret);
-  try{
-    this._fn(this._a, this._b, this._c, function EncaseN3$done(err, val){
-      cont = err ? function EncaseN3$rej(){
-        open = false;
-        rej(err);
-      } : function EncaseN3$res(){
-        open = false;
-        res(val);
-      };
-      if(open){
-        cont();
-      }
-    });
-  }catch(e){
-    rec(makeError(e, this, context));
-    open = false;
-    return noop;
-  }
-  cont();
-  return function EncaseN3$cancel(){ open = false; };
-};
-
-EncaseN3.prototype.toString = function EncaseN3$toString(){
-  return 'encaseN3('
-       + showf(this._fn)
-       + ', '
-       + sanctuaryShow(this._a)
-       + ', '
-       + sanctuaryShow(this._b)
-       + ', '
-       + sanctuaryShow(this._c)
-       + ')';
-};function invalidPromise(p, f, a){
-  return typeError(
-    'encaseP() expects the function it\'s given to return a Promise/Thenable'
-    + '\n  Actual: ' + (sanctuaryShow(p)) + '\n  From calling: ' + (showf(f))
-    + '\n  With: ' + (sanctuaryShow(a))
-  );
-}
-
-function EncaseP(fn, a){
-  this._fn = fn;
-  this._a = a;
-  this.context = captureContext(nil, 'a Future created with encaseP', EncaseP);
-}
-
-EncaseP.prototype = Object.create(Future.prototype);
-
-EncaseP.prototype._interpret = function EncaseP$interpret(rec, rej, res){
-  var open = true, fn = this._fn, a = this._a, p;
-  var context = captureContext(this.context, 'consuming an encased Future', EncaseP$interpret);
-  try{
-    p = fn(a);
-  }catch(e){
-    rec(makeError(e, this, context));
-    return noop;
-  }
-  if(!isThenable$1(p)){
-    rec(makeError(invalidPromise(p, fn, a), this, context));
-    return noop;
-  }
-  p.then(function EncaseP$res(x){
-    if(open){
-      open = false;
-      res(x);
-    }
-  }, function EncaseP$rej(x){
-    if(open){
-      open = false;
-      rej(x);
-    }
-  });
-  return function EncaseP$cancel(){ open = false; };
-};
-
-EncaseP.prototype.toString = function EncaseP$toString(){
-  return 'encaseP(' + showf(this._fn) + ', ' + sanctuaryShow(this._a) + ')';
-};function invalidPromise$1(p, f, a, b){
-  return typeError(
-    'encaseP2() expects the function it\'s given to return a Promise/Thenable'
-    + '\n  Actual: ' + (sanctuaryShow(p)) + '\n  From calling: ' + (showf(f))
-    + '\n  With 1: ' + (sanctuaryShow(a))
-    + '\n  With 2: ' + (sanctuaryShow(b))
-  );
-}
-
-function EncaseP2(fn, a, b){
-  this._fn = fn;
-  this._a = a;
-  this._b = b;
-  this.context = captureContext(nil, 'a Future created with encaseP2', EncaseP2);
-}
-
-EncaseP2.prototype = Object.create(Future.prototype);
-
-EncaseP2.prototype._interpret = function EncaseP2$interpret(rec, rej, res){
-  var open = true, fn = this._fn, a = this._a, b = this._b, p;
-  var context = captureContext(this.context, 'consuming an encased Future', EncaseP2$interpret);
-  try{
-    p = fn(a, b);
-  }catch(e){
-    rec(makeError(e, this, context));
-    return noop;
-  }
-  if(!isThenable$1(p)){
-    rec(makeError(invalidPromise$1(p, fn, a, b), this, context));
-    return noop;
-  }
-  p.then(function EncaseP2$res(x){
-    if(open){
-      open = false;
-      res(x);
-    }
-  }, function EncaseP2$rej(x){
-    if(open){
-      open = false;
-      rej(x);
-    }
-  });
-  return function EncaseP2$cancel(){ open = false; };
-};
-
-EncaseP2.prototype.toString = function EncaseP2$toString(){
-  return 'encaseP2(' + showf(this._fn) + ', ' + sanctuaryShow(this._a) + ', ' + sanctuaryShow(this._b) + ')';
-};function invalidPromise$2(p, f, a, b, c){
-  return typeError(
-    'encaseP3() expects the function it\'s given to return a Promise/Thenable'
-    + '\n  Actual: ' + (sanctuaryShow(p)) + '\n  From calling: ' + (showf(f))
-    + '\n  With 1: ' + (sanctuaryShow(a))
-    + '\n  With 2: ' + (sanctuaryShow(b))
-    + '\n  With 3: ' + (sanctuaryShow(c))
-  );
-}
-
-function EncaseP3(fn, a, b, c){
-  this._fn = fn;
-  this._a = a;
-  this._b = b;
-  this._c = c;
-  this.context = captureContext(nil, 'a Future created with encaseP3', EncaseP3);
-}
-
-EncaseP3.prototype = Object.create(Future.prototype);
-
-EncaseP3.prototype._interpret = function EncaseP3$interpret(rec, rej, res){
-  var open = true, fn = this._fn, a = this._a, b = this._b, c = this._c, p;
-  var context = captureContext(this.context, 'consuming an encased Future', EncaseP3$interpret);
-  try{
-    p = fn(a, b, c);
-  }catch(e){
-    rec(makeError(e, this, context));
-    return noop;
-  }
-  if(!isThenable$1(p)){
-    rec(makeError(invalidPromise$2(p, fn, a, b, c), this, context));
-    return noop;
-  }
-  p.then(function EncaseP3$res(x){
-    if(open){
-      open = false;
-      res(x);
-    }
-  }, function EncaseP3$rej(x){
-    if(open){
-      open = false;
-      rej(x);
-    }
-  });
-  return function EncaseP3$cancel(){ open = false; };
-};
-
-EncaseP3.prototype.toString = function EncaseP3$toString(){
-  return 'encaseP3('
-       + showf(this._fn)
-       + ', '
-       + sanctuaryShow(this._a)
-       + ', '
-       + sanctuaryShow(this._b)
-       + ', '
-       + sanctuaryShow(this._c)
-       + ')';
-};var Undetermined = 0;
-var Synchronous = 1;
-var Asynchronous = 2;/*eslint consistent-return: 0, no-cond-assign: 0*/
-
-function invalidIteration(o){
-  return typeError(
-    'The iterator did not return a valid iteration from iterator.next()\n' +
-    '  Actual: ' + sanctuaryShow(o)
-  );
-}
-
-function invalidState(x){
-  return invalidFuture(
-    'go',
-    'the iterator to produce only valid Futures',
-    x,
-    '\n  Tip: If you\'re using a generator, make sure you always yield a Future'
-  );
-}
-
-function Go(generator){
-  this._generator = generator;
-  this.context = captureContext(nil, 'a Future created with do-notation', Go);
-}
-
-Go.prototype = Object.create(Future.prototype);
-
-Go.prototype._interpret = function Go$interpret(rec, rej, res){
-
-  var _this = this, timing = Undetermined, cancel = noop, state, value, iterator;
-
-  var context = captureContext(
-    _this.context,
-    'interpreting a Future created with do-notation',
-    Go$interpret
-  );
-
-  try{
-    iterator = _this._generator();
-  }catch(e){
-    rec(makeError(e, _this, context));
-    return noop;
-  }
-
-  if(!isIterator(iterator)){
-    rec(makeError(
-      invalidArgument('go', 0, 'return an iterator, maybe you forgot the "*"', iterator),
-      _this,
-      context
-    ));
-    return noop;
-  }
-
-  function resolved(x){
-    value = x;
-    if(timing === Asynchronous){
-      context = cat(state.value.context, context);
-      return drain();
-    }
-    timing = Synchronous;
-  }
-
-  function crash(e){
-    rec(makeError(e, state.value, cat(state.value.context, context)));
-  }
-
-  function drain(){
-    //eslint-disable-next-line no-constant-condition
-    while(true){
-      try{
-        state = iterator.next(value);
-      }catch(e){
-        return rec(makeError(e, _this, context));
-      }
-      if(!isIteration(state)) return rec(makeError(invalidIteration(state), _this, context));
-      if(state.done) break;
-      if(!isFuture(state.value)) return rec(makeError(invalidState(state.value), _this, context));
-      timing = Undetermined;
-      cancel = state.value._interpret(crash, rej, resolved);
-      if(timing === Undetermined) return timing = Asynchronous;
-    }
-    res(state.value);
-  }
-
-  drain();
-
-  return function Go$cancel(){ cancel(); };
-
-};
-
-Go.prototype.toString = function Go$toString(){
-  return 'go(' + showf(this._generator) + ')';
-};function invalidDisposal(m, f, x){
-  return invalidFuture(
-    'hook',
-    'the first function it\'s given to return a Future',
-    m,
-    '\n  From calling: ' + showf(f) + '\n  With: ' + sanctuaryShow(x)
-  );
-}
-
-function invalidConsumption(m, f, x){
-  return invalidFuture(
-    'hook',
-    'the second function it\'s given to return a Future',
-    m,
-    '\n  From calling: ' + showf(f) + '\n  With: ' + sanctuaryShow(x)
-  );
-}
-
-function Hook(acquire, dispose, consume){
-  this._acquire = acquire;
-  this._dispose = dispose;
-  this._consume = consume;
-  this.context = captureContext(nil, 'a Future created with hook', Hook);
-}
-
-Hook.prototype = Object.create(Future.prototype);
-
-Hook.prototype._interpret = function Hook$interpret(rec, rej, res){
-
-  var _this = this, _acquire = this._acquire, _dispose = this._dispose, _consume = this._consume;
-  var cancel, cancelConsume = noop, resource, value, cont = noop;
-  var context = captureContext(_this.context, 'interpreting a hooked Future', Hook$interpret);
-
-  function Hook$done(){
-    cont(value);
-  }
-
-  function Hook$reject(x){
-    rej(x);
-  }
-
-  function Hook$consumptionException(report){
-    var rec_ = rec;
-    cont = noop;
-    rej = noop;
-    rec = noop;
-    Hook$dispose();
-    rec_(report);
-  }
-
-  function Hook$dispose(){
-    context = captureContext(context, 'hook consuming a resource', Hook$dispose);
-    var disposal;
-    try{
-      disposal = _dispose(resource);
-    }catch(e){
-      return rec(makeError(e, _this, context));
-    }
-    if(!isFuture(disposal)){
-      return rec(makeError(invalidDisposal(disposal, _dispose, resource), _this, context));
-    }
-    disposal._interpret(rec, Hook$reject, Hook$done);
-    cancel = Hook$cancelDisposal;
-  }
-
-  function Hook$cancelConsumption(){
-    cancelConsume();
-    Hook$dispose();
-    Hook$cancelDisposal();
-  }
-
-  function Hook$cancelDisposal(){
-    cont = noop;
-    rec = noop;
-    rej = noop;
-  }
-
-  function Hook$consumptionRejected(x){
-    cont = rej;
-    value = x;
-    Hook$dispose();
-  }
-
-  function Hook$consumptionResolved(x){
-    cont = res;
-    value = x;
-    Hook$dispose();
-  }
-
-  function Hook$consume(x){
-    context = captureContext(context, 'hook acquiring a resource', Hook$consume);
-    resource = x;
-    var consumption;
-    try{
-      consumption = _consume(resource);
-    }catch(e){
-      return Hook$consumptionException(makeError(e, _this, context));
-    }
-    if(!isFuture(consumption)){
-      return Hook$consumptionException(makeError(
-        invalidConsumption(consumption, _consume, resource),
-        _this,
-        context
-      ));
-    }
-    cancel = Hook$cancelConsumption;
-    cancelConsume = consumption._interpret(
-      Hook$consumptionException,
-      Hook$consumptionRejected,
-      Hook$consumptionResolved
-    );
-  }
-
-  var cancelAcquire = _acquire._interpret(rec, Hook$reject, Hook$consume);
-  cancel = cancel || cancelAcquire;
-
-  return function Hook$fork$cancel(){ cancel(); };
-
-};
-
-Hook.prototype.toString = function Hook$toString(){
-  return 'hook('
-       + this._acquire.toString()
-       + ', '
-       + showf(this._dispose)
-       + ', '
-       + showf(this._consume)
-       + ')';
-};function Node(fn){
-  this._fn = fn;
-  this.context = captureContext(nil, 'a Future created with node');
-}
-
-Node.prototype = Object.create(Future.prototype);
-
-Node.prototype._interpret = function Node$interpret(rec, rej, res){
-  var open = false, cont = function(){ open = true; };
-  try{
-    this._fn(function Node$done(err, val){
-      cont = err ? function Node$rej(){
-        open = false;
-        rej(err);
-      } : function Node$res(){
-        open = false;
-        res(val);
-      };
-      if(open){
-        cont();
-      }
-    });
-  }catch(e){
-    rec(makeError(e, this, this.context));
-    open = false;
-    return noop;
-  }
-  cont();
-  return function Node$cancel(){ open = false; };
-};
-
-Node.prototype.toString = function Node$toString(){
-  return 'node(' + showf(this._fn) + ')';
-};function Parallel(max, futures){
-  this._futures = futures;
-  this._length = futures.length;
-  this._max = Math.min(this._length, max);
-  this.context = captureContext(nil, 'a Future created with parallel', Parallel);
-}
-
-Parallel.prototype = Object.create(Future.prototype);
-
-Parallel.prototype._interpret = function Parallel$interpret(rec, rej, res){
-
-  var _futures = this._futures, _length = this._length, _max = this._max;
-  var cancels = new Array(_length), out = new Array(_length);
-  var cursor = 0, running = 0, blocked = false;
-  var context = captureContext(this.context, 'consuming a parallel Future', Parallel$interpret);
-
-  function Parallel$cancel(){
-    cursor = _length;
-    for(var n = 0; n < _length; n++) cancels[n] && cancels[n]();
-  }
-
-  function Parallel$run(idx){
-    running++;
-    cancels[idx] = _futures[idx]._interpret(function Parallel$rec(e){
-      cancels[idx] = noop;
-      Parallel$cancel();
-      rec(makeError(e, _futures[idx], context));
-    }, function Parallel$rej(reason){
-      cancels[idx] = noop;
-      Parallel$cancel();
-      rej(reason);
-    }, function Parallel$res(value){
-      cancels[idx] = noop;
-      out[idx] = value;
-      running--;
-      if(cursor === _length && running === 0) res(out);
-      else if(blocked) Parallel$drain();
-    });
-  }
-
-  function Parallel$drain(){
-    blocked = false;
-    while(cursor < _length && running < _max) Parallel$run(cursor++);
-    blocked = true;
-  }
-
-  Parallel$drain();
-
-  return Parallel$cancel;
-
-};
-
-Parallel.prototype.toString = function Parallel$toString(){
-  return 'parallel(' + this._max + ', ' + sanctuaryShow(this._futures) + ')';
-};function invalidPromise$3(p, f){
-  return typeError(
-    'tryP() expects the function it\'s given to return a Promise/Thenable'
-    + '\n  Actual: ' + sanctuaryShow(p) + '\n  From calling: ' + showf(f)
-  );
-}
-
-function TryP(fn){
-  this._fn = fn;
-  this.context = captureContext(nil, 'a Future created with tryP', TryP);
-}
-
-TryP.prototype = Object.create(Future.prototype);
-
-TryP.prototype._interpret = function TryP$interpret(rec, rej, res){
-  var open = true, fn = this._fn, p;
-  try{
-    p = fn();
-  }catch(e){
-    rec(makeError(e, this, this.context));
-    return noop;
-  }
-  if(!isThenable$1(p)){
-    rec(makeError(invalidPromise$3(p, fn), this, this.context));
-    return noop;
-  }
-  p.then(function TryP$res(x){
-    if(open){
-      open = false;
-      res(x);
-    }
-  }, function TryP$rej(x){
-    if(open){
-      open = false;
-      rej(x);
-    }
-  });
-  return function TryP$cancel(){ open = false; };
-};
-
-TryP.prototype.toString = function TryP$toString(){
-  return 'tryP(' + sanctuaryShow(this._fn) + ')';
-};Future.resolve = Future.of = Future[FL.of] = resolve;
-Future.chainRec = Future[FL.chainRec] = chainRec;
-Future.reject = reject;
-Future.ap = ap;
-Future.alt = alt;
-Future.map = map;
-Future.bimap = bimap;
-Future.chain = chain;
-
-var Par = concurrify(Future, never, race, function parallelAp(a, b){ return b._parallelAp(a) });
-Par.of = Par[FL.of];
-Par.zero = Par[FL.zero];
-Par.map = map;
-Par.ap = ap;
-Par.alt = alt;var defaultDefinition = {
+var defaultDefinition = {
   output: {
     a_A_b_B_c: "_g",
     a_A_b_B_C: "_tp~a/A/b/B/c?C=d&D=e&E=f&F=g&G=h",
@@ -8125,10 +4630,14 @@ Par.alt = alt;var defaultDefinition = {
       _o: "POST"
     }
   }
-};function _isPlaceholder(a) {
+};
+
+function _isPlaceholder(a) {
        return a != null && typeof a === 'object' && a['@@functional/placeholder'] === true;
 }
-var _isPlaceholder_1 = _isPlaceholder;/**
+var _isPlaceholder_1 = _isPlaceholder;
+
+/**
  * Optimized internal one-arity curry function.
  *
  * @private
@@ -8147,7 +4656,9 @@ function _curry1(fn) {
     }
   };
 }
-var _curry1_1 = _curry1;/**
+var _curry1_1 = _curry1;
+
+/**
  * Optimized internal two-arity curry function.
  *
  * @private
@@ -8175,7 +4686,9 @@ function _curry2(fn) {
     }
   };
 }
-var _curry2_1 = _curry2;/**
+var _curry2_1 = _curry2;
+
+/**
  * Optimized internal three-arity curry function.
  *
  * @private
@@ -8219,10 +4732,14 @@ function _curry3(fn) {
     }
   };
 }
-var _curry3_1 = _curry3;function _has$1(prop, obj) {
+var _curry3_1 = _curry3;
+
+function _has$1(prop, obj) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
-var _has_1 = _has$1;/**
+var _has_1 = _has$1;
+
+/**
  * Tests whether or not an object is an array.
  *
  * @private
@@ -8236,7 +4753,9 @@ var _has_1 = _has$1;/**
  */
 var _isArray = Array.isArray || function _isArray(val) {
   return val != null && val.length >= 0 && Object.prototype.toString.call(val) === '[object Array]';
-};/**
+};
+
+/**
  * Determine if the passed argument is an integer.
  *
  * @private
@@ -8246,7 +4765,9 @@ var _isArray = Array.isArray || function _isArray(val) {
  */
 var _isInteger = Number.isInteger || function _isInteger(n) {
   return n << 0 === n;
-};/**
+};
+
+/**
  * Makes a shallow clone of an object, setting or overriding the specified
  * property with the given value. Note that this copies and flattens prototype
  * properties onto the new object as well. All non-primitive properties are
@@ -8276,7 +4797,9 @@ var assoc = /*#__PURE__*/_curry3_1(function assoc(prop, val, obj) {
   result[prop] = val;
   return result;
 });
-var assoc_1 = assoc;/**
+var assoc_1 = assoc;
+
+/**
  * Checks if the input value is `null` or `undefined`.
  *
  * @func
@@ -8295,10 +4818,12 @@ var assoc_1 = assoc;/**
  */
 
 
-var isNil$1 = /*#__PURE__*/_curry1_1(function isNil(x) {
+var isNil = /*#__PURE__*/_curry1_1(function isNil(x) {
   return x == null;
 });
-var isNil_1 = isNil$1;/**
+var isNil_1 = isNil;
+
+/**
  * Makes a shallow clone of an object, setting or overriding the nodes required
  * to create the given path, and placing the specific value at the tail end of
  * that path. Note that this copies and flattens prototype properties onto the
@@ -8341,10 +4866,14 @@ var assocPath = /*#__PURE__*/_curry3_1(function assocPath(path, val, obj) {
     return assoc_1(idx, val, obj);
   }
 });
-var assocPath_1 = assocPath;function _isTransformer(obj) {
+var assocPath_1 = assocPath;
+
+function _isTransformer(obj) {
   return obj != null && typeof obj['@@transducer/step'] === 'function';
 }
-var _isTransformer_1 = _isTransformer;/**
+var _isTransformer_1 = _isTransformer;
+
+/**
  * Returns a function that dispatches with different strategies based on the
  * object in list position (last argument). If it is an array, executes [fn].
  * Otherwise, if it has a function with one of the given method names, it will
@@ -8383,7 +4912,9 @@ function _dispatchable(methodNames, xf, fn) {
     return fn.apply(this, arguments);
   };
 }
-var _dispatchable_1 = _dispatchable;function _map(fn, functor) {
+var _dispatchable_1 = _dispatchable;
+
+function _map(fn, functor) {
   var idx = 0;
   var len = functor.length;
   var result = Array(len);
@@ -8393,10 +4924,14 @@ var _dispatchable_1 = _dispatchable;function _map(fn, functor) {
   }
   return result;
 }
-var _map_1 = _map;function _isString(x) {
+var _map_1 = _map;
+
+function _isString(x) {
   return Object.prototype.toString.call(x) === '[object String]';
 }
-var _isString_1 = _isString;/**
+var _isString_1 = _isString;
+
+/**
  * Tests whether or not an object is similar to an array.
  *
  * @private
@@ -8439,7 +4974,9 @@ var _isArrayLike = /*#__PURE__*/_curry1_1(function isArrayLike(x) {
   }
   return false;
 });
-var _isArrayLike_1 = _isArrayLike;var XWrap = /*#__PURE__*/function () {
+var _isArrayLike_1 = _isArrayLike;
+
+var XWrap = /*#__PURE__*/function () {
   function XWrap(fn) {
     this.f = fn;
   }
@@ -8459,7 +4996,9 @@ var _isArrayLike_1 = _isArrayLike;var XWrap = /*#__PURE__*/function () {
 function _xwrap(fn) {
   return new XWrap(fn);
 }
-var _xwrap_1 = _xwrap;function _arity(n, fn) {
+var _xwrap_1 = _xwrap;
+
+function _arity(n, fn) {
   /* eslint-disable no-unused-vars */
   switch (n) {
     case 0:
@@ -8510,7 +5049,9 @@ var _xwrap_1 = _xwrap;function _arity(n, fn) {
       throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
   }
 }
-var _arity_1 = _arity;/**
+var _arity_1 = _arity;
+
+/**
  * Creates a function that is bound to a context.
  * Note: `R.bind` does not provide the additional argument-binding capabilities of
  * [Function.prototype.bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
@@ -8534,12 +5075,14 @@ var _arity_1 = _arity;/**
  */
 
 
-var bind$1 = /*#__PURE__*/_curry2_1(function bind(fn, thisObj) {
+var bind = /*#__PURE__*/_curry2_1(function bind(fn, thisObj) {
   return _arity_1(fn.length, function () {
     return fn.apply(thisObj, arguments);
   });
 });
-var bind_1 = bind$1;function _arrayReduce(xf, acc, list) {
+var bind_1 = bind;
+
+function _arrayReduce(xf, acc, list) {
   var idx = 0;
   var len = list.length;
   while (idx < len) {
@@ -8594,14 +5137,18 @@ function _reduce(fn, acc, list) {
 
   throw new TypeError('reduce: list must be array or iterable');
 }
-var _reduce_1 = _reduce;var _xfBase = {
+var _reduce_1 = _reduce;
+
+var _xfBase = {
   init: function () {
     return this.xf['@@transducer/init']();
   },
   result: function (result) {
     return this.xf['@@transducer/result'](result);
   }
-};var XMap = /*#__PURE__*/function () {
+};
+
+var XMap = /*#__PURE__*/function () {
 
   function XMap(f, xf) {
     this.xf = xf;
@@ -8619,7 +5166,9 @@ var _reduce_1 = _reduce;var _xfBase = {
 var _xmap = /*#__PURE__*/_curry2_1(function _xmap(f, xf) {
   return new XMap(f, xf);
 });
-var _xmap_1 = _xmap;/**
+var _xmap_1 = _xmap;
+
+/**
  * Internal curryN function.
  *
  * @private
@@ -8654,7 +5203,9 @@ function _curryN(length, received, fn) {
     return left <= 0 ? fn.apply(this, combined) : _arity_1(left, _curryN(length, combined, fn));
   };
 }
-var _curryN_1 = _curryN;/**
+var _curryN_1 = _curryN;
+
+/**
  * Returns a curried equivalent of the provided function, with the specified
  * arity. The curried function has two unusual capabilities. First, its
  * arguments needn't be provided one at a time. If `g` is `R.curryN(3, f)`, the
@@ -8704,16 +5255,20 @@ var curryN = /*#__PURE__*/_curry2_1(function curryN(length, fn) {
   }
   return _arity_1(length, _curryN_1(length, [], fn));
 });
-var curryN_1 = curryN;var toString$2 = Object.prototype.toString;
+var curryN_1 = curryN;
+
+var toString$1 = Object.prototype.toString;
 var _isArguments = /*#__PURE__*/function () {
-  return toString$2.call(arguments) === '[object Arguments]' ? function _isArguments(x) {
-    return toString$2.call(x) === '[object Arguments]';
+  return toString$1.call(arguments) === '[object Arguments]' ? function _isArguments(x) {
+    return toString$1.call(x) === '[object Arguments]';
   } : function _isArguments(x) {
     return _has_1('callee', x);
   };
 }();
 
-var _isArguments_1 = _isArguments;// cover IE < 9 keys issues
+var _isArguments_1 = _isArguments;
+
+// cover IE < 9 keys issues
 
 
 var hasEnumBug = ! /*#__PURE__*/{ toString: null }.propertyIsEnumerable('toString');
@@ -8779,7 +5334,9 @@ var keys = typeof Object.keys === 'function' && !hasArgsEnumBug ? /*#__PURE__*/_
   }
   return ks;
 });
-var keys_1 = keys;/**
+var keys_1 = keys;
+
+/**
  * Takes a function and
  * a [functor](https://github.com/fantasyland/fantasy-land#functor),
  * applies the function to each of the functor's values, and returns
@@ -8816,7 +5373,7 @@ var keys_1 = keys;/**
  */
 
 
-var map$1 = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['fantasy-land/map', 'map'], _xmap_1, function map(fn, functor) {
+var map = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['fantasy-land/map', 'map'], _xmap_1, function map(fn, functor) {
   switch (Object.prototype.toString.call(functor)) {
     case '[object Function]':
       return curryN_1(functor.length, function () {
@@ -8831,7 +5388,9 @@ var map$1 = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['fantasy-land/
       return _map_1(fn, functor);
   }
 }));
-var map_1 = map$1;/**
+var map_1 = map;
+
+/**
  * Returns a lens for the given getter and setter functions. The getter "gets"
  * the value of the focus; the setter "sets" the value of the focus. The setter
  * should not mutate the data structure.
@@ -8865,7 +5424,9 @@ var lens = /*#__PURE__*/_curry2_1(function lens(getter, setter) {
     };
   };
 });
-var lens_1 = lens;/**
+var lens_1 = lens;
+
+/**
  * Retrieve the value at a given path.
  *
  * @func
@@ -8897,7 +5458,9 @@ var path = /*#__PURE__*/_curry2_1(function path(paths, obj) {
   }
   return val;
 });
-var path_1 = path;/**
+var path_1 = path;
+
+/**
  * Returns a lens whose focus is the specified path.
  *
  * @func
@@ -8926,10 +5489,14 @@ var path_1 = path;/**
 var lensPath = /*#__PURE__*/_curry1_1(function lensPath(p) {
   return lens_1(path_1(p), assocPath_1(p));
 });
-var lensPath_1 = lensPath;function _isObject$1(x) {
+var lensPath_1 = lensPath;
+
+function _isObject$1(x) {
   return Object.prototype.toString.call(x) === '[object Object]';
 }
-var _isObject_1 = _isObject$1;/**
+var _isObject_1 = _isObject$1;
+
+/**
  * Creates a new object with the own properties of the two provided objects. If
  * a key exists in both objects, the provided function is applied to the key
  * and the values associated with the key in each object, with the result being
@@ -8974,7 +5541,9 @@ var mergeWithKey = /*#__PURE__*/_curry3_1(function mergeWithKey(fn, l, r) {
 
   return result;
 });
-var mergeWithKey_1 = mergeWithKey;/**
+var mergeWithKey_1 = mergeWithKey;
+
+/**
  * Creates a new object with the own properties of the two provided objects.
  * If a key exists in both objects:
  * - and both associated values are also objects then the values will be
@@ -9013,7 +5582,9 @@ var mergeDeepWithKey = /*#__PURE__*/_curry3_1(function mergeDeepWithKey(fn, lObj
     }
   }, lObj, rObj);
 });
-var mergeDeepWithKey_1 = mergeDeepWithKey;/**
+var mergeDeepWithKey_1 = mergeDeepWithKey;
+
+/**
  * Creates a new object with the own properties of the first object merged with
  * the own properties of the second object. If a key exists in both objects:
  * - and both values are objects, the two values will be recursively merged
@@ -9041,10 +5612,14 @@ var mergeDeepRight = /*#__PURE__*/_curry2_1(function mergeDeepRight(lObj, rObj) 
     return rVal;
   }, lObj, rObj);
 });
-var mergeDeepRight_1 = mergeDeepRight;function _identity(x) {
+var mergeDeepRight_1 = mergeDeepRight;
+
+function _identity(x) {
   return x;
 }
-var _identity_1 = _identity;/**
+var _identity_1 = _identity;
+
+/**
  * A function that does nothing but return the parameter supplied to it. Good
  * as a default or placeholder function.
  *
@@ -9066,7 +5641,9 @@ var _identity_1 = _identity;/**
 
 
 var identity = /*#__PURE__*/_curry1_1(_identity_1);
-var identity_1 = identity;function _arrayFromIterator(iter) {
+var identity_1 = identity;
+
+function _arrayFromIterator(iter) {
   var list = [];
   var next;
   while (!(next = iter.next()).done) {
@@ -9074,7 +5651,9 @@ var identity_1 = identity;function _arrayFromIterator(iter) {
   }
   return list;
 }
-var _arrayFromIterator_1 = _arrayFromIterator;function _includesWith(pred, x, list) {
+var _arrayFromIterator_1 = _arrayFromIterator;
+
+function _includesWith(pred, x, list) {
   var idx = 0;
   var len = list.length;
 
@@ -9086,12 +5665,16 @@ var _arrayFromIterator_1 = _arrayFromIterator;function _includesWith(pred, x, li
   }
   return false;
 }
-var _includesWith_1 = _includesWith;function _functionName(f) {
+var _includesWith_1 = _includesWith;
+
+function _functionName(f) {
   // String(x => x) evaluates to "x => x", so the pattern may not match.
   var match = String(f).match(/^function (\w*)/);
   return match == null ? '' : match[1];
 }
-var _functionName_1 = _functionName;// Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+var _functionName_1 = _functionName;
+
+// Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
 function _objectIs(a, b) {
   // SameValue algorithm
   if (a === b) {
@@ -9104,7 +5687,9 @@ function _objectIs(a, b) {
   }
 }
 
-var _objectIs_1 = typeof Object.is === 'function' ? Object.is : _objectIs;/**
+var _objectIs_1 = typeof Object.is === 'function' ? Object.is : _objectIs;
+
+/**
  * Gives a single-word string description of the (native) type of a value,
  * returning such answers as 'Object', 'Number', 'Array', or 'Null'. Does not
  * attempt to distinguish user Object types any further, reporting them all as
@@ -9134,7 +5719,9 @@ var _objectIs_1 = typeof Object.is === 'function' ? Object.is : _objectIs;/**
 var type = /*#__PURE__*/_curry1_1(function type(val) {
   return val === null ? 'Null' : val === undefined ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1);
 });
-var type_1 = type;/**
+var type_1 = type;
+
+/**
  * private _uniqContentEquals function.
  * That function is checking equality of 2 iterator contents with 2 assumptions
  * - iterators lengths are the same
@@ -9275,7 +5862,9 @@ function _equals(a, b, stackA, stackB) {
   }
   return true;
 }
-var _equals_1 = _equals;/**
+var _equals_1 = _equals;
+
+/**
  * Returns `true` if its arguments are equivalent, `false` otherwise. Handles
  * cyclical data structures.
  *
@@ -9305,7 +5894,9 @@ var _equals_1 = _equals;/**
 var equals = /*#__PURE__*/_curry2_1(function equals(a, b) {
   return _equals_1(a, b, [], []);
 });
-var equals_1 = equals;function _indexOf(list, a, idx) {
+var equals_1 = equals;
+
+function _indexOf(list, a, idx) {
   var inf, item;
   // Array.prototype.indexOf doesn't exist below IE9
   if (typeof list.indexOf === 'function') {
@@ -9359,10 +5950,14 @@ var equals_1 = equals;function _indexOf(list, a, idx) {
   }
   return -1;
 }
-var _indexOf_1 = _indexOf;function _includes(a, list) {
+var _indexOf_1 = _indexOf;
+
+function _includes(a, list) {
   return _indexOf_1(list, a, 0) >= 0;
 }
-var _includes_1 = _includes;var _Set = /*#__PURE__*/function () {
+var _includes_1 = _includes;
+
+var _Set = /*#__PURE__*/function () {
 
   function _Set() {
     /* globals Set */
@@ -9533,7 +6128,9 @@ function hasOrAdd(item, shouldAdd, set) {
 }
 
 // A simple Set type that honours R.equals semantics
-var _Set_1 = _Set;/**
+var _Set_1 = _Set;
+
+/**
  * Returns a new list containing only one copy of each element in the original
  * list, based upon the value returned by applying the supplied function to
  * each list element. Prefers the first item if the supplied function produces
@@ -9569,7 +6166,9 @@ var uniqBy = /*#__PURE__*/_curry2_1(function uniqBy(fn, list) {
   }
   return result;
 });
-var uniqBy_1 = uniqBy;/**
+var uniqBy_1 = uniqBy;
+
+/**
  * Returns a new list containing only one copy of each element in the original
  * list. [`R.equals`](#equals) is used to determine equality.
  *
@@ -9589,7 +6188,9 @@ var uniqBy_1 = uniqBy;/**
 
 
 var uniq = /*#__PURE__*/uniqBy_1(identity_1);
-var uniq_1 = uniq;/**
+var uniq_1 = uniq;
+
+/**
  * Returns a partial copy of an object containing only the keys specified. If
  * the key does not exist, the property is ignored.
  *
@@ -9620,12 +6221,16 @@ var pick = /*#__PURE__*/_curry2_1(function pick(names, obj) {
   }
   return result;
 });
-var pick_1 = pick;function _pipe(f, g) {
+var pick_1 = pick;
+
+function _pipe(f, g) {
   return function () {
     return g.call(this, f.apply(this, arguments));
   };
 }
-var _pipe_1 = _pipe;/**
+var _pipe_1 = _pipe;
+
+/**
  * Returns a single item by iterating through the list, successively calling
  * the iterator function and passing it an accumulator value and the current
  * value from the array, and then passing the result to the next call.
@@ -9674,7 +6279,9 @@ var _pipe_1 = _pipe;/**
 
 
 var reduce = /*#__PURE__*/_curry3_1(_reduce_1);
-var reduce_1 = reduce;/**
+var reduce_1 = reduce;
+
+/**
  * This checks whether a function has a [methodname] function. If it isn't an
  * array it will execute that function otherwise it will default to the ramda
  * implementation.
@@ -9696,7 +6303,9 @@ function _checkForMethod(methodname, fn) {
     return _isArray(obj) || typeof obj[methodname] !== 'function' ? fn.apply(this, arguments) : obj[methodname].apply(obj, Array.prototype.slice.call(arguments, 0, length - 1));
   };
 }
-var _checkForMethod_1 = _checkForMethod;/**
+var _checkForMethod_1 = _checkForMethod;
+
+/**
  * Returns the elements of the given list or string (or object with a `slice`
  * method) from `fromIndex` (inclusive) to `toIndex` (exclusive).
  *
@@ -9725,7 +6334,9 @@ var _checkForMethod_1 = _checkForMethod;/**
 var slice = /*#__PURE__*/_curry3_1( /*#__PURE__*/_checkForMethod_1('slice', function slice(fromIndex, toIndex, list) {
   return Array.prototype.slice.call(list, fromIndex, toIndex);
 }));
-var slice_1 = slice;/**
+var slice_1 = slice;
+
+/**
  * Returns all but the first element of the given list or string (or object
  * with a `tail` method).
  *
@@ -9755,7 +6366,9 @@ var slice_1 = slice;/**
 
 
 var tail = /*#__PURE__*/_curry1_1( /*#__PURE__*/_checkForMethod_1('tail', /*#__PURE__*/slice_1(1, Infinity)));
-var tail_1 = tail;/**
+var tail_1 = tail;
+
+/**
  * Performs left-to-right function composition. The leftmost function may have
  * any arity; the remaining functions must be unary.
  *
@@ -9786,7 +6399,9 @@ function pipe() {
   }
   return _arity_1(arguments[0].length, reduce_1(_pipe_1, arguments[0], tail_1(arguments)));
 }
-var pipe_1 = pipe;/**
+var pipe_1 = pipe;
+
+/**
  * Returns a new list or string with the elements or characters in reverse
  * order.
  *
@@ -9812,10 +6427,12 @@ var pipe_1 = pipe;/**
  */
 
 
-var reverse$1 = /*#__PURE__*/_curry1_1(function reverse(list) {
+var reverse = /*#__PURE__*/_curry1_1(function reverse(list) {
   return _isString_1(list) ? list.split('').reverse().join('') : Array.prototype.slice.call(list, 0).reverse();
 });
-var reverse_1 = reverse$1;/**
+var reverse_1 = reverse;
+
+/**
  * Performs right-to-left function composition. The rightmost function may have
  * any arity; the remaining functions must be unary.
  *
@@ -9847,16 +6464,22 @@ function compose() {
   }
   return pipe_1.apply(this, reverse_1(arguments));
 }
-var compose_1 = compose;function _isFunction(x) {
+var compose_1 = compose;
+
+function _isFunction(x) {
   return Object.prototype.toString.call(x) === '[object Function]';
 }
-var _isFunction_1 = _isFunction;function _quote(s) {
+var _isFunction_1 = _isFunction;
+
+function _quote(s) {
   var escaped = s.replace(/\\/g, '\\\\').replace(/[\b]/g, '\\b') // \b matches word boundary; [\b] matches backspace
   .replace(/\f/g, '\\f').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t').replace(/\v/g, '\\v').replace(/\0/g, '\\0');
 
   return '"' + escaped.replace(/"/g, '\\"') + '"';
 }
-var _quote_1 = _quote;/**
+var _quote_1 = _quote;
+
+/**
  * Polyfill from <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString>.
  */
 var pad = function pad(n) {
@@ -9869,12 +6492,16 @@ var _toISOString = typeof Date.prototype.toISOString === 'function' ? function _
   return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + '.' + (d.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) + 'Z';
 };
 
-var _toISOString_1 = _toISOString;function _complement(f) {
+var _toISOString_1 = _toISOString;
+
+function _complement(f) {
   return function () {
     return !f.apply(this, arguments);
   };
 }
-var _complement_1 = _complement;function _filter(fn, list) {
+var _complement_1 = _complement;
+
+function _filter(fn, list) {
   var idx = 0;
   var len = list.length;
   var result = [];
@@ -9887,7 +6514,9 @@ var _complement_1 = _complement;function _filter(fn, list) {
   }
   return result;
 }
-var _filter_1 = _filter;var XFilter = /*#__PURE__*/function () {
+var _filter_1 = _filter;
+
+var XFilter = /*#__PURE__*/function () {
 
   function XFilter(f, xf) {
     this.xf = xf;
@@ -9905,7 +6534,9 @@ var _filter_1 = _filter;var XFilter = /*#__PURE__*/function () {
 var _xfilter = /*#__PURE__*/_curry2_1(function _xfilter(f, xf) {
   return new XFilter(f, xf);
 });
-var _xfilter_1 = _xfilter;/**
+var _xfilter_1 = _xfilter;
+
+/**
  * Takes a predicate and a `Filterable`, and returns a new filterable of the
  * same type containing the members of the given filterable which satisfy the
  * given predicate. Filterable objects include plain objects or any object
@@ -9944,7 +6575,9 @@ var filter = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['filter'], _x
   // else
   _filter_1(pred, filterable);
 }));
-var filter_1 = filter;/**
+var filter_1 = filter;
+
+/**
  * The complement of [`filter`](#filter).
  *
  * Acts as a transducer if a transformer is given in list position. Filterable
@@ -9970,10 +6603,12 @@ var filter_1 = filter;/**
  */
 
 
-var reject$1 = /*#__PURE__*/_curry2_1(function reject(pred, filterable) {
+var reject = /*#__PURE__*/_curry2_1(function reject(pred, filterable) {
   return filter_1(_complement_1(pred), filterable);
 });
-var reject_1 = reject$1;function _toString(x, seen) {
+var reject_1 = reject;
+
+function _toString(x, seen) {
   var recur = function recur(y) {
     var xs = seen.concat([x]);
     return _includes_1(y, xs) ? '<Circular>' : _toString(y, xs);
@@ -10016,7 +6651,9 @@ var reject_1 = reject$1;function _toString(x, seen) {
       return '{' + mapPairs(x, keys_1(x)).join(', ') + '}';
   }
 }
-var _toString_1 = _toString;/**
+var _toString_1 = _toString;
+
+/**
  * Returns the string representation of the given value. `eval`'ing the output
  * should result in a value equivalent to the input value. Many of the built-in
  * `toString` methods do not satisfy this requirement.
@@ -10054,10 +6691,12 @@ var _toString_1 = _toString;/**
  */
 
 
-var toString$3 = /*#__PURE__*/_curry1_1(function toString(val) {
+var toString$2 = /*#__PURE__*/_curry1_1(function toString(val) {
   return _toString_1(val, []);
 });
-var toString_1 = toString$3;/**
+var toString_1 = toString$2;
+
+/**
  * Turns a named method with a specified arity into a function that can be
  * called directly supplied with arguments and a target object.
  *
@@ -10095,7 +6734,9 @@ var invoker = /*#__PURE__*/_curry2_1(function invoker(arity, method) {
     throw new TypeError(toString_1(target) + ' does not have a method named "' + method + '"');
   });
 });
-var invoker_1 = invoker;/**
+var invoker_1 = invoker;
+
+/**
  * Returns a string made by inserting the `separator` between each element and
  * concatenating all the elements into a single string.
  *
@@ -10117,7 +6758,9 @@ var invoker_1 = invoker;/**
 
 
 var join = /*#__PURE__*/invoker_1(1, 'join');
-var join_1 = join;/**
+var join_1 = join;
+
+/**
  * Private `concat` function to merge two array-like objects.
  *
  * @private
@@ -10148,7 +6791,9 @@ function _concat(set1, set2) {
   }
   return result;
 }
-var _concat_1 = _concat;/**
+var _concat_1 = _concat;
+
+/**
  * Creates a new list iteration function from an existing one by adding two new
  * parameters to its callback function: the current index, and the entire list.
  *
@@ -10188,7 +6833,9 @@ var addIndex = /*#__PURE__*/_curry1_1(function addIndex(fn) {
     return fn.apply(this, args);
   });
 });
-var addIndex_1 = addIndex;/**
+var addIndex_1 = addIndex;
+
+/**
  * Replace a substring or regex match in a string with a replacement.
  *
  * The first two parameters correspond to the parameters of the
@@ -10217,7 +6864,9 @@ var addIndex_1 = addIndex;/**
 var replace = /*#__PURE__*/_curry3_1(function replace(regex, replacement, str) {
   return str.replace(regex, replacement);
 });
-var replace_1 = replace;/**
+var replace_1 = replace;
+
+/**
  * Returns a curried equivalent of the provided function. The curried function
  * has two unusual capabilities. First, its arguments needn't be provided one
  * at a time. If `f` is a ternary function and `g` is `R.curry(f)`, the
@@ -10263,7 +6912,9 @@ var replace_1 = replace;/**
 var curry = /*#__PURE__*/_curry1_1(function curry(fn) {
   return curryN_1(fn.length, fn);
 });
-var curry_1 = curry;/**
+var curry_1 = curry;
+
+/**
  * Returns a partial copy of an object omitting the keys specified.
  *
  * @func
@@ -10299,7 +6950,9 @@ var omit = /*#__PURE__*/_curry2_1(function omit(names, obj) {
   }
   return result;
 });
-var omit_1 = omit;// Based on https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+var omit_1 = omit;
+
+// Based on https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
 
 function _objectAssign(target) {
@@ -10324,7 +6977,9 @@ function _objectAssign(target) {
   return output;
 }
 
-var _objectAssign_1 = typeof Object.assign === 'function' ? Object.assign : _objectAssign;/**
+var _objectAssign_1 = typeof Object.assign === 'function' ? Object.assign : _objectAssign;
+
+/**
  * Create a new object with the own properties of the first object merged with
  * the own properties of the second object. If a key exists in both objects,
  * the value from the second object will be used.
@@ -10350,10 +7005,12 @@ var _objectAssign_1 = typeof Object.assign === 'function' ? Object.assign : _obj
  */
 
 
-var merge$1 = /*#__PURE__*/_curry2_1(function merge(l, r) {
+var merge = /*#__PURE__*/_curry2_1(function merge(l, r) {
   return _objectAssign_1({}, l, r);
 });
-var merge_1 = merge$1;/**
+var merge_1 = merge;
+
+/**
  * Converts an object into an array of key, value arrays. Only the object's
  * own properties are used.
  * Note that the order of the output array is not guaranteed to be consistent
@@ -10382,7 +7039,9 @@ var toPairs = /*#__PURE__*/_curry1_1(function toPairs(obj) {
   }
   return pairs;
 });
-var toPairs_1 = toPairs;/**
+var toPairs_1 = toPairs;
+
+/**
  * Returns a function that always returns the given value. Note that for
  * non-primitives the value returned is a reference to the original value.
  *
@@ -10408,7 +7067,9 @@ var always = /*#__PURE__*/_curry1_1(function always(val) {
     return val;
   };
 });
-var always_1 = always;// `Identity` is a functor that holds a single value, where `map` simply
+var always_1 = always;
+
+// `Identity` is a functor that holds a single value, where `map` simply
 // transforms the held value with the provided function.
 
 
@@ -10448,7 +7109,9 @@ var over = /*#__PURE__*/_curry3_1(function over(lens, f, x) {
     return Identity(f(y));
   })(x).value;
 });
-var over_1 = over;/**
+var over_1 = over;
+
+/**
  * Returns the result of "setting" the portion of the given data structure
  * focused by the given lens to the given value.
  *
@@ -10475,7 +7138,9 @@ var over_1 = over;/**
 var set$1 = /*#__PURE__*/_curry3_1(function set(lens, v, x) {
   return over_1(lens, always_1(v), x);
 });
-var set_1 = set$1;/**
+var set_1 = set$1;
+
+/**
  * Returns a function that when supplied an object returns the indicated
  * property of that object, if it exists.
  *
@@ -10498,7 +7163,9 @@ var set_1 = set$1;/**
 var prop = /*#__PURE__*/_curry2_1(function prop(p, obj) {
   return path_1([p], obj);
 });
-var prop_1 = prop;/**
+var prop_1 = prop;
+
+/**
  * Returns a lens whose focus is the specified property.
  *
  * @func
@@ -10523,7 +7190,9 @@ var prop_1 = prop;/**
 var lensProp = /*#__PURE__*/_curry1_1(function lensProp(k) {
   return lens_1(prop_1(k), assoc_1(k));
 });
-var lensProp_1 = lensProp;/**
+var lensProp_1 = lensProp;
+
+/**
  * Returns the second argument if it is not `null`, `undefined` or `NaN`;
  * otherwise the first argument is returned.
  *
@@ -10551,7 +7220,9 @@ var lensProp_1 = lensProp;/**
 var defaultTo = /*#__PURE__*/_curry2_1(function defaultTo(d, v) {
   return v == null || v !== v ? d : v;
 });
-var defaultTo_1 = defaultTo;/**
+var defaultTo_1 = defaultTo;
+
+/**
  * If the given, non-null object has a value at the given path, returns the
  * value at that path. Otherwise returns the provided default value.
  *
@@ -10575,7 +7246,9 @@ var defaultTo_1 = defaultTo;/**
 var pathOr = /*#__PURE__*/_curry3_1(function pathOr(d, p, obj) {
   return defaultTo_1(d, path_1(p, obj));
 });
-var pathOr_1 = pathOr;/**
+var pathOr_1 = pathOr;
+
+/**
  * A special placeholder value used to specify "gaps" within curried functions,
  * allowing partial application of any combination of arguments, regardless of
  * their positions.
@@ -10602,7 +7275,9 @@ var pathOr_1 = pathOr;/**
  *      const greet = R.replace('{name}', R.__, 'Hello, {name}!');
  *      greet('Alice'); //=> 'Hello, Alice!'
  */
-var __ = { '@@functional/placeholder': true };/**
+var __ = { '@@functional/placeholder': true };
+
+/**
  * Create a new object with the own properties of the first object merged with
  * the own properties of the second object. If a key exists in both objects,
  * the value from the second object will be used.
@@ -10629,7 +7304,9 @@ var __ = { '@@functional/placeholder': true };/**
 var mergeRight = /*#__PURE__*/_curry2_1(function mergeRight(l, r) {
   return _objectAssign_1({}, l, r);
 });
-var mergeRight_1 = mergeRight;/**
+var mergeRight_1 = mergeRight;
+
+/**
  * Creates a function that will process either the `onTrue` or the `onFalse`
  * function depending upon the result of the `condition` predicate.
  *
@@ -10661,7 +7338,9 @@ var ifElse = /*#__PURE__*/_curry3_1(function ifElse(condition, onTrue, onFalse) 
     return condition.apply(this, arguments) ? onTrue.apply(this, arguments) : onFalse.apply(this, arguments);
   });
 });
-var ifElse_1 = ifElse;/**
+var ifElse_1 = ifElse;
+
+/**
  * Splits a string into an array of strings based on the given
  * separator.
  *
@@ -10684,7 +7363,9 @@ var ifElse_1 = ifElse;/**
 
 
 var split = /*#__PURE__*/invoker_1(1, 'split');
-var split_1 = split;/**
+var split_1 = split;
+
+/**
  * Returns a new function much like the supplied one, except that the first two
  * arguments' order is reversed.
  *
@@ -10714,10 +7395,14 @@ var flip = /*#__PURE__*/_curry1_1(function flip(fn) {
     return fn.apply(this, args);
   });
 });
-var flip_1 = flip;function _cloneRegExp(pattern) {
+var flip_1 = flip;
+
+function _cloneRegExp(pattern) {
                                   return new RegExp(pattern.source, (pattern.global ? 'g' : '') + (pattern.ignoreCase ? 'i' : '') + (pattern.multiline ? 'm' : '') + (pattern.sticky ? 'y' : '') + (pattern.unicode ? 'u' : ''));
 }
-var _cloneRegExp_1 = _cloneRegExp;/**
+var _cloneRegExp_1 = _cloneRegExp;
+
+/**
  * Copies an object.
  *
  * @private
@@ -10759,7 +7444,9 @@ function _clone(value, refFrom, refTo, deep) {
       return value;
   }
 }
-var _clone_1 = _clone;/**
+var _clone_1 = _clone;
+
+/**
  * Creates a deep copy of the value which may contain (nested) `Array`s and
  * `Object`s, `Number`s, `String`s, `Boolean`s and `Date`s. `Function`s are
  * assigned by reference rather than copied
@@ -10785,10 +7472,14 @@ var _clone_1 = _clone;/**
 var clone = /*#__PURE__*/_curry1_1(function clone(value) {
   return value != null && typeof value.clone === 'function' ? value.clone() : _clone_1(value, [], [], true);
 });
-var clone_1 = clone;function _isRegExp(x) {
+var clone_1 = clone;
+
+function _isRegExp(x) {
   return Object.prototype.toString.call(x) === '[object RegExp]';
 }
-var _isRegExp_1 = _isRegExp;/**
+var _isRegExp_1 = _isRegExp;
+
+/**
  * Determines whether a given string matches a given regular expression.
  *
  * @func
@@ -10813,7 +7504,9 @@ var test = /*#__PURE__*/_curry2_1(function test(pattern, str) {
   }
   return _cloneRegExp_1(pattern).test(str);
 });
-var test_1 = test;/**
+var test_1 = test;
+
+/**
  * If the given, non-null object has an own property with the specified name,
  * returns the value of that property. Otherwise returns the provided default
  * value.
@@ -10844,7 +7537,9 @@ var test_1 = test;/**
 var propOr = /*#__PURE__*/_curry3_1(function propOr(val, p, obj) {
   return pathOr_1(val, [p], obj);
 });
-var propOr_1 = propOr;/**
+var propOr_1 = propOr;
+
+/**
  * Returns a list of all the enumerable own properties of the supplied object.
  * Note that the order of the output array is not guaranteed across different
  * JS platforms.
@@ -10874,7 +7569,9 @@ var values = /*#__PURE__*/_curry1_1(function values(obj) {
   }
   return vals;
 });
-var values_1 = values;/**
+var values_1 = values;
+
+/**
  * Creates a new object by recursively evolving a shallow copy of `object`,
  * according to the `transformation` functions. All non-primitive properties
  * are copied by reference.
@@ -10913,7 +7610,120 @@ var evolve = /*#__PURE__*/_curry2_1(function evolve(transformations, object) {
   }
   return result;
 });
-var evolve_1 = evolve;var R = {
+var evolve_1 = evolve;
+
+/**
+ * Merges a list of objects together into one object.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.10.0
+ * @category List
+ * @sig [{k: v}] -> {k: v}
+ * @param {Array} list An array of objects
+ * @return {Object} A merged object.
+ * @see R.reduce
+ * @example
+ *
+ *      R.mergeAll([{foo:1},{bar:2},{baz:3}]); //=> {foo:1,bar:2,baz:3}
+ *      R.mergeAll([{foo:1},{foo:2},{bar:2}]); //=> {foo:2,bar:2}
+ * @symb R.mergeAll([{ x: 1 }, { y: 2 }, { z: 3 }]) = { x: 1, y: 2, z: 3 }
+ */
+
+
+var mergeAll = /*#__PURE__*/_curry1_1(function mergeAll(list) {
+  return _objectAssign_1.apply(null, [{}].concat(list));
+});
+var mergeAll_1 = mergeAll;
+
+/**
+ * Tests a regular expression against a String. Note that this function will
+ * return an empty array when there are no matches. This differs from
+ * [`String.prototype.match`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match)
+ * which returns `null` when there are no matches.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category String
+ * @sig RegExp -> String -> [String | Undefined]
+ * @param {RegExp} rx A regular expression.
+ * @param {String} str The string to match against
+ * @return {Array} The list of matches or empty array.
+ * @see R.test
+ * @example
+ *
+ *      R.match(/([a-z]a)/g, 'bananas'); //=> ['ba', 'na', 'na']
+ *      R.match(/a/, 'b'); //=> []
+ *      R.match(/a/, null); //=> TypeError: null does not have a method named "match"
+ */
+
+
+var match = /*#__PURE__*/_curry2_1(function match(rx, str) {
+  return str.match(rx) || [];
+});
+var match_1 = match;
+
+/**
+ * Returns the nth element of the given list or string. If n is negative the
+ * element at index length + n is returned.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category List
+ * @sig Number -> [a] -> a | Undefined
+ * @sig Number -> String -> String
+ * @param {Number} offset
+ * @param {*} list
+ * @return {*}
+ * @example
+ *
+ *      const list = ['foo', 'bar', 'baz', 'quux'];
+ *      R.nth(1, list); //=> 'bar'
+ *      R.nth(-1, list); //=> 'quux'
+ *      R.nth(-99, list); //=> undefined
+ *
+ *      R.nth(2, 'abc'); //=> 'c'
+ *      R.nth(3, 'abc'); //=> ''
+ * @symb R.nth(-1, [a, b, c]) = c
+ * @symb R.nth(0, [a, b, c]) = a
+ * @symb R.nth(1, [a, b, c]) = b
+ */
+
+
+var nth = /*#__PURE__*/_curry2_1(function nth(offset, list) {
+  var idx = offset < 0 ? list.length + offset : offset;
+  return _isString_1(list) ? list.charAt(idx) : list[idx];
+});
+var nth_1 = nth;
+
+/**
+ * Returns the last element of the given list or string.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.4
+ * @category List
+ * @sig [a] -> a | Undefined
+ * @sig String -> String
+ * @param {*} list
+ * @return {*}
+ * @see R.init, R.head, R.tail
+ * @example
+ *
+ *      R.last(['fi', 'fo', 'fum']); //=> 'fum'
+ *      R.last([]); //=> undefined
+ *
+ *      R.last('abc'); //=> 'c'
+ *      R.last(''); //=> ''
+ */
+
+
+var last = /*#__PURE__*/nth_1(-1);
+var last_1 = last;
+
+var R = {
   lensPath: lensPath_1,
   mergeDeepRight: mergeDeepRight_1,
   uniq: uniq_1,
@@ -10945,13 +7755,20 @@ var evolve_1 = evolve;var R = {
   test: test_1,
   propOr: propOr_1,
   values: values_1,
-  evolve: evolve_1
-};var _strictMethod = function (method, arg) {
+  evolve: evolve_1,
+  mergeAll: mergeAll_1,
+  match: match_1,
+  last: last_1
+};
+
+var _strictMethod = function (method, arg) {
   return !!method && _fails(function () {
     // eslint-disable-next-line no-useless-call
     arg ? method.call(null, function () { /* empty */ }, 1) : method.call(null);
   });
-};var $sort = [].sort;
+};
+
+var $sort = [].sort;
 var test$1 = [1, 2, 3];
 
 _export(_export.P + _export.F * (_fails(function () {
@@ -10968,32 +7785,23 @@ _export(_export.P + _export.F * (_fails(function () {
       ? $sort.call(_toObject(this))
       : $sort.call(_toObject(this), _aFunction(comparefn));
   }
-});// most Object methods by ES6 should accept primitives
+});
 
-
-
-var _objectSap = function (KEY, exec) {
-  var fn = (_core.Object || {})[KEY] || Object[KEY];
-  var exp = {};
-  exp[KEY] = exec(fn);
-  _export(_export.S + _export.F * _fails(function () { fn(1); }), 'Object', exp);
-};// 19.1.2.14 Object.keys(O)
-
-
-
-_objectSap('keys', function () {
-  return function keys(it) {
-    return _objectKeys(_toObject(it));
-  };
-});var f$3 = _wks;
+var f$3 = _wks;
 
 var _wksExt = {
 	f: f$3
-};var defineProperty = _objectDp.f;
+};
+
+var defineProperty = _objectDp.f;
 var _wksDefine = function (name) {
   var $Symbol = _core.Symbol || (_core.Symbol = _global.Symbol || {});
   if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty($Symbol, name, { value: _wksExt.f(name) });
-};_wksDefine('asyncIterator');var _meta = createCommonjsModule(function (module) {
+};
+
+_wksDefine('asyncIterator');
+
+var _meta = createCommonjsModule(function (module) {
 var META = _uid('meta');
 
 
@@ -11052,11 +7860,15 @@ var _meta_1 = _meta.KEY;
 var _meta_2 = _meta.NEED;
 var _meta_3 = _meta.fastKey;
 var _meta_4 = _meta.getWeak;
-var _meta_5 = _meta.onFreeze;var f$4 = Object.getOwnPropertySymbols;
+var _meta_5 = _meta.onFreeze;
+
+var f$4 = Object.getOwnPropertySymbols;
 
 var _objectGops = {
 	f: f$4
-};// all enumerable object keys, includes symbols
+};
+
+// all enumerable object keys, includes symbols
 
 
 
@@ -11070,11 +7882,15 @@ var _enumKeys = function (it) {
     var key;
     while (symbols.length > i) if (isEnum.call(it, key = symbols[i++])) result.push(key);
   } return result;
-};// 7.2.2 IsArray(argument)
+};
+
+// 7.2.2 IsArray(argument)
 
 var _isArray$1 = Array.isArray || function isArray(arg) {
   return _cof(arg) == 'Array';
-};// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
+};
+
+// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
 
 var hiddenKeys = _enumBugKeys.concat('length', 'prototype');
 
@@ -11084,10 +7900,12 @@ var f$5 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 
 var _objectGopn = {
 	f: f$5
-};// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+};
+
+// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 
 var gOPN = _objectGopn.f;
-var toString$4 = {}.toString;
+var toString$3 = {}.toString;
 
 var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
   ? Object.getOwnPropertyNames(window) : [];
@@ -11101,12 +7919,14 @@ var getWindowNames = function (it) {
 };
 
 var f$6 = function getOwnPropertyNames(it) {
-  return windowNames && toString$4.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(_toIobject(it));
+  return windowNames && toString$3.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(_toIobject(it));
 };
 
 var _objectGopnExt = {
 	f: f$6
-};var gOPD = Object.getOwnPropertyDescriptor;
+};
+
+var gOPD = Object.getOwnPropertyDescriptor;
 
 var f$7 = _descriptors ? gOPD : function getOwnPropertyDescriptor(O, P) {
   O = _toIobject(O);
@@ -11119,7 +7939,9 @@ var f$7 = _descriptors ? gOPD : function getOwnPropertyDescriptor(O, P) {
 
 var _objectGopd = {
 	f: f$7
-};// ECMAScript 6 symbols shim
+};
+
+// ECMAScript 6 symbols shim
 
 
 
@@ -11351,7 +8173,9 @@ _setToStringTag($Symbol, 'Symbol');
 // 20.2.1.9 Math[@@toStringTag]
 _setToStringTag(Math, 'Math', true);
 // 24.3.3 JSON[@@toStringTag]
-_setToStringTag(_global.JSON, 'JSON', true);// https://github.com/tc39/proposal-object-values-entries
+_setToStringTag(_global.JSON, 'JSON', true);
+
+// https://github.com/tc39/proposal-object-values-entries
 
 var $entries = _objectToArray(true);
 
@@ -11359,7 +8183,9 @@ _export(_export.S, 'Object', {
   entries: function entries(it) {
     return $entries(it);
   }
-});// 19.1.2.1 Object.assign(target, source, ...)
+});
+
+// 19.1.2.1 Object.assign(target, source, ...)
 
 
 
@@ -11391,14 +8217,20 @@ var _objectAssign$1 = !$assign || _fails(function () {
     var key;
     while (length > j) if (isEnum.call(S, key = keys[j++])) T[key] = S[key];
   } return T;
-} : $assign;// 19.1.3.1 Object.assign(target, source)
+} : $assign;
+
+// 19.1.3.1 Object.assign(target, source)
 
 
-_export(_export.S + _export.F, 'Object', { assign: _objectAssign$1 });// 21.2.5.3 get RegExp.prototype.flags()
+_export(_export.S + _export.F, 'Object', { assign: _objectAssign$1 });
+
+// 21.2.5.3 get RegExp.prototype.flags()
 if (_descriptors && /./g.flags != 'g') _objectDp.f(RegExp.prototype, 'flags', {
   configurable: true,
   get: _flags
-});var TO_STRING = 'toString';
+});
+
+var TO_STRING = 'toString';
 var $toString = /./[TO_STRING];
 
 var define = function (fn) {
@@ -11417,7 +8249,9 @@ if (_fails(function () { return $toString.call({ source: 'a', flags: 'b' }) != '
   define(function toString() {
     return $toString.call(this);
   });
-}var type$1 = function type(val) {
+}
+
+var type$1 = function type(val) {
   return val === null ? 'Null' : val === undefined ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1);
 };
 var mixin = function mixin(proto) {
@@ -11426,6 +8260,16 @@ var mixin = function mixin(proto) {
   }
 
   return Object.assign.apply(Object, [Object.create(proto)].concat(sources));
+};
+var toDashCase = function toDashCase(str) {
+  return str.replace(/[A-Z]/g, function (match) {
+    return '-' + match[0].toLowerCase() + match.substring(1);
+  });
+};
+var fromDashCase = function fromDashCase(str) {
+  return str.split('-').reduce(function (acc, sub) {
+    return acc + sub[0].toUpperCase() + sub.substring[1];
+  });
 };
 
 var _curryN$1 = function _curryN(len, fn) {
@@ -11448,8 +8292,8 @@ var curry$1 = function curry(fn) {
   };
 };
 var curryN$1 = curry$1(_curryN$1);
-var ifType = curry$1(function (valueType, value) {
-  return type$1(value) === valueType ? value : null;
+var ifType = curry$1(function (valueType, value, def) {
+  return type$1(value) === valueType ? value : def || null;
 });
 var testIsServer = new Function('try {return this===global;}catch(e){return false;}');
 var dive = curryN$1(2, function () {
@@ -11464,6 +8308,9 @@ var dive = curryN$1(2, function () {
     };
   }, obj);
 });
+var id$2 = function id(x) {
+  return x;
+};
 var isFn = function isFn(x) {
   return 'function' === typeof x;
 };
@@ -11485,7 +8332,7 @@ Function.prototype.papp = function () {
     return fn.apply(this, args.concat(newArgs));
   };
 };
-var isBuffer$1 = function isBuffer(obj) {
+var isBuffer = function isBuffer(obj) {
   return obj != null && obj.constructor != null && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj);
 };
 var flatMap = function flatMap(f, a) {
@@ -11595,23 +8442,26 @@ var uncompressFlattened = function uncompressFlattened() {
   }, {});
 };
 var crawl = curry$1(function () {
-  var process = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x, y) {
-    return y;
-  };
+  var process = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : id$2;
   var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   var step = function step(obj) {
+    var path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
     Object.entries(obj).forEach(function (_ref9) {
       var _ref10 = _slicedToArray(_ref9, 2),
           key = _ref10[0],
           value = _ref10[1];
 
-      if (type$1(value) === 'Object') obj[key] = step(process(value));
+      if (type$1(value) === 'Object' || type$1(value) === 'Function') {
+        path.push(key);
+        obj[key] = step(process(value, key, _toConsumableArray(path), obj), path);
+        path.pop();
+      }
     });
     return obj;
   };
 
-  return step(process(obj));
+  return step(obj);
 });
 var unflatten = function unflatten() {
   var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -11622,7 +8472,7 @@ var unflatten = function unflatten() {
       object = opts.object,
       _opts$reference2 = opts.reference,
       reference = _opts$reference2 === void 0 ? {} : _opts$reference2;
-  var isbuffer = isBuffer$1(target);
+  var isbuffer = isBuffer(target);
   if (isbuffer || type$1(target) !== 'Object') return target;
 
   var parseKey = function parseKey(key) {
@@ -11663,7 +8513,9 @@ var unflatten = function unflatten() {
     container[key1] = unflatten(target[joinedKey]);
     return result;
   }, {});
-};var version$1 = '1.1705.17038.0',
+};
+
+var version = '1.1705.17038.0',
     DEVELOPER = 1,
     ADMINUSER = 2,
     SHOPPER = 4,
@@ -11720,10 +8572,11 @@ var constants = {
   baseUrl: 'https://home.mozu.com/',
   basePciUrl: 'https://pmts.mozu.com/',
   capabilityTimeoutInSeconds: 180,
-  version: version$1,
+  version: version,
   templateBraceRegex: /\{([^}]+)\}/g,
   urlTemplateSplitRegex: /[\/\?=\&~]/g
-};var isServer = testIsServer();
+};
+
 var authenticate = (function (api) {
   var auth = {};
   var assignKey = R.curry(function (key, ref, val) {
@@ -11786,8 +8639,9 @@ var authenticate = (function (api) {
 
   var passwordPrompt = function () {
     var readline = function readline() {
-      return import('readline');
-    };
+      return Promise.resolve(require('readline'));
+    }; // let readline = new Function("return import('readline')")
+
 
     var userLoginAttempts = 0;
     return function (requestOptions) {
@@ -11827,15 +8681,15 @@ var authenticate = (function (api) {
 
         return readline;
       })).chain(function (readline) {
-        return api.newTask(function (reject$$1, resolve$$1) {
+        return api.newTask(function (reject, resolve) {
           readline.question('developer password: ', function (answer) {
             if (!answer) {
               readline.output.write("\ni don't think your password is an empty string\n");
-              return reject$$1('invalid password');
+              return reject('invalid password');
             }
 
             readline.write('\n');
-            resolve$$1(password);
+            resolve(password);
           });
         });
       }).chain(function (password) {
@@ -11872,7 +8726,7 @@ var authenticate = (function (api) {
         if (userClaim.valid) return Future.of(addUserClaimToRequest(requestOptions, userClaim));
         return userClaim.stale ? refreshUserAccessToken(userClaim) : password ? api.resolve(password) : !isServer ? api.reject('no password for user auth in context') : passwordPrompt(requestOptions);
       }
-    }
+    } else return api.resolve(requestOptions);
 
     return api.reject('unable to authenticate');
   };
@@ -11882,7 +8736,1241 @@ var authenticate = (function (api) {
   authenticate.setUserClaim = setUserClaim;
   authenticate.getUserClaim = getUserClaim;
   return authenticate;
-});/**
+});
+
+var basicOps = {
+	get: "GET",
+	update: "PUT",
+	create: "POST",
+	del: "DELETE"
+};
+var urls = {
+	productService: "/api/commerce/catalog/storefront/products/",
+	documentListService: "/api/content/documentlists/",
+	entityListService: "/api/platform/entitylists/",
+	categoryService: "/api/commerce/catalog/storefront/categories/",
+	cartService: "/api/commerce/carts/",
+	customerService: "/api/commerce/customer/accounts/",
+	customerAttributeDefService: "/api/commerce/customer/attributedefinition/attributes/",
+	inStockNotificationService: "/api/commerce/instocknotifications/",
+	shippingService: "/api/commerce/catalog/storefront/shipping/",
+	orderService: "/api/commerce/orders/",
+	searchService: "/api/commerce/catalog/storefront/productsearch/",
+	referenceService: "/api/platform/reference/",
+	paymentService: "https://pmts.mozu.com/payments/commerce/payments/cards/",
+	addressValidationService: "/api/commerce/customer/addressvalidation/",
+	wishlistService: "/api/commerce/wishlists/",
+	returnService: "/api/commerce/returns/",
+	storefrontUserService: "/user/",
+	locationService: "/api/commerce/storefront/",
+	creditService: "/api/commerce/customer/credits/",
+	paypalExpress: "https://paypal.com/cgi-bin/webscr?cmd=_express-checkout",
+	orderAttributeDefService: "/api/commerce/orders/attributedefinition/attributes/",
+	locationAttributeDefService: "/api/commerce/admin/locations/attributedefinition/attributes/",
+	checkoutService: "/api/commerce/checkouts/",
+	tokenService: "https://pmts.mozu.com/payments/commerce/payments/tokens/",
+	discountService: "/api/commerce/catalog/storefront/discounts/"
+};
+var headerPrefix = "x-vol-";
+var methods = {
+	document: {
+		template: "{+documentListService}{listName}/documents/{id}{?_*}",
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	documentList: {
+		template: "{+documentListService}{listName}/documents{?_*}",
+		shortcutParam: "listName",
+		defaultParams: {
+			startIndex: 0,
+			pageSize: 15
+		},
+		collectionOf: "document",
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	documentView: {
+		template: "{+documentListService}{listName}/views/{viewName}/documents{?_*}",
+		shortcutParam: "listName",
+		defaultParams: {
+			viewName: "default",
+			startIndex: 0,
+			pageSize: 15
+		},
+		collectionOf: "document",
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	entityList: {
+		template: {
+			templateText: "{+entityListService}{listName}/entities{?_*}",
+			expressions: [
+				{
+					templateText: "+entityListService",
+					operator: {
+						symbol: "+",
+						separator: ",",
+						named: false,
+						ifEmpty: "",
+						first: ""
+					},
+					varspecs: [
+						{
+							varname: "entityListService",
+							exploded: false,
+							maxLength: null
+						}
+					]
+				},
+				{
+					templateText: "listName",
+					operator: {
+						symbol: "",
+						separator: ",",
+						named: false,
+						ifEmpty: "",
+						first: ""
+					},
+					varspecs: [
+						{
+							varname: "listName",
+							exploded: false,
+							maxLength: null
+						}
+					]
+				},
+				{
+					literal: "/entities"
+				},
+				{
+					templateText: "?_*",
+					operator: {
+						symbol: "?",
+						separator: "&",
+						named: true,
+						ifEmpty: "=",
+						first: "?"
+					},
+					varspecs: [
+						{
+							varname: "_",
+							exploded: true,
+							maxLength: null
+						}
+					]
+				}
+			]
+		},
+		shortcutParam: "listName",
+		defaultParams: {
+			startIndex: 0,
+			pageSize: 15
+		},
+		collectionOf: "entity",
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	entityView: {
+		template: "{+entityListService}{listName}/views/{viewName}/entities{?_*}",
+		shortcutParam: "listName",
+		defaultParams: {
+			viewName: "default",
+			startIndex: 0,
+			pageSize: 15
+		},
+		collectionOf: "entity",
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	entity: {
+		template: {
+			templateText: "{+entityListService}{listName}/entities/{id}{?_*}",
+			expressions: [
+				{
+					templateText: "+entityListService",
+					operator: {
+						symbol: "+",
+						separator: ",",
+						named: false,
+						ifEmpty: "",
+						first: ""
+					},
+					varspecs: [
+						{
+							varname: "entityListService",
+							exploded: false,
+							maxLength: null
+						}
+					]
+				},
+				{
+					templateText: "listName",
+					operator: {
+						symbol: "",
+						separator: ",",
+						named: false,
+						ifEmpty: "",
+						first: ""
+					},
+					varspecs: [
+						{
+							varname: "listName",
+							exploded: false,
+							maxLength: null
+						}
+					]
+				},
+				{
+					literal: "/entities/"
+				},
+				{
+					templateText: "id",
+					operator: {
+						symbol: "",
+						separator: ",",
+						named: false,
+						ifEmpty: "",
+						first: ""
+					},
+					varspecs: [
+						{
+							varname: "id",
+							exploded: false,
+							maxLength: null
+						}
+					]
+				},
+				{
+					templateText: "?_*",
+					operator: {
+						symbol: "?",
+						separator: "&",
+						named: true,
+						ifEmpty: "=",
+						first: "?"
+					},
+					varspecs: [
+						{
+							varname: "_",
+							exploded: true,
+							maxLength: null
+						}
+					]
+				}
+			]
+		},
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	entityContainer: {
+		template: "{+entityListService}{listName}/entityContainers/{id}{?_*}",
+		shortcutParam: "listName",
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	entityContainerList: {
+		template: "{+entityListService}{listName}/entityContainers{?_*}",
+		shortcutParam: "listName",
+		defaultParams: {
+			startIndex: 0,
+			pageSize: 15
+		},
+		collectionOf: "entityContainer",
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	entityContainerView: {
+		template: "{+entityListService}{listName}/views/{viewName}/entityContainers{?_*}",
+		shortcutParam: "listName",
+		defaultParams: {
+			startIndex: 0,
+			viewName: "default",
+			pageSize: 15
+		},
+		collectionOf: "entityContainer",
+		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+	},
+	products: {
+		template: {
+			templateText: "{+productService}{?_*}",
+			expressions: [
+				{
+					templateText: "+productService",
+					operator: {
+						symbol: "+",
+						separator: ",",
+						named: false,
+						ifEmpty: "",
+						first: ""
+					},
+					varspecs: [
+						{
+							varname: "productService",
+							exploded: false,
+							maxLength: null
+						}
+					]
+				},
+				{
+					templateText: "?_*",
+					operator: {
+						symbol: "?",
+						separator: "&",
+						named: true,
+						ifEmpty: "=",
+						first: "?"
+					},
+					varspecs: [
+						{
+							varname: "_",
+							exploded: true,
+							maxLength: null
+						}
+					]
+				}
+			]
+		},
+		shortcutParam: "filter",
+		defaultParams: {
+			startIndex: 0,
+			pageSize: 15
+		},
+		collectionOf: "product"
+	},
+	categories: {
+		template: "{+categoryService}{?_*}",
+		shortcutParam: "filter",
+		defaultParams: {
+			startIndex: 0,
+			pageSize: 15
+		},
+		collectionOf: "category"
+	},
+	category: {
+		template: "{+categoryService}{id}{?allowInactive}",
+		shortcutParam: "id",
+		defaultParams: {
+			allowInactive: false
+		}
+	},
+	categorytree: {
+		template: "{+categoryService}tree",
+		returnType: "json"
+	},
+	search: {
+		template: "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,facetPrefix,sortBy,pageSize,PageSize,startIndex,StartIndex}",
+		shortcutParam: "query",
+		defaultParams: {
+			startIndex: 0,
+			query: "*:*",
+			pageSize: 15
+		},
+		collectionOf: "product"
+	},
+	suggest: {
+		template: "{+searchService}suggest{?_*}",
+		shortcutParam: "query"
+	},
+	customers: {
+		collectionOf: "customer"
+	},
+	orders: {
+		template: "{+orderService}{?_*}",
+		defaultParams: {
+			filter: "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned and Status ne Errored",
+			startIndex: 0,
+			pageSize: 5
+		},
+		collectionOf: "order"
+	},
+	product: {
+		get: {
+			template: "{+productService}{productCode}?{&allowInactive,acceptVariantProductCode}",
+			shortcutParam: "productCode",
+			defaultParams: {
+				allowInactive: false
+			}
+		},
+		configure: {
+			verb: "POST",
+			template: "{+productService}{productCode}/configure{?includeOptionDetails,quantity}",
+			defaultParams: {
+				includeOptionDetails: true,
+				quantity: 1
+			},
+			includeSelf: true
+		},
+		"add-to-cart": {
+			verb: "POST",
+			returnType: "cartitem",
+			template: "{+cartService}current/items/"
+		},
+		"get-inventory": {
+			template: "{+productService}{productCode}/locationinventory{?locationCodes}",
+			includeSelf: true,
+			shortcutParam: "locationcodes",
+			returnType: "string"
+		}
+	},
+	location: {
+		get: {
+			template: "{+locationService}locationUsageTypes/SP/locations/{code}",
+			shortcutParam: "code"
+		}
+	},
+	locations: {
+		defaultParams: {
+			pageSize: 15
+		},
+		collectionOf: "location",
+		get: {
+			defaultParams: {
+				includeAttributeDefinition: true
+			},
+			template: "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition,nearZipcode,nearZipcodeRadius}"
+		},
+		"get-by-lat-long": {
+			defaultParams: {
+				includeAttributeDefinition: true
+			},
+			template: "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+		},
+		"get-by-zipcode": {
+			defaultParams: {
+				includeAttributeDefinition: false
+			},
+			template: "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+		}
+	},
+	cartsummary: "{+cartService}summary",
+	cart: {
+		defaults: {
+			template: "{+cartService}current"
+		},
+		"add-product": {
+			verb: "POST",
+			returnType: "cartitem",
+			template: "{+cartService}current/items/"
+		},
+		empty: {
+			verb: "DELETE",
+			template: "{+cartService}current/items/"
+		},
+		"get-extended-properties": {
+			template: "{+cartService}current/extendedproperties",
+			returnType: "json"
+		},
+		"add-extended-properties": {
+			verb: "POST",
+			template: "{+cartService}current/extendedproperties"
+		},
+		"update-extended-properties": {
+			verb: "PUT",
+			template: "{+cartService}current/extendedproperties"
+		},
+		"remove-extended-property": {
+			verb: "DELETE",
+			template: "{+cartService}current/extendedproperties/{key}"
+		},
+		"remove-extended-properties": {
+			verb: "DELETE",
+			template: "{+cartService}current/extendedproperties"
+		},
+		checkout: {
+			verb: "POST",
+			template: "{+orderService}?cartId={id}",
+			returnType: "order",
+			noBody: true,
+			includeSelf: true
+		},
+		checkout2: {
+			verb: "POST",
+			template: "{+checkoutService}?cartId={id}",
+			returnType: "checkout",
+			noBody: true,
+			includeSelf: true
+		},
+		"apply-coupon": {
+			verb: "PUT",
+			template: "{+cartService}{id}/coupons/{couponCode}",
+			shortcutParam: "couponCode",
+			includeSelf: true,
+			noBody: true,
+			returnType: "coupon"
+		},
+		"remove-coupon": {
+			verb: "DELETE",
+			template: "{+cartService}{id}/coupons/{couponCode}",
+			shortcutParam: "couponCode",
+			includeSelf: true
+		},
+		"remove-all-coupons": {
+			verb: "DELETE",
+			template: "{+cartService}{id}/coupons",
+			includeSelf: true
+		},
+		"reject-suggested-discount": {
+			verb: "POST",
+			template: "{+cartService}{id}/rejectautodiscount/{discountId}"
+		}
+	},
+	cartitem: {
+		defaults: {
+			template: "{+cartService}current/items/{id}",
+			shortcutParam: "id"
+		},
+		"update-quantity": {
+			verb: "PUT",
+			template: "{+cartService}current/items{/id,quantity}",
+			shortcutParam: "quantity",
+			includeSelf: true,
+			noBody: true
+		}
+	},
+	attributedefinition: {
+		template: "{+customerAttributeDefService}{attributeFQN}",
+		shortcutParam: "attributeFQN",
+		defaults: {
+			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+		}
+	},
+	customerattribute: {
+		template: "{+customerService}{accountId}/attributes/{attributeFQN}",
+		defaults: {
+			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+		}
+	},
+	customerattributes: {
+		collectionOf: "customerattribute",
+		template: "{+customerService}{accountId}/attributes/{?_*}",
+		defaultParams: {
+			startIndex: 0,
+			pageSize: 5
+		}
+	},
+	customer: {
+		template: "{+customerService}{id}",
+		defaults: {
+			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+		},
+		shortcutParam: "id",
+		includeSelf: true,
+		create: {
+			verb: "POST",
+			template: "{+customerService}add-account-and-login",
+			returnType: "login"
+		},
+		"create-storefront": {
+			verb: "POST",
+			template: "{+storefrontUserService}create",
+			returnType: "login"
+		},
+		login: {
+			verb: "POST",
+			template: "{+customerService}../authtickets",
+			returnType: "login"
+		},
+		"login-storefront": {
+			verb: "POST",
+			template: "{+storefrontUserService}login",
+			returnType: "login"
+		},
+		"order-status-login": {
+			verb: "POST",
+			template: "{+storefrontUserService}anonymous-login"
+		},
+		update: {
+			verb: "PUT",
+			template: "{+customerService}{id}",
+			includeSelf: true
+		},
+		"reset-password": {
+			verb: "POST",
+			template: "{+customerService}reset-password",
+			returnType: "string"
+		},
+		"reset-password-storefront": {
+			verb: "POST",
+			template: "{+storefrontUserService}resetpassword",
+			returnType: "string"
+		},
+		"change-password": {
+			verb: "POST",
+			template: "{+customerService}{id}/change-password",
+			includeSelf: true
+		},
+		"get-attributes": {
+			template: "{+customerService}{customer.id}/attributes/{?startIndex,pageSize,sortBy,filter}",
+			defaultParams: {
+				startIndex: 0,
+				pageSize: 5
+			},
+			includeSelf: {
+				asProperty: "customer"
+			},
+			returnType: "customerattributes"
+		},
+		"get-attribute": {
+			template: "{+customerService}{customer.id}/attributes/{attributeFQN}",
+			includeSelf: {
+				asProperty: "customer"
+			},
+			shortcutParam: "attributeFQN",
+			returnType: "customerattribute"
+		},
+		"update-attribute": {
+			verb: "PUT",
+			template: "{+customerService}{customer.id}/attributes/{attributeFQN}",
+			includeSelf: {
+				asProperty: "customer"
+			},
+			shortcutParam: "attributeFQN",
+			returnType: "customerattribute"
+		},
+		"get-attribute-definition": {
+			template: "{+customerAttributeDefService}{attributeFQN}",
+			shortcutParam: "attributeFQN",
+			returnType: "attributedefinition"
+		},
+		"get-attribute-definitions": {
+			template: "{+customerAttributeDefService}",
+			returnType: "customerattribute"
+		},
+		"get-orders": {
+			template: "{+orderService}?filter=OrderNumber ne null",
+			includeSelf: true,
+			returnType: "orders"
+		},
+		"get-cards": {
+			template: "{+customerService}{id}/cards",
+			includeSelf: true,
+			returnType: "accountcards"
+		},
+		"add-card": {
+			verb: "POST",
+			template: "{+customerService}{customer.id}/cards",
+			includeSelf: {
+				asProperty: "customer"
+			},
+			returnType: "accountcard"
+		},
+		"update-card": {
+			verb: "PUT",
+			template: "{+customerService}{customer.id}/cards/{id}",
+			includeSelf: {
+				asProperty: "customer"
+			},
+			returnType: "accountcard"
+		},
+		"delete-card": {
+			verb: "DELETE",
+			template: "{+customerService}{customer.id}/cards/{id}",
+			shortcutParam: "id",
+			includeSelf: {
+				asProperty: "customer"
+			},
+			returnType: "accountcard"
+		},
+		"add-contact": {
+			verb: "POST",
+			template: "{+customerService}{id}/contacts",
+			includeSelf: true,
+			returnType: "contact"
+		},
+		"update-contact": {
+			verb: "PUT",
+			template: "{+customerService}{accountId}/contacts/{id}",
+			includeSelf: true,
+			returnType: "contact"
+		},
+		"get-contacts": {
+			template: "{+customerService}{id}/contacts",
+			includeSelf: true,
+			returnType: "contacts"
+		},
+		"delete-contact": {
+			verb: "DELETE",
+			template: "{+customerService}{customer.id}/contacts/{id}",
+			shortcutParam: "id",
+			includeSelf: {
+				asProperty: "customer"
+			},
+			returnType: "contact"
+		},
+		"get-credits": {
+			template: "{+creditService}",
+			returnType: "storecredits"
+		},
+		"get-credit": {
+			verb: "GET",
+			template: "{+creditService}/{id}",
+			includeSelf: true,
+			returnType: "storecredit"
+		},
+		"update-customer-contacts": {
+			verb: "PUT",
+			template: "{+customerService}{id}/contacts",
+			returnType: "contacts",
+			specifyPostData: true
+		}
+	},
+	storecredit: {
+		"associate-to-shopper": {
+			verb: "PUT",
+			template: "{+creditService}{code}/associate-to-shopper",
+			includeSelf: true
+		},
+		"get-credit": {
+			verb: "GET",
+			template: "{+creditService}{code}",
+			includeSelf: true,
+			returnType: "storecredit"
+		}
+	},
+	storecredits: {
+		verb: "GET",
+		template: "{+creditService}{?startIndex,pageSize,sortBy,filter}",
+		collectionOf: "storecredit"
+	},
+	contact: {
+		template: "{+customerService}{accountId}/contacts/{id}",
+		includeSelf: true
+	},
+	contacts: {
+		collectionOf: "contact"
+	},
+	login: "{+userService}login",
+	address: {
+		"validate-address": {
+			verb: "POST",
+			template: "{+addressValidationService}",
+			includeSelf: {
+				asProperty: "address"
+			},
+			overridePostData: true,
+			returnType: "address"
+		},
+		"validate-address-lenient": {
+			verb: "POST",
+			template: "{+addressValidationService}",
+			includeSelf: {
+				asProperty: "address"
+			},
+			overridePostData: true,
+			returnType: "address",
+			suppressErrors: true
+		}
+	},
+	order: {
+		template: "{+orderService}{id}",
+		includeSelf: true,
+		"create-from-cart": {
+			template: "{+orderService}{?cartId*}",
+			shortcutParam: "cartId",
+			method: "POST",
+			noBody: true
+		},
+		"update-shipping-info": {
+			template: "{+orderService}{id}/fulfillmentinfo",
+			verb: "PUT",
+			returnType: "shipment",
+			includeSelf: true
+		},
+		"get-shipping-methods": {
+			template: "{+orderService}{id}/shipments/methods",
+			returnType: "shippingmethods"
+		},
+		"set-user-id": {
+			verb: "PUT",
+			template: "{+orderService}{id}/users",
+			noBody: true,
+			includeSelf: true,
+			returnType: "user"
+		},
+		"create-payment": {
+			verb: "POST",
+			template: "{+orderService}{id}/payments/actions",
+			includeSelf: true
+		},
+		"perform-payment-action": {
+			verb: "POST",
+			template: "{+orderService}{id}/payments/{paymentId}/actions",
+			includeSelf: true,
+			shortcutParam: "paymentId",
+			returnType: "string"
+		},
+		"apply-coupon": {
+			verb: "PUT",
+			template: "{+orderService}{id}/coupons/{couponCode}",
+			shortcutParam: "couponCode",
+			includeSelf: true,
+			noBody: true,
+			returnType: "coupon"
+		},
+		"remove-coupon": {
+			verb: "DELETE",
+			template: "{+orderService}{id}/coupons/{couponCode}",
+			shortcutParam: "couponCode",
+			includeSelf: true
+		},
+		"remove-all-coupons": {
+			verb: "DELETE",
+			template: "{+orderService}{id}/coupons",
+			includeSelf: true
+		},
+		"get-available-actions": {
+			template: "{+orderService}{id}/actions",
+			includeSelf: true,
+			returnType: "orderactions"
+		},
+		"perform-order-action": {
+			verb: "POST",
+			template: "{+orderService}{id}/actions",
+			shortcutParam: "actionName",
+			overridePostData: [
+				"actionName"
+			],
+			includeSelf: true
+		},
+		"add-order-note": {
+			verb: "POST",
+			template: "{+orderService}{id}/notes",
+			includeSelf: true,
+			returnType: "ordernote"
+		},
+		"get-extended-properties": {
+			template: "{+orderService}{id}/extendedproperties",
+			returnType: "json"
+		},
+		"add-extended-properties": {
+			verb: "POST",
+			template: "{+orderService}{id}/extendedproperties"
+		},
+		"update-extended-properties": {
+			verb: "PUT",
+			template: "{+orderService}{id}/extendedproperties"
+		},
+		"remove-extended-property": {
+			verb: "DELETE",
+			template: "{+orderService}{id}/extendedproperties/{key}"
+		},
+		"remove-extended-properties": {
+			verb: "DELETE",
+			template: "{+orderService}{id}/extendedproperties"
+		},
+		"process-digital-wallet": {
+			verb: "PUT",
+			template: "{+orderService}{id}/digitalWallet/VisaCheckout",
+			includeSelf: true,
+			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+		},
+		"get-attribute-definitions": {
+			template: "{+orderAttributeDefService}",
+			returnType: "orderattribute"
+		},
+		"update-attributes": {
+			verb: "PUT",
+			includeSelf: true,
+			template: "{+orderService}{id}/attributes{?removeMissing}",
+			shortcutParam: "removeMissing",
+			returnType: "orderattributes"
+		},
+		"get-returnable-items": {
+			verb: "GET",
+			includeSelf: true,
+			template: "{+orderService}{id}/returnableitems",
+			returnType: "json"
+		}
+	},
+	rma: {
+		create: {
+			verb: "POST",
+			template: "{+returnService}"
+		},
+		"get-return-label": {
+			verb: "GET",
+			template: "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64Png}",
+			returnType: "string"
+		}
+	},
+	rmas: {
+		template: "{+returnService}{?_*}",
+		defaultParams: {
+			startIndex: 0,
+			pageSize: 5
+		},
+		collectionOf: "rma"
+	},
+	shipment: {
+		defaults: {
+			template: "{+orderService}{orderId}/fulfillmentinfo",
+			includeSelf: true
+		},
+		"get-shipping-methods": {
+			template: "{+orderService}{orderId}/shipments/methods",
+			returnType: "shippingmethods"
+		}
+	},
+	payment: {
+		create: {
+			template: "{+orderService}{orderId}/payments/actions",
+			includeSelf: true
+		}
+	},
+	token: {
+		defaults: {
+			useIframeTransport: "{+tokenService}../../../Assets/mozu_receiver_v2.html"
+		},
+		create: {
+			verb: "POST",
+			template: "{+tokenService}",
+			returnType: "json"
+		},
+		execute: {
+			verb: "POST",
+			shortcutParam: "cardType",
+			template: "{+tokenService}/{cardType}/execute",
+			returnType: "json"
+		}
+	},
+	accountcard: {
+		template: "{+customerService}{id}/cards"
+	},
+	accountcards: {
+		collectionOf: "accountcard"
+	},
+	creditcard: {
+		defaults: {
+			useIframeTransport: "{+paymentService}../../../Assets/mozu_receiver_v2.html"
+		},
+		save: {
+			verb: "POST",
+			template: "{+paymentService}",
+			returnType: "json"
+		},
+		update: {
+			verb: "PUT",
+			template: "{+paymentService}{cardId}",
+			returnType: "string"
+		},
+		del: {
+			verb: "DELETE",
+			shortcutParam: "cardId",
+			template: "{+paymentService}{cardId}"
+		},
+		"get-gift-card-balance": {
+			verb: "POST",
+			shortcutParam: "cardId",
+			template: "{+paymentService}{cardId}/balance{?responseFields}",
+			defaultParams: {
+				responseFields: "amount"
+			}
+		},
+		"get-unregistered-gift-card-balance": {
+			verb: "POST",
+			template: "{+paymentService}balance",
+			defaultParams: {
+				responseFields: "amount"
+			}
+		}
+	},
+	creditcards: {
+		collectionOf: "creditcard"
+	},
+	ordernote: {
+		template: "{+orderService}{orderId}/notes/{id}"
+	},
+	addressschemas: "{+referenceService}addressschemas",
+	wishlist: {
+		get: {
+			template: "{+wishlistService}{id}",
+			includeSelf: true
+		},
+		"get-by-name": {
+			template: "{+wishlistService}customers/{customerAccountId}/{name}",
+			includeSelf: true
+		},
+		"get-default": {
+			template: {
+				templateText: "{+wishlistService}customers/{customerAccountId}/my_wishlist",
+				expressions: [
+					{
+						templateText: "+wishlistService",
+						operator: {
+							symbol: "+",
+							separator: ",",
+							named: false,
+							ifEmpty: "",
+							first: ""
+						},
+						varspecs: [
+							{
+								varname: "wishlistService",
+								exploded: false,
+								maxLength: null
+							}
+						]
+					},
+					{
+						literal: "customers/"
+					},
+					{
+						templateText: "customerAccountId",
+						operator: {
+							symbol: "",
+							separator: ",",
+							named: false,
+							ifEmpty: "",
+							first: ""
+						},
+						varspecs: [
+							{
+								varname: "customerAccountId",
+								exploded: false,
+								maxLength: null
+							}
+						]
+					},
+					{
+						literal: "/my_wishlist"
+					}
+				]
+			},
+			includeSelf: true
+		},
+		"create-default": {
+			verb: "POST",
+			template: "{+wishlistService}",
+			defaultParams: {
+				name: "my_wishlist",
+				typeTag: "default"
+			},
+			overridePostData: true
+		},
+		"add-item": {
+			verb: "POST",
+			template: "{+wishlistService}{id}/items/",
+			includeSelf: true
+		},
+		"delete-all-items": {
+			verb: "DELETE",
+			template: "{+wishlistService}{id}/items/"
+		},
+		"delete-item": {
+			verb: "DELETE",
+			template: "{+wishlistService}{id}/items/{itemId}",
+			includeSelf: true,
+			shortcutParam: "itemId"
+		},
+		"edit-item": {
+			verb: "PUT",
+			template: "{+wishlistService}{id}/items/{itemId}",
+			includeSelf: true
+		},
+		"add-item-to-cart": {
+			verb: "POST",
+			returnType: "cartitem",
+			template: "{+cartService}current/items/"
+		},
+		"get-items-by-name": {
+			returnType: "wishlistitems",
+			template: "{+wishlistService}customers/{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}",
+			defaultParams: {
+				sortBy: "UpdateDate asc"
+			},
+			includeSelf: true
+		}
+	},
+	wishlists: {
+		collectionOf: "wishlist"
+	},
+	instockrequest: {
+		create: {
+			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}",
+			verb: "POST",
+			template: "{+inStockNotificationService}"
+		}
+	},
+	destination: {
+		template: "{+checkoutService}{id}/destinations/{destinationId}",
+		includeSelf: true
+	},
+	destinations: {
+		collectionOf: "destination"
+	},
+	toCheckout: {
+		verb: "POST",
+		template: "{+checkoutService}?cartId={id}",
+		returnType: "checkout",
+		noBody: true,
+		includeSelf: true
+	},
+	checkout: {
+		template: "{+checkoutService}{id}",
+		includeSelf: true,
+		"create-from-cart": {
+			template: "{+checkoutService}{?cartId*}",
+			shortcutParam: "cartId",
+			method: "POST",
+			noBody: true
+		},
+		"get-shipping-destinations": {
+			template: "{+checkoutService}{id}/destinations",
+			returnType: "destinations"
+		},
+		"add-shipping-destination": {
+			template: "{+checkoutService}{id}/destinations",
+			verb: "POST",
+			returnType: "destination",
+			includeSelf: true
+		},
+		"update-shipping-destination": {
+			template: "{+checkoutService}{checkoutId}/destinations/{destinationId}",
+			verb: "PUT",
+			returnType: "destination"
+		},
+		"remove-shipping-destination": {
+			template: "{+checkoutService}{id}/destinations/{destinationId}",
+			verb: "DELETE"
+		},
+		"get-checkout-items": {
+			template: "{+checkoutService}{id}/items"
+		},
+		"get-checkout-item": {
+			template: "{+checkoutService}{id}/items{itemId}"
+		},
+		"split-checkout-item": {
+			template: "{+checkoutService}{id}/items/{itemId}/split?quantity={quantity}",
+			verb: "POST"
+		},
+		"merge-duplicate-checkout-items": {
+			template: "{+checkoutService}{id}/items/mergeDuplicateItems",
+			verb: "POST"
+		},
+		"update-checkout-item-destination": {
+			template: "{+checkoutService}{id}/items/{itemId}/destination/{destinationId}",
+			verb: "PUT"
+		},
+		"update-checkout-item-destination-bulk": {
+			template: "{+checkoutService}{id}/items/destinations",
+			verb: "POST",
+			specifyPostData: true
+		},
+		"update-checkout": {
+			template: "{+checkoutService}{id}",
+			verb: "POST",
+			includeSelf: true
+		},
+		"get-avaiable-shipping-methods": {
+			template: "{+checkoutService}{id}/shippingMethods",
+			verb: "GET",
+			returnType: "shippingmethods"
+		},
+		"update-checkout-item-fulfillment": {
+			template: "{+checkoutService}{id}/items/{itemId}/fulfillment",
+			verb: "PUT",
+			returnType: "shipment",
+			includeSelf: true
+		},
+		"set-shipping-methods": {
+			template: "{+checkoutService}{id}/shippingMethods",
+			verb: "POST",
+			specifyPostData: true
+		},
+		"get-shipping-methods": {
+			template: "{+checkoutService}{id}/shippingMethods",
+			returnType: "shippingmethods"
+		},
+		"set-user-id": {
+			verb: "PUT",
+			template: "{+checkoutService}{id}/users",
+			noBody: true,
+			includeSelf: true,
+			returnType: "user"
+		},
+		"create-payment": {
+			verb: "POST",
+			template: "{+checkoutService}{id}/payments/actions",
+			includeSelf: true
+		},
+		"perform-payment-action": {
+			verb: "POST",
+			template: "{+checkoutService}{id}/payments/{paymentId}/actions",
+			includeSelf: true,
+			shortcutParam: "paymentId",
+			returnType: "string"
+		},
+		"apply-coupon": {
+			verb: "PUT",
+			template: "{+checkoutService}{id}/coupons/{couponCode}",
+			shortcutParam: "couponCode",
+			includeSelf: true,
+			noBody: true,
+			returnType: "coupon"
+		},
+		"remove-coupon": {
+			verb: "DELETE",
+			template: "{+checkoutService}{id}/coupons/{couponCode}",
+			shortcutParam: "couponCode",
+			includeSelf: true
+		},
+		"remove-all-coupons": {
+			verb: "DELETE",
+			template: "{+checkoutService}{id}/coupons",
+			includeSelf: true
+		},
+		"get-available-actions": {
+			template: "{+checkoutService}{id}/actions",
+			includeSelf: true,
+			returnType: "checkoutactions"
+		},
+		"perform-checkout-action": {
+			verb: "POST",
+			template: "{+checkoutService}{id}/actions",
+			shortcutParam: "actionName",
+			overridePostData: [
+				"actionName"
+			],
+			includeSelf: true
+		},
+		"add-checkout-note": {
+			verb: "POST",
+			template: "{+checkoutService}{id}/notes",
+			includeSelf: true,
+			returnType: "checkoutnote"
+		},
+		"process-digital-wallet": {
+			verb: "PUT",
+			template: "{+checkoutService}{id}/digitalWallet/VisaCheckout",
+			includeSelf: true,
+			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
+		},
+		"get-attribute-definitions": {
+			template: "{+checkoutAttributeDefService}",
+			returnType: "checkoutattribute"
+		},
+		"update-attributes": {
+			verb: "PUT",
+			includeSelf: true,
+			template: "{+checkoutService}{id}/attributes{?removeMissing}",
+			shortcutParam: "removeMissing",
+			returnType: "checkoutattributes"
+		},
+		"get-returnable-items": {
+			verb: "GET",
+			includeSelf: true,
+			template: "{+checkoutService}{id}/returnableitems",
+			returnType: "json"
+		}
+	},
+	discounts: {
+		get: {
+			returnType: "discount",
+			template: "{+discountService}autoaddtarget/{discountId}",
+			shortcutParam: "discountId"
+		}
+	}
+};
+var storefrontReference = {
+	basicOps: basicOps,
+	urls: urls,
+	headerPrefix: headerPrefix,
+	methods: methods
+};
+
+/**
  * work in both environments or standalone
  * pass tests from storefront/node sdk
  * retain simplified interface from storefront and some of the utility methods
@@ -11891,8 +9979,13 @@ var authenticate = (function (api) {
  * caching
  */
 
-var isServer$1 = testIsServer();
-var hooks = ['beforeRequest', 'withRequest'];
+var isServer = testIsServer();
+var hooks = ['beforeRequest', 'withRequest', 'afterRequest'];
+var hookReference = {
+  beforeRequest: 'accepts as the first parameter the request configuration options and should return a modified version',
+  withRequest: 'accepts as the first parameter and should return the future or promise that will be returned by the request method',
+  afterRequest: 'accepts as the first parameter and should return the response that will occur after the request promise/future settles'
+};
 var defaultOptions = {
   useFutures: true,
   hooks: {}
@@ -11944,13 +10037,13 @@ var Api = function Api() {
   proto.reject = proto.task.reject.bind(proto.task);
   proto.all = proto.task.parallel;
   proto.newTask = options.useFutures ? Future : function (handler) {
-    return new Promise(function (resolve$$1, reject$$1) {
-      return handler(reject$$1, resolve$$1);
+    return new Promise(function (resolve, reject) {
+      return handler(reject, resolve);
     });
   }; //#endregion promise interop
   //#region set context
 
-  if (isServer$1) {
+  if (isServer) {
     if (context && context.apiContext) context = context.apiContext;
 
     if (process.env.mozuHosted) {
@@ -11962,12 +10055,26 @@ var Api = function Api() {
       }
     }
   } else {
-    var headerPreload = document.getElementById('data-mz-preload-apicontext');
-    var headerPreloadText = headerPreload && (headerPreload.textContent || headerPreload.innerText || headerPreload.text || headerPreload.innerHTML);
+    var contextPreload = document.getElementById('data-mz-preload-apicontext');
+    var contextPreloadText = contextPreload && (contextPreload.textContent || contextPreload.innerText || contextPreload.text || contextPreload.innerHTML);
 
     try {
-      var headerJSON = headerPreloadText && JSON.parse(headerPreloadText);
-      context = R.mergeDeepRight(context, headerJSON);
+      var contextJSON = contextPreloadText && JSON.parse(contextPreloadText);
+
+      if (contextJSON.headers) {
+        context = R.mergeDeepRight(context, R.toPairs(contextJSON.headers).reduce(function (a, _ref) {
+          var _ref2 = _slicedToArray(_ref, 2),
+              key = _ref2[0],
+              v = _ref2[1];
+
+          a[fromDashCase(key.replace(constants.headerPrefix, ''))] = v;
+          return a;
+        }, {}));
+      }
+
+      if (contextJSON.urls) {
+        storefrontReference.urls = contextJSON.urls;
+      }
     } catch (e) {
       console.error(e);
     }
@@ -11981,28 +10088,31 @@ var Api = function Api() {
     keyMap[key.replace(/[^0-9a-zA-Z]/g, '').toUpperCase()] = key;
     return keyMap;
   }, {}, R.keys(context));
-  context.homePod = context.baseUrl || 'https://home.mozu.com/';
-  context.pciPod = context.basePciUrl || 'https://pmts.mozu.com/';
-  context.tenantPod = "https://t".concat(context.tenant, ".sandbox.mozu.com/");
+  context.homePod = context.baseUrl || context.homePod || 'https://home.mozu.com/';
+  context.pciPod = context.basePciUrl || context.pciPod || 'https://pmts.mozu.com/';
+  context.tenantPod = context.tenantPod || "https://t".concat(context.tenant, ".sandbox.mozu.com/");
   proto.context = context;
   proto.options = options;
-  proto.headers = R.reduce(function (headers, _ref) {
-    var _ref2 = _slicedToArray(_ref, 2),
-        key = _ref2[0],
-        name = _ref2[1];
+  proto.headers = R.reduce(function (headers, _ref3) {
+    var _ref4 = _slicedToArray(_ref3, 2),
+        key = _ref4[0],
+        name = _ref4[1];
 
-    var value$$1 = proto.context[normalizedContextKeys[key] || key] || headerDefaults[key];
-    if (value$$1) headers[constants.headerPrefix + name] = value$$1;
+    var value = proto.context[normalizedContextKeys[key] || key] || headerDefaults[key];
+    if (value) headers[constants.headerPrefix + name] = value;
     return headers;
   }, {}, R.toPairs(constants.headers));
+  proto.methods = R.values(constants.verbs).map(function (v) {
+    return v.toLowerCase();
+  });
 
-  if (isServer$1) {
+  if (isServer) {
     proto.headers['User-Agent'] = "Mozu Universal SDK v".concat(constants.version, " (Node.js ").concat(process.version, "; ").concat(process.platform, " ").concat(process.arch, ")");
   } //#endregion set context
   //#region request handler
 
 
-  proto.axios = options.useFutures ? Future.encaseP(axios$1) : axios$1;
+  proto.axios = options.useFutures ? Future.encaseP(axiosClient) : axiosClient;
 
   proto.parseTemplate = function () {
     var context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -12022,10 +10132,47 @@ var Api = function Api() {
     }), R.split('?'), R.replace(constants.templateBraceRegex, function (str) {
       var fromContext = str[1] === '+';
       var key = str.slice(1 + fromContext, str.length - 1);
-      var value$$1 = (fromContext ? context : data)[key] || (fromContext ? constants.baseUrl : '');
-      if (value$$1) usedKeys.push(key);
-      return value$$1;
+      var value = (fromContext ? context : data)[key] || (fromContext ? constants.baseUrl : '');
+      if (value) usedKeys.push(key);
+      return value;
     }))(template);
+    return {
+      url: url,
+      usedKeys: usedKeys
+    };
+  };
+
+  var queryStringReducer = function queryStringReducer(acc, _ref5, dex, pairs) {
+    var _ref6 = _slicedToArray(_ref5, 2),
+        key = _ref6[0],
+        value = _ref6[1];
+
+    return acc + (!dex ? '?' : '') + key + '=' + value + (dex < pairs.length - 1 ? '&' : '');
+  };
+
+  proto.parseStorefrontTemplate = function () {
+    var template = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    //ignoring the explode operator bc it is only used by entity
+    //and i don't care about that
+    var usedKeys = [];
+    R.replace();
+    var url = R.replace(constants.templateBraceRegex, function (str) {
+      var innerMatch = str.substring(1, str.length - 1);
+
+      if (innerMatch[0] === '+') {
+        return api.storefrontReference.urls[innerMatch.substring(1)];
+      }
+
+      if (innerMatch[0] === '?') {
+        var values = innerMatch === '?_*' ? data : R.pick(innerMatch.substring(1).split(','), data);
+        return R.compose(R.reduce(queryStringReducer, ''), R.toPairs)(values);
+      }
+
+      var value = data[innerMatch];
+      if (value) usedKeys.push(value);
+      return value || '';
+    }, template);
     return {
       url: url,
       usedKeys: usedKeys
@@ -12035,23 +10182,24 @@ var Api = function Api() {
   api.request = R.curryN(3, function (method, templateOrId) {
     var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var requestOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-    var requestContext = arguments.length > 4 ? arguments[4] : undefined;
-    var context = requestContext || api.context || {};
-    var headers = requestOptions.headers || api.headers || {}; //check for storefront interface id
+    var context = requestOptions.context || api.context || {};
+    var headers = requestOptions.headers || api.headers || {};
+    var returnType = requestOptions.returnType || '';
+    var storefrontAction = requestOptions.storefrontAction; //check for storefront interface id
     //data is overloaded.. it fills in template keys and is sent as the body
     //if the method is PUT/POST. this was changed in node-sdk at some point
     //if it becomes a problem consider removing used keys from body
     //also consider removing items from the body that are used in the template
 
-    var _api$parseTemplate = api.parseTemplate(context, templateOrId, data),
-        url = _api$parseTemplate.url,
-        usedKeys = _api$parseTemplate.usedKeys;
+    var _api = api[storefrontAction ? 'parseStorefrontTemplate' : 'parseTemplate'](context, templateOrId, data),
+        url = _api.url,
+        usedKeys = _api.usedKeys;
 
-    var config = {
+    var config = R.merge(requestOptions.config || {}, {
       headers: headers,
       method: method,
       url: url
-    };
+    });
 
     if ([constants.verbs.POST, constants.verbs.PUT].map(function (str) {
       return str.toLowerCase();
@@ -12063,17 +10211,26 @@ var Api = function Api() {
     config = api.hookMap.beforeRequest(config);
     return api.hookMap.withRequest(api.auth(R.merge({
       context: context
-    }, config)).chain(function (config) {
-      debugger;
-      return api.axios(config);
+    }, config)).chain(api.axios).map(function (response) {
+      if (returnType) {
+        var apiMethods = R.compose(R.reduce(function (a, key) {
+          var camel = fromDashCase(key);
+          a[camel] = api.action.bind(returnType, camel);
+          return a;
+        }, {}), R.keys, R.pathOr({}, ['methods', returnType]));
+        response.data = mixin(apiMethods, response.data);
+      }
+
+      if (!requestOptions.preserveRequest) response = response.data;
+      return api.hookMap.afterRequest(response);
     }));
   }); //#endregion request handler
   //#region set hookMap
 
-  api.hookMap = hooks.reduce(function (acc, hookName) {
-    return R.set(R.lensProp(hookName), ifType('Function', options.hooks[hookName]) || function (x) {
+  proto.hookMap = hooks.reduce(function (acc, hookName) {
+    return R.set(R.lensProp(hookName), ifType('Function', options.hooks[hookName], function (x) {
       return x;
-    }, acc);
+    }), acc);
   }, {}); //#endregion set hookMap
   //#region expand template and build service tree / methods
 
@@ -12081,47 +10238,89 @@ var Api = function Api() {
   var templateReference = definition.reference.template;
   var uncompressedServices = R.map(R.compose(R.replace('~', ''), R.join(''), R.map(function (piece) {
     return R.propOr(piece, piece, templateReference);
-  }), splitWhenStr(R.test(constants.urlTemplateSplitRegex))), uncompressFlattened(definition, delimiter)); //client tree
+  }), splitWhenStr(R.test(constants.urlTemplateSplitRegex))), uncompressFlattened(definition, delimiter));
+  var nodeActions = {}; //client tree
 
-  var services = crawl(function (obj) {
+  var services = crawl(function (obj, key, path) {
     if (!obj.url || !obj.method) return obj;
-    var request = api.request(obj.method, obj.url);
-    request.url = obj.url;
-    request.method = obj.method;
+    var url = obj.url,
+        method = obj.method;
+
+    var _url$split = url.split('?'),
+        _url$split2 = _slicedToArray(_url$split, 2),
+        route = _url$split2[0],
+        _url$split2$ = _url$split2[1],
+        query = _url$split2$ === void 0 ? '' : _url$split2$;
+
+    var args = R.match(constants.templateBraceRegex, route).map(function (match) {
+      var innerMatch = match.substring(1, match.length - 1);
+      return innerMatch[0] === '+' ? '' : innerMatch;
+    }).filter(Boolean);
+    var params = R.match(constants.templateBraceRegex, query).map(function (match) {
+      return match.substring(1, match.length - 1);
+    });
+    var name = R.last(key);
+    var request = api.request(method, url);
+    request.url = url;
+    request.method = method;
+    request.args = args;
+    request.params = params;
+    request.path = path;
+    nodeActions[key] = request;
     return request;
   }, unflatten(uncompressedServices, {
     delimiter: delimiter
   }));
   console.timeEnd('expand template'); //api.(set|post|etc)
 
-  var methods = Object.values(constants.verbs).reduce(function (a, verb) {
+  var methods$$1 = Object.values(constants.verbs).reduce(function (a, verb) {
     return R.merge(_defineProperty({}, verb.toLowerCase(), api.request(verb)), a);
-  }, {}); //#endregion expand template and build service tree / methods
+  }, {});
+  proto.nodeActions = nodeActions;
+  proto.storefrontReference = storefrontReference;
+  proto.storefrontActions = storefrontReference.methods; //#endregion expand template and build service tree / methods
 
-  proto = R.merge(proto, methods);
+  proto = R.merge(proto, methods$$1);
   api = mixin(proto, R.merge(api, services)); //#region api utilities
+  //api.client('commerce.order.getOrder', {orderId: 'asdf'})
 
-  api.getClient = R.compose(function (client) {
-    return isObj(client) ? api.resolve(client) : api.reject("invalid client path: ".concat(client));
-  }, function (path) {
-    return R.pathOr(path, detectPath(path), api);
-  });
-
-  api.action = function () {
+  api.client = function () {
     var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
     for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
 
-    return R.compose(function (request) {
-      return isFn(request) ? request(args) : api.reject("invalid client path: ".concat(request));
+    return R.compose(function (client) {
+      return isObj(client) ? api.resolve(client) : isFn(client) ? client.apply(void 0, args) : api.reject("invalid client path: ".concat(client));
     }, function (path) {
       return R.pathOr(path, detectPath(path), api);
     })(path);
   };
 
-  api.auth = authenticate(api); //#endregion api utilities
+  api.action = function () {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var dashCase = toDashCase(name);
+    var splitName = name.split('.').map(toDashCase).reverse();
+    var nodeAction = nodeActions[name];
+    var storefrontAction = R.pathOr(null, splitName, api.storefrontActions);
+    if (!nodeAction && !storefrontAction) splitName[1] = 'defaults';
+    storefrontAction = R.pathOr(null, splitName, api.storefrontActions);
+    if (!nodeAction && !storefrontAction) return api.reject('invalid action invocation');
+
+    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+
+    if (nodeAction) return request.apply(void 0, args);
+    return api.request(storefrontAction.verb || 'GET', storefrontAction.template, args[0] || {}, R.merge(args[1] || {}, {
+      returnType: storefrontAction.returnType,
+      storefrontAction: 1
+    }));
+  };
+
+  api.actions = nodeActions;
+  proto.auth = authenticate(api); //#endregion api utilities
 
   console.timeEnd('construct api'); //api takes 70ms to construct 50 of which is the template expansion
   //compressing the template saved about 100kb (half the size)
@@ -12130,4 +10329,7 @@ var Api = function Api() {
 };
 
 Api.hooks = hooks;
-Api.defaultOptions = defaultOptions;return Api;}));
+Api.hookReference = hookReference;
+Api.defaultOptions = defaultOptions;
+
+module.exports = Api;

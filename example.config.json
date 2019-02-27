@@ -1,0 +1,9 @@
+{
+  "applicationId": "example.1337.1.0.0.release",
+  "sharedSecret": "12345",
+  "tenant": 12345,
+  "site": 12345,
+  "baseUrl": "https://home.mozu.com/",
+  "basePciUrl": "https://pmts.mozu.com/",
+  "developerAccountId": 1234
+}

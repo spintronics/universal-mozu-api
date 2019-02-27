@@ -6,9 +6,22 @@ export let type = val => {
     : Object.prototype.toString.call(val).slice(8, -1)
 }
 
+export let assign = (ref, val) => (ref = val)
+
 export const mixin = (proto, ...sources) => {
   return Object.assign(Object.create(proto), ...sources)
 }
+
+export const toDashCase = str =>
+  str.replace(
+    /[A-Z]/g,
+    match => '-' + match[0].toLowerCase() + match.substring(1)
+  )
+
+export const fromDashCase = str =>
+  str
+    .split('-')
+    .reduce((acc, sub) => acc + sub[0].toUpperCase() + sub.substring[1])
 
 const _curryN = (len, fn) => (...args) => {
   if (args.length >= len) return fn(...args)
@@ -69,8 +82,8 @@ export let nodeBackToPromise = function(fn, context) {
 export let theGoodStuff = promise =>
   promise.then(x => [null, x]).catch(e => [e])
 
-export let ifType = curry((valueType, value) =>
-  type(value) === valueType ? value : null
+export let ifType = curry((valueType, value, def) =>
+  type(value) === valueType ? value : def || null
 )
 
 export let testIsServer = new Function(
@@ -101,7 +114,18 @@ export let isFn = x => 'function' === typeof x
 
 export let isObj = x => 'Object' === type(x)
 
+export let isArray = x =>
+  Array.isArray ? Array.isArray(x) : type(x) === 'Array'
+
+export let isNull = x => x === null
+
+export let isStr = x => 'string' === typeof x
+
+export let isUndef = x => x === undefined
+
 export let papp = (f, ...args) => f.bind(null, ...args)
+
+export let hasValue = x => !isUndef(x) && !isNull(x) && x !== false
 
 Function.prototype.papp = function(...args) {
   let fn = this
@@ -315,14 +339,18 @@ export const flatten = function flatten(target = {}, opts = {}) {
   return output
 }
 
-export const crawl = curry((process = (x, y) => y, obj = {}) => {
-  let step = obj => {
+export const crawl = curry((process = id, obj = {}) => {
+  let step = (obj, path = []) => {
     Object.entries(obj).forEach(([key, value]) => {
-      if (type(value) === 'Object') obj[key] = step(process(value))
+      if (type(value) === 'Object' || type(value) === 'Function') {
+        path.push(key)
+        obj[key] = step(process(value, key, [...path], obj), path)
+        path.pop()
+      }
     })
     return obj
   }
-  return step(process(obj))
+  return step(obj)
 })
 
 export const unflatten = (target = {}, opts = {}) => {

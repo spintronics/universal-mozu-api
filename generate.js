@@ -8,10 +8,13 @@ import {
   flatMap,
   objSwap,
   splitWhenStr,
-  log
+  log,
+  crawl
 } from './util'
 import R from './ramda'
 import constants from './constants'
+import prettier from 'prettier'
+import exampleConfig from './example.config.json'
 
 let [readdir, stat, readFile, writeFile] = [
   fs.readdir,
@@ -145,6 +148,18 @@ walk('./node_modules/mozu-node-sdk/clients')
     )
 
     return Promise.all([
+      // writeFile(
+      //   './definition.json',
+      //   `${JSON.stringify(unflatten(result, { delimiter }), null, 2)}`
+      // ),
+      // writeFile(
+      //   './flat-definition.js',
+      //   `export default ${JSON.stringify(
+      //     flatten(result, { delimiter: '.', skip: service => service.url }),
+      //     null,
+      //     2
+      //   )}`
+      // )
       writeFile(
         './definition.js',
         `export default {
@@ -160,19 +175,169 @@ walk('./node_modules/mozu-node-sdk/clients')
             2
           )}
         }`.replace(/".*":/gm, match => match.replace(/"/g, ''))
-      ),
-      writeFile(
-        './definition.json',
-        `${JSON.stringify(unflatten(result, { delimiter }), null, 2)}`
-      )
-      // writeFile(
-      //   './flat-definition.js',
-      //   `export default ${JSON.stringify(
-      //     flatten(result, { delimiter: '.', skip: service => service.url }),
-      //     null,
-      //     2
-      //   )}`
-      // )
+      ).then(() => {
+        Promise.all([
+          prettier.resolveConfig('./index.d.ts'),
+          import('./api.js')
+        ])
+          .then(([options, apiModule]) => {
+            let Api = apiModule.default
+            let api = Api(exampleConfig)
+            // let actions = {}
+            // crawl((obj, key, path) => {
+            //   if (obj.url && obj.method) {
+            //     let { url, method } = obj
+            //     let [route, query = ''] = url.split('?')
+            //     let args = R.match(constants.templateBraceRegex, route)
+            //       .map(match => {
+            //         let innerMatch = match.substring(1, match.length - 1)
+            //         return innerMatch[0] === '+' ? '' : innerMatch
+            //       })
+            //       .filter(Boolean)
+            //     let params = R.match(constants.templateBraceRegex, query).map(
+            //       match => {
+            //         return match.substring(1, match.length - 1)
+            //       }
+            //     )
+            //     actions[key] = {
+            //       args,
+            //       params,
+            //       method,
+            //       path: path,
+            //       action: R.last(path)
+            //     }
+            //   }
+            //   return obj
+            // }, R.pick(['commerce', 'content', 'event', 'platform'], api))
+            return prettier.format(
+              `
+                import Future from 'fluture'
+                import {AxiosRequestConfig} from 'axios'
+                declare function api(
+                  context: api.Context,
+                  options: api.Options,
+                  definition: {
+                    output: object
+                    reference: object
+                  }
+                ): api.Api
+  
+                type Task = Promise & Future
+  
+                type Method = ${api.methods.reduce(
+                  (a, m, i) => a + (i ? ' | ' : '') + `'${m}'`,
+                  ''
+                )}
+                
+                
+                declare namespace api {
+                  interface Api {
+                    request(method: Method, templateOrId: string, data?: object, requestOptions?: RequestOptons): Task
+                    //first argument is an array or string lens (with any non-character delimiter). if more than one argument is passed and the client exists it will be called with arguments 2..n
+                    client(path: string|string[], ...args?: []): Task
+                    action(name: string, ...args?: []): Task
+                    ${
+                      '' /*actions: {
+                      ${Object.entries(api.actions).reduce(
+                        (a, [name, action]) => {
+                          let dataProperties =
+                            action.args.reduce(
+                              (a, arg) => `${arg}: string;`,
+                              ''
+                            ) +
+                            action.params.reduce(
+                              (a, param) => `${param}?: string;`,
+                              ''
+                            )
+                          return (
+                            a +
+                            `
+                              ${name}(data${action.args.length ? '' : '?'}:{
+                                ${dataProperties}
+                              }, requestOptions: RequestOptions): Task
+                            `
+                          )
+                        },
+                        ''
+                      )}
+                    }*/
+                    }
+                  }
+
+                  
+                  class Api {
+                    resolve(value: any): Task
+                    reject(value: any): Task
+                    all(concurrency: number, taskList: Task[]): Task
+                    newTask(reject: function, resolve: function): Task
+                    axios(config: AxiosRequestConfig): Task
+                    parseTemplate(context: api.context, template: string, data?: object): {url: string, usedKeys: string[]}
+                    parseStorefrontTemplate(context: object, template: string, data?: object): {url: string, usedKeys: string[]}
+                    auth(config: AxiosRequestConfig): Task
+                    task: Task
+                    headers: string[]
+                    nodeActions: object  
+                    storefrontActions: object
+                  }
+  
+                  interface Headers {
+                    ${Object.values(constants.headers).reduce(
+                      (a, m, i) =>
+                        a + `'${constants.headerPrefix + m}': string;`,
+                      ''
+                    )}
+                  }
+                  
+                  interface Context {
+                    sharedSecret?: string
+                    homePod?: string
+                    pciPod?: string
+                    tenantPod?: string
+                    baseUrl?: string
+                    basePciUrl?: string
+                    developerAccount?: {
+                      emailAddress: string
+                    }
+                    applicationId: string
+                    developerAccountId: number
+                    tenant: number
+                    site: number
+                  }
+  
+                  interface RequestOptions {
+                    headers?: api.Headers
+                    context?: api.Context
+                    config?: AxiosRequestConfig
+                    storefrontAction?: Boolean
+                    internal?: Boolean
+                    preserveReqeust?: Boolean
+                  }
+  
+                  interface Options {
+                    ${Object.entries(Api.defaultOptions).reduce((a, [k, v]) => {
+                      return ['hooks'].includes(k)
+                        ? a
+                        : a + ' ' + k + '?:' + typeof v + ';'
+                    }, '')}
+                    hooks: {
+                      ${Api.hooks.reduce(
+                        (a, h) =>
+                          a +
+                          `\n//${Api.hookReference[h]}\n` +
+                          `${h} ?: function;`,
+                        ''
+                      )}
+                    }
+                  }
+                }
+  
+                export default api
+              `,
+              Object.assign(options, { parser: 'typescript' })
+            )
+          })
+          .then(output => writeFile('./index.d.ts', log(output)))
+      })
     ])
   })
   .catch(console.error)

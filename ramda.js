@@ -30,6 +30,9 @@ import test from 'ramda/src/test'
 import propOr from 'ramda/src/propOr'
 import values from 'ramda/src/values'
 import evolve from 'ramda/src/evolve'
+import mergeAll from 'ramda/src/mergeAll'
+import match from 'ramda/src/match'
+import last from 'ramda/src/last'
 
 export default {
   lensPath,
@@ -63,5 +66,8 @@ export default {
   test,
   propOr,
   values,
-  evolve
+  evolve,
+  mergeAll,
+  match,
+  last
 }

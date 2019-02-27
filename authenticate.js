@@ -89,6 +89,7 @@ export default api => {
   let password
   let passwordPrompt = (() => {
     let readline = () => import('readline')
+    // let readline = new Function("return import('readline')")
     let userLoginAttempts = 0
     return requestOptions => {
       return (isObj(readline)
@@ -217,7 +218,7 @@ export default api => {
           ? api.reject('no password for user auth in context')
           : passwordPrompt(requestOptions)
       }
-    }
+    } else return api.resolve(requestOptions)
     return api.reject('unable to authenticate')
   }
 
