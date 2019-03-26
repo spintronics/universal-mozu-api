@@ -22,15 +22,6 @@ import authenticate from './authenticate'
 import storefrontReference from './storefront-reference.json'
 // import circularJson from 'circular-json'
 
-/**
- * work in both environments or standalone
- * pass tests from storefront/node sdk
- * retain simplified interface from storefront and some of the utility methods
- * generate typing files
- * --end mvp
- * caching
- */
-
 const isServer = testIsServer()
 
 const hooks = ['beforeRequest', 'withRequest', 'afterRequest']
