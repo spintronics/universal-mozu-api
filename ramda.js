@@ -16,7 +16,6 @@ import set from 'ramda/src/set'
 import lensProp from 'ramda/src/lensProp'
 import pathOr from 'ramda/src/pathOr'
 import path from 'ramda/src/path'
-import __ from 'ramda/src/__'
 import keys from 'ramda/src/keys'
 import reduce from 'ramda/src/reduce'
 import mergeRight from 'ramda/src/mergeRight'
@@ -53,7 +52,6 @@ export default {
   lensProp,
   pathOr,
   path,
-  __,
   keys,
   reduce,
   mergeRight,

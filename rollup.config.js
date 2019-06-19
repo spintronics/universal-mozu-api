@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json'
 import replace from 'rollup-plugin-replace'
 import pkg from './package.json'
 
-let input = 'api.js'
+let input = 'src.js'
 
 let external = ['ramda', 'fluture', 'axios']
 
@@ -36,7 +36,7 @@ export default [
   {
     input,
     output: {
-      name: 'mozu-universal-api',
+      name: 'api',
       compact: false,
       banner: '//hey mom!',
       format: 'umd',

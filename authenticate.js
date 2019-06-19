@@ -1,6 +1,5 @@
 import constants from './constants'
 import R from './ramda'
-import Future from 'fluture'
 import { testIsServer, isObj } from './util'
 
 export default api => {
@@ -94,46 +93,44 @@ export default api => {
     return requestOptions => {
       return (isObj(readline)
         ? Promise.resolve(readline)
-        : (api.options.useFutures ? Future.encaseP(readline) : readline)().then(
-            r => {
-              readline = r.createInterface({
-                input: process.stdin,
-                output: process.stdout,
-                terminal: true
-              })
-              readline.on('SIGINT', function() {
-                readline.clearLine()
-                return process.exit()
-              })
-              readline._writeToOutput = function(str) {
-                // log(arguments)
-                if (str.includes(this._prompt)) {
-                  readline.history.pop()
-                  readline.output.write(
-                    this._prompt +
-                      str
-                        .replace(this._prompt, '')
-                        .replace(/[\r\n]/g, '')
-                        .replace(/./g, '*')
-                  )
-                  return
-                }
-                if (str === '\r\n') return
-                if (readline.mask) readline.output.write('*')
-                else readline.output.write(str)
+        : readline().then(r => {
+            readline = r.createInterface({
+              input: process.stdin,
+              output: process.stdout,
+              terminal: true
+            })
+            readline.on('SIGINT', function() {
+              readline.clearLine()
+              return process.exit()
+            })
+            readline._writeToOutput = function(str) {
+              // log(arguments)
+              if (str.includes(this._prompt)) {
+                readline.history.pop()
+                readline.output.write(
+                  this._prompt +
+                    str
+                      .replace(this._prompt, '')
+                      .replace(/[\r\n]/g, '')
+                      .replace(/./g, '*')
+                )
+                return
               }
-              let question = readline.question.bind(readline)
-              readline.question = (q, cb) => {
-                readline.mask = false
-                question(q, answer => {
-                  readline.mask = false
-                  cb(answer)
-                })
-                readline.mask = true
-              }
-              return readline
+              if (str === '\r\n') return
+              if (readline.mask) readline.output.write('*')
+              else readline.output.write(str)
             }
-          )
+            let question = readline.question.bind(readline)
+            readline.question = (q, cb) => {
+              readline.mask = false
+              question(q, answer => {
+                readline.mask = false
+                cb(answer)
+              })
+              readline.mask = true
+            }
+            return readline
+          })
       )
         .then(readline => {
           return api.newTask((reject, resolve) => {
@@ -187,12 +184,13 @@ export default api => {
      * using either application credentials (checked first) or user credentials
      *
      */
+    console.log(isServer, requestOptions.context)
     if (isServer) {
       if (appClaim.accessToken || requestOptions.context.sharedSecret) {
         appClaim.valid = validClaim(appClaim)
         appClaim.stale = !appClaim.valid && staleClaim(appClaim)
         if (appClaim.valid)
-          return Future.of(addAppClaimToRequest(requestOptions, appClaim))
+          return Promise.resolve(addAppClaimToRequest(requestOptions, appClaim))
         return appClaim.stale
           ? refreshAppAccessToken(appClaim)
           : getAppAccessToken(api.context)
@@ -215,7 +213,9 @@ export default api => {
         if (!password && requestOptions.context.developerAccount.password)
           password = requestOptions.context.developerAccount.password
         if (userClaim.valid)
-          return Future.of(addUserClaimToRequest(requestOptions, userClaim))
+          return Promise.resolve(
+            addUserClaimToRequest(requestOptions, userClaim)
+          )
         return userClaim.stale
           ? refreshUserAccessToken(userClaim)
           : password
