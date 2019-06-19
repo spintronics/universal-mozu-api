@@ -93,8 +93,8 @@ export default api => {
     let userLoginAttempts = 0
     return requestOptions => {
       return (isObj(readline)
-        ? api.resolve(readline)
-        : (api.options.useFutures ? Future.encaseP(readline) : readline)().map(
+        ? Promise.resolve(readline)
+        : (api.options.useFutures ? Future.encaseP(readline) : readline)().then(
             r => {
               readline = r.createInterface({
                 input: process.stdin,
@@ -135,7 +135,7 @@ export default api => {
             }
           )
       )
-        .chain(readline => {
+        .then(readline => {
           return api.newTask((reject, resolve) => {
             readline.question('developer password: ', answer => {
               if (!answer) {
@@ -149,31 +149,31 @@ export default api => {
             })
           })
         })
-        .chain(password =>
+        .then(password =>
           getUserAccessToken(
             R.assocPath(['developerAccount', 'password'], password, api.context)
           )
         )
-        .map(
+        .then(
           R.compose(
             setUserClaim(auth),
             R.prop('data')
           )
         )
-        .map(
+        .then(
           R.compose(
             addUserClaimToRequest(requestOptions),
             getUserClaim
           )
         )
-        .chainRej(e => {
+        .catch(e => {
           if (e && e.response.status === 401 && userLoginAttempts < 3) {
             userLoginAttempts += 1
             readline.output.write('\ninvalid password. try again?\n')
             return passwordPrompt(requestOptions)
           }
           readline.close()
-          return api.reject(e)
+          return Promise.reject(e)
         })
     }
   })()
@@ -181,6 +181,12 @@ export default api => {
   let authenticate = requestOptions => {
     let appClaim = getAppClaim(auth)
     let userClaim = getUserClaim(auth)
+    /**
+     * if this is not being run in node don't do anything. otherwise use the appclaim from state if it is
+     * valid and not stale. refresh the token if it is stale. request a token if one does not yet exist
+     * using either application credentials (checked first) or user credentials
+     *
+     */
     if (isServer) {
       if (appClaim.accessToken || requestOptions.context.sharedSecret) {
         appClaim.valid = validClaim(appClaim)
@@ -190,13 +196,13 @@ export default api => {
         return appClaim.stale
           ? refreshAppAccessToken(appClaim)
           : getAppAccessToken(api.context)
-              .map(
+              .then(
                 R.compose(
                   setAppClaim(auth),
                   R.prop('data')
                 )
               )
-              .map(
+              .then(
                 R.compose(
                   addAppClaimToRequest(requestOptions),
                   getAppClaim
@@ -213,13 +219,13 @@ export default api => {
         return userClaim.stale
           ? refreshUserAccessToken(userClaim)
           : password
-          ? api.resolve(password)
+          ? Promise.resolve(password)
           : !isServer
-          ? api.reject('no password for user auth in context')
+          ? Promise.reject('no password for user auth in context')
           : passwordPrompt(requestOptions)
       }
-    } else return api.resolve(requestOptions)
-    return api.reject('unable to authenticate')
+    } else return Promise.resolve(requestOptions)
+    return Promise.reject('unable to authenticate')
   }
 
   authenticate.setAppClaim = setAppClaim

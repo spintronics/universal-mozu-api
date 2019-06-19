@@ -36,6 +36,12 @@ function walk(dir) {
           } else if (stats.isFile()) {
             return readFile(filepath, 'utf8')
               .then(file => {
+                /**
+                 * if there is Client.method in the file remove all variables from
+                 * the top and special characters. grab the object argument to client.sub/method
+                 * and transform it into a serialzed json object. create a tree that represents
+                 * the methods.
+                 */
                 if (!~file.indexOf('Client.method')) return null
                 return file
                   .replace(/(\/\/|var).*/g, '')
@@ -123,6 +129,12 @@ walk('./node_modules/mozu-node-sdk/clients')
     let urlTemplateRegex = constants.urlTemplateSplitRegex
     let urlContextRegex = /\{\+([^}]+)\}/
 
+    /**
+     * flatten the generated definition and split the keys/values on not letters.
+     * create a base54 (allowed starting characters for js key) dictonary and store
+     * unique strings from the flattened&split definition keys/values.
+     */
+
     output = R.map(
       R.compose(
         R.join(''),
@@ -148,18 +160,6 @@ walk('./node_modules/mozu-node-sdk/clients')
     )
 
     return Promise.all([
-      // writeFile(
-      //   './definition.json',
-      //   `${JSON.stringify(unflatten(result, { delimiter }), null, 2)}`
-      // ),
-      // writeFile(
-      //   './flat-definition.js',
-      //   `export default ${JSON.stringify(
-      //     flatten(result, { delimiter: '.', skip: service => service.url }),
-      //     null,
-      //     2
-      //   )}`
-      // )
       writeFile(
         './definition.js',
         `export default {
@@ -183,156 +183,126 @@ walk('./node_modules/mozu-node-sdk/clients')
           .then(([options, apiModule]) => {
             let Api = apiModule.default
             let api = Api(exampleConfig)
-            // let actions = {}
-            // crawl((obj, key, path) => {
-            //   if (obj.url && obj.method) {
-            //     let { url, method } = obj
-            //     let [route, query = ''] = url.split('?')
-            //     let args = R.match(constants.templateBraceRegex, route)
-            //       .map(match => {
-            //         let innerMatch = match.substring(1, match.length - 1)
-            //         return innerMatch[0] === '+' ? '' : innerMatch
-            //       })
-            //       .filter(Boolean)
-            //     let params = R.match(constants.templateBraceRegex, query).map(
-            //       match => {
-            //         return match.substring(1, match.length - 1)
-            //       }
-            //     )
-            //     actions[key] = {
-            //       args,
-            //       params,
-            //       method,
-            //       path: path,
-            //       action: R.last(path)
-            //     }
-            //   }
-            //   return obj
-            // }, R.pick(['commerce', 'content', 'event', 'platform'], api))
-            return prettier.format(
-              `
-                import Future from 'fluture'
-                import {AxiosRequestConfig} from 'axios'
-                declare function api(
-                  context: api.Context,
-                  options: api.Options,
-                  definition: {
-                    output: object
-                    reference: object
-                  }
-                ): api.Api
-  
-                type Task = Promise & Future
-  
-                type Method = ${api.methods.reduce(
-                  (a, m, i) => a + (i ? ' | ' : '') + `'${m}'`,
-                  ''
-                )}
-                
-                
-                declare namespace api {
-                  interface Api {
-                    request(method: Method, templateOrId: string, data?: object, requestOptions?: RequestOptons): Task
-                    //first argument is an array or string lens (with any non-character delimiter). if more than one argument is passed and the client exists it will be called with arguments 2..n
-                    client(path: string|string[], ...args?: []): Task
-                    action(name: string, ...args?: []): Task
-                    ${
-                      '' /*actions: {
-                      ${Object.entries(api.actions).reduce(
-                        (a, [name, action]) => {
-                          let dataProperties =
-                            action.args.reduce(
-                              (a, arg) => `${arg}: string;`,
-                              ''
-                            ) +
-                            action.params.reduce(
-                              (a, param) => `${param}?: string;`,
-                              ''
-                            )
-                          return (
-                            a +
-                            `
-                              ${name}(data${action.args.length ? '' : '?'}:{
-                                ${dataProperties}
-                              }, requestOptions: RequestOptions): Task
-                            `
-                          )
-                        },
-                        ''
-                      )}
-                    }*/
-                    }
-                  }
+            let baseClients = Object.keys(api).reduce((acc, key) => {
+              acc[key] = 1
+              return acc
+            }, {})
+            var functions = []
 
-                  
-                  class Api {
-                    resolve(value: any): Task
-                    reject(value: any): Task
-                    all(concurrency: number, taskList: Task[]): Task
-                    newTask(reject: function, resolve: function): Task
-                    axios(config: AxiosRequestConfig): Task
-                    parseTemplate(context: api.context, template: string, data?: object): {url: string, usedKeys: string[]}
-                    parseStorefrontTemplate(context: object, template: string, data?: object): {url: string, usedKeys: string[]}
-                    auth(config: AxiosRequestConfig): Task
-                    task: Task
-                    headers: string[]
-                    nodeActions: object  
-                    storefrontActions: object
+            /**
+             * instantiate the api with the newly generated definition. transform the api
+             * methods in the tree into a funtion interface that defines the require / optional
+             * arguments. flatten the tree and create a map containing each of the node keys on
+             * the tree that are not methods. build up an interface that composes them together
+             * to match the api tree structure. define the api constructor and write the definition file to
+             * the same name as the entry point.
+             */
+            var definition = `
+              declare function api(
+                context: api.Context,
+                options?: api.Options
+              ): api.Api
+              declare namespace api {
+                ${R.compose(
+                  R.reduce((definition, [key, type]) => {
+                    return (
+                      definition +
+                      (typeof type === 'string'
+                        ? type
+                        : `
+                      interface ${key in baseClients ? '' : 'z_'}${key} {
+                        ${Object.keys(type).reduce(
+                          (acc, str) => acc + `${str}: z_${str};`,
+                          ''
+                        )}
+                      }
+                    `)
+                    )
+                  }, ''),
+                  R.toPairs,
+                  R.reduce((acc, [key, type]) => {
+                    var split = key.split('.')
+                    var end = split.length - 1
+                    split.forEach((k, dex) => {
+                      if (dex) {
+                        if (dex === end) acc[k] = type
+                        if (!(split[dex - 1] in acc)) acc[split[dex - 1]] = {}
+                        acc[split[dex - 1]][k] = (dex === end ? 'z_' : 'z_') + k
+                      } else {
+                        if (!(k in acc)) acc[k] = {}
+                      }
+                    })
+
+                    return acc
+                  }, {}),
+                  R.toPairs,
+                  flatten,
+                  crawl((fn, key, path, parent) => {
+                    if ('function' !== typeof fn) return fn
+                    return `
+                      interface ${key}_args {
+                        ${fn.args.reduce((a, arg) => `${arg}: string;`, '')}
+                        ${fn.params.reduce(
+                          (a, param) => `${param}?: string;`,
+                          ''
+                        )}
+                      }
+                      interface z_${key} {
+                        (config: ${key}_args, options: api.RequestOptions) : Promise
+                      }
+                    `
+                  })
+                )(api)}
+                interface Api {
+                  ${Object.keys(api).reduce(
+                    (acc, key) => acc + key + ':' + key + ';',
+                    ''
+                  )}
+                }
+                interface Context {
+                  sharedSecret?: string
+                  homePod?: string
+                  pciPod?: string
+                  tenantPod?: string
+                  baseUrl?: string
+                  basePciUrl?: string
+                  developerAccount?: {
+                    emailAddress: string
                   }
-  
-                  interface Headers {
-                    ${Object.values(constants.headers).reduce(
-                      (a, m, i) =>
-                        a + `'${constants.headerPrefix + m}': string;`,
+                  applicationId: string
+                  developerAccountId: number
+                  tenant: number
+                  site: number
+                }
+                interface RequestOptions {
+                  headers?: api.Headers
+                  context?: api.Context
+                  config?: AxiosRequestConfig
+                  internal?: Boolean
+                  preserveReqeust?: Boolean
+                }
+                interface Options {
+                  ${Object.entries(Api.defaultOptions).reduce((a, [k, v]) => {
+                    return ['hooks'].includes(k)
+                      ? a
+                      : a + ' ' + k + '?:' + typeof v + ';'
+                  }, '')}
+                  hooks: {
+                    ${Api.hooks.reduce(
+                      (a, h) =>
+                        a +
+                        `\n//${Api.hookReference[h]}\n` +
+                        `${h} ?: function;`,
                       ''
                     )}
                   }
-                  
-                  interface Context {
-                    sharedSecret?: string
-                    homePod?: string
-                    pciPod?: string
-                    tenantPod?: string
-                    baseUrl?: string
-                    basePciUrl?: string
-                    developerAccount?: {
-                      emailAddress: string
-                    }
-                    applicationId: string
-                    developerAccountId: number
-                    tenant: number
-                    site: number
-                  }
-  
-                  interface RequestOptions {
-                    headers?: api.Headers
-                    context?: api.Context
-                    config?: AxiosRequestConfig
-                    storefrontAction?: Boolean
-                    internal?: Boolean
-                    preserveReqeust?: Boolean
-                  }
-  
-                  interface Options {
-                    ${Object.entries(Api.defaultOptions).reduce((a, [k, v]) => {
-                      return ['hooks'].includes(k)
-                        ? a
-                        : a + ' ' + k + '?:' + typeof v + ';'
-                    }, '')}
-                    hooks: {
-                      ${Api.hooks.reduce(
-                        (a, h) =>
-                          a +
-                          `\n//${Api.hookReference[h]}\n` +
-                          `${h} ?: function;`,
-                        ''
-                      )}
-                    }
-                  }
                 }
-  
-                export default api
-              `,
+              }
+              export default api
+            `
+            definition = functions.join('\n') + definition
+            return prettier.format(
+              definition,
               Object.assign(options, { parser: 'typescript' })
             )
           })

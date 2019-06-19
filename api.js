@@ -1,5 +1,4 @@
 import axiosClient from 'axios'
-import Future from 'fluture'
 import defaultDefinition from './definition.js'
 import R from './ramda'
 import {
@@ -19,118 +18,88 @@ import {
 } from './util'
 import constants from './constants'
 import authenticate from './authenticate'
-import storefrontReference from './storefront-reference.json'
 // import circularJson from 'circular-json'
 
-const isServer = testIsServer()
+const CONSTANTS = Object.freeze({
+  isServer: testIsServer(),
+  hooks: ['beforeRequest', 'withRequest', 'afterRequest'],
 
-const hooks = ['beforeRequest', 'withRequest', 'afterRequest']
+  hookReference: {
+    beforeRequest:
+      'accepts as the first parameter the request configuration options and should return a modified version',
+    withRequest:
+      'accepts as the first parameter and should return the future or promise that will be returned by the request method',
+    afterRequest:
+      'accepts as the first parameter and should return the response that will occur after the request promise/future settles'
+  },
 
-const hookReference = {
-  beforeRequest:
-    'accepts as the first parameter the request configuration options and should return a modified version',
-  withRequest:
-    'accepts as the first parameter and should return the future or promise that will be returned by the request method',
-  afterRequest:
-    'accepts as the first parameter and should return the response that will occur after the request promise/future settles'
-}
+  defaultOptions: {
+    hooks: {}
+  },
 
-const defaultOptions = {
-  useFutures: true,
-  hooks: {}
-}
-
-const delimiter = '_'
-
-const detectPath = path =>
-  'string' === typeof path ? R.split(/[^a-zA-Z0-9]/g, path) : path
+  delimiter: '_',
+  apiBasePath: '/api'
+})
 
 let Api = (
   context = {},
-  options = defaultOptions,
+  options = CONSTANTS.defaultOptions,
   definition = defaultDefinition
 ) => {
   console.time('construct api')
 
+  /**
+   * only the interface intended for use when consuming the library should be exposed on
+   * api. everything else will be put in proto.
+   */
+
   let api = {}
   let proto = {}
 
-  //#region promise interop
-
-  if (!options.useFutures) {
-    if (typeof Promise === 'undefined') options.useFutures = true
-    else {
-      // let promiseThroat = R.curry(throat(Promise))
-      Promise.prototype.chain = Promise.prototype.map = Promise.prototype.then
-      Promise.prototype.forkCatch = Promise.prototype.catch
-      Promise.prototype.chainRej = Promise.prototype.mapRej = function(
-        handler
-      ) {
-        return this.then(null, handler)
-      }
-      Promise.prototype.fork = function(rej, res) {
-        return this.then(res, rej)
-      }
-      Promise.of = Promise.resolve
-
-      Promise.parallel = (concurrency = 1, promiseList = []) => {
-        // return Promise.all(
-        //   promiseList.map(promise =>
-        //     isFn(promise) ? promiseThroat(concurrency, promise) : promise
-        //   )
-        // )
-        return Promise.all(promiseList)
-      }
-    }
-  }
-
-  proto.task = options.useFutures ? Future : Promise
-  proto.resolve = proto.task.of.bind(proto.task)
-  proto.reject = proto.task.reject.bind(proto.task)
-  proto.all = proto.task.parallel
-  proto.newTask = options.useFutures
-    ? Future
-    : handler => new Promise((resolve, reject) => handler(reject, resolve))
-
-  //#endregion promise interop
-
   //#region set context
 
-  if (isServer) {
-    if (context && context.apiContext) context = context.apiContext
-    if (process.env.mozuHosted) {
-      try {
-        let conf = JSON.parse(process.env.mozuHosted).sdkConfig
-        context = R.mergeDeepRight(context, conf)
-      } catch (e) {
-        console.error(e)
-      }
-    }
+  if (CONSTANTS.isServer) {
+    // if (context && context.apiContext) context = context.apiContext
+    // if (process.env.mozuHosted) {
+    //   try {
+    //     let conf = JSON.parse(process.env.mozuHosted).sdkConfig
+    //     context = R.mergeDeepRight(context, conf)
+    //   } catch (e) {
+    //     console.error(e)
+    //   }
+    // }
   } else {
-    let contextPreload = document.getElementById('data-mz-preload-apicontext')
-    let contextPreloadText =
-      contextPreload &&
-      (contextPreload.textContent ||
-        contextPreload.innerText ||
-        contextPreload.text ||
-        contextPreload.innerHTML)
-    try {
-      let contextJSON = contextPreloadText && JSON.parse(contextPreloadText)
-      if (contextJSON.headers) {
-        context = R.mergeDeepRight(
-          context,
-          R.toPairs(contextJSON.headers).reduce((a, [key, v]) => {
-            a[fromDashCase(key.replace(constants.headerPrefix, ''))] = v
-            return a
-          }, {})
-        )
-      }
-      if (contextJSON.urls) {
-        storefrontReference.urls = contextJSON.urls
-      }
-    } catch (e) {
-      console.error(e)
-    }
+    // context = {
+    //   baseUrl: '/api',
+    //   tenantUrl: '/api',
+    //   basePciUrl: '/api',
+    //   homePod: '/api',
+    //   pciPod: '/api'
+    // }
+    // let contextPreload = document.getElementById('data-mz-preload-apicontext')
+    // let contextPreloadText =
+    //   contextPreload &&
+    //   (contextPreload.textContent ||
+    //     contextPreload.innerText ||
+    //     contextPreload.text ||
+    //     contextPreload.innerHTML)
+    // try {
+    //   let contextJSON = contextPreloadText && JSON.parse(contextPreloadText)
+    //   if (contextJSON.headers) {
+    //     context = R.mergeDeepRight(
+    //       context,
+    //       R.toPairs(contextJSON.headers).reduce((a, [key, v]) => {
+    //         a[fromDashCase(key.replace(constants.headerPrefix, ''))] = v
+    //         return a
+    //       }, {})
+    //     )
+    //   }
+    //   if (contextJSON.urls) {
+    //     storefrontReference.urls = contextJSON.urls
+    //   }
+    // } catch (e) {
+    //   console.error(e)
+    // }
   }
 
   let headerDefaults = {
@@ -138,6 +107,7 @@ let Api = (
     DATAVIEWMODE: constants.dataViewModes.LIVE
   }
 
+  //all uppercase is a valid key as well
   let normalizedContextKeys = R.reduce(
     (keyMap, key) => {
       keyMap[key.replace(/[^0-9a-zA-Z]/g, '').toUpperCase()] = key
@@ -157,6 +127,7 @@ let Api = (
   proto.context = context
   proto.options = options
 
+  //set default headers
   proto.headers = R.reduce(
     (headers, [key, name]) => {
       var value =
@@ -170,8 +141,8 @@ let Api = (
 
   proto.methods = R.values(constants.verbs).map(v => v.toLowerCase())
 
-  if (isServer) {
-    proto.headers['User-Agent'] = `Mozu Universal SDK v${
+  if (CONSTANTS.isServer) {
+    proto.headers['User-Agent'] = `K Isomorphic SDK v${
       constants.version
     } (Node.js ${process.version}; ${process.platform} ${process.arch})`
   }
@@ -180,9 +151,16 @@ let Api = (
 
   //#region request handler
 
-  proto.axios = options.useFutures ? Future.encaseP(axiosClient) : axiosClient
+  proto.axios = axiosClient
 
   proto.parseTemplate = (context = {}, template = '', data = {}) => {
+    /**
+     * replace +contextVars from context map. template variables
+     * and query parameters will both be in data. replace the appropriate
+     * key in the template string and return a map containing the used keys
+     * so that the request handler can remove them from the body if it is a post
+     * request.
+     */
     let usedKeys = []
     let url = R.compose(
       R.join('?'),
@@ -211,81 +189,50 @@ let Api = (
     return { url, usedKeys }
   }
 
-  let queryStringReducer = (acc, [key, value], dex, pairs) =>
-    acc +
-    (!dex ? '?' : '') +
-    key +
-    '=' +
-    value +
-    (dex < pairs.length - 1 ? '&' : '')
-
-  proto.parseStorefrontTemplate = (
-    context = storefrontReference.urls,
-    template = '',
-    data = {}
-  ) => {
-    //ignoring the explode operator bc it is only used by entity
-    //and i don't care about that
-    let usedKeys = []
-    R.replace()
-    let url = R.replace(
-      constants.templateBraceRegex,
-      str => {
-        let innerMatch = str.substring(1, str.length - 1)
-        if (innerMatch[0] === '+') {
-          return api.storefrontReference.urls[innerMatch.substring(1)]
-        }
-        if (innerMatch[0] === '?') {
-          let values =
-            innerMatch === '?_*'
-              ? data
-              : R.pick(innerMatch.substring(1).split(','), data)
-          usedKeys.concat(Object.keys(values))
-          return R.compose(
-            R.reduce(queryStringReducer, ''),
-            R.toPairs
-          )(values)
-        }
-        let value = data[innerMatch]
-        if (value) usedKeys.push(value)
-        return value || ''
-      },
-      template
-    )
-    return { url, usedKeys }
-  }
-
-  api.request = R.curryN(
+  /**
+   * requestOptions should be the same as the axios options with the addition
+   * of the ability to pass in the context to make testing easier.
+   */
+  proto.request = R.curryN(
     3,
     (method, templateOrId, data = {}, requestOptions = {}) => {
       let context = requestOptions.context || api.context || {}
       let headers = requestOptions.headers || api.headers || {}
-      let returnType = requestOptions.returnType || ''
-      let storefrontAction = requestOptions.storefrontAction
-      //check for storefront interface id
       //data is overloaded.. it fills in template keys and is sent as the body
       //if the method is PUT/POST. this was changed in node-sdk at some point
       //if it becomes a problem consider removing used keys from body
       //also consider removing items from the body that are used in the template
 
-      let { url, usedKeys } = api[
-        storefrontAction ? 'parseStorefrontTemplate' : 'parseTemplate'
-      ](context, templateOrId, data)
+      if (isServer) {
+        var { url, usedKeys } = api.parseTemplate(context, templateOrId, data)
 
-      let config = R.merge(requestOptions.config || {}, {
-        headers,
-        method,
-        url
-      })
+        var config = R.merge(R.omit(['context'], requestOptions), {
+          headers,
+          method,
+          url
+        })
 
-      if (
-        [constants.verbs.POST, constants.verbs.PUT]
-          .map(str => str.toLowerCase())
-          .includes(method.toLowerCase())
-      ) {
-        config.data = R.omit(usedKeys, data)
+        if (
+          [constants.verbs.POST, constants.verbs.PUT]
+            .map(str => str.toLowerCase())
+            .includes(method.toLowerCase())
+        ) {
+          config.data = R.omit(usedKeys, data)
+        }
+      } else {
+        //call api.request from server with the arguments passed in the body of the client request
+        config = {
+          method: 'POST',
+          url: CONSTANTS.apiBasePath,
+          body: JSON.stringify(Array.from(arguments)),
+          headers: {
+            //userid??
+          }
+        }
       }
 
+      //this is mainly being used to prevent infinite recursion from the auth step
+      //it might not be necessary anymore
       if (requestOptions.internal) return api.axios(config)
 
       config = api.hookMap.beforeRequest(config)
@@ -293,20 +240,8 @@ let Api = (
       return api.hookMap.withRequest(
         api
           .auth(R.merge({ context }, config))
-          .chain(api.axios)
-          .map(response => {
-            if (returnType) {
-              let apiMethods = R.compose(
-                R.reduce((a, key) => {
-                  let camel = fromDashCase(key)
-                  a[camel] = api.action.bind(returnType, camel)
-                  return a
-                }, {}),
-                R.keys,
-                R.pathOr({}, ['methods', returnType])
-              )
-              response.data = mixin(apiMethods, response.data)
-            }
+          .then(api.axios)
+          .then(response => {
             if (!requestOptions.preserveRequest) response = response.data
             return api.hookMap.afterRequest(response)
           })
@@ -318,11 +253,11 @@ let Api = (
 
   //#region set hookMap
 
-  proto.hookMap = hooks.reduce(
+  proto.hookMap = CONSTANTS.hooks.reduce(
     (acc, hookName) =>
       R.set(
         R.lensProp(hookName),
-        ifType('Function', options.hooks[hookName], x => x),
+        ifType('Function', options.hooks[hoCONSTANTS.okName], x => x),
         acc
       ),
     {}
@@ -330,8 +265,8 @@ let Api = (
 
   //#endregion set hookMap
 
-  //#region expand template and build service tree / methods
-  console.time('expand template')
+  //#region expand and build service tree / methods
+  console.time('expand')
   let templateReference = definition.reference.template
   let uncompressedServices = R.map(
     R.compose(
@@ -340,7 +275,7 @@ let Api = (
       R.map(piece => R.propOr(piece, piece, templateReference)),
       splitWhenStr(R.test(constants.urlTemplateSplitRegex))
     ),
-    uncompressFlattened(definition, delimiter)
+    uncompressFlattened(definition, CONSTANTS.delimiter)
   )
   let nodeActions = {}
   //client tree
@@ -358,8 +293,9 @@ let Api = (
       let params = R.match(constants.templateBraceRegex, query).map(match => {
         return match.substring(1, match.length - 1)
       })
-      let name = R.last(key)
-      let request = api.request(method, url)
+      // let name = R.last(key)
+      let request = proto.request(method, url)
+      //store useful information on the method
       request.url = url
       request.method = method
       request.args = args
@@ -369,32 +305,30 @@ let Api = (
       return request
     },
     unflatten(uncompressedServices, {
-      delimiter
+      delimiter: CONSTANTS.delimiter
     })
   )
 
-  console.timeEnd('expand template')
+  console.timeEnd('expand')
 
   //api.(set|post|etc)
   let methods = Object.values(constants.verbs).reduce(
-    (a, verb) => R.merge({ [verb.toLowerCase()]: api.request(verb) }, a),
+    (a, verb) => R.merge({ [verb.toLowerCase()]: proto.request(verb) }, a),
     {}
   )
 
   proto.nodeActions = nodeActions
-  proto.storefrontReference = storefrontReference
-  proto.storefrontActions = storefrontReference.methods
 
-  //#endregion expand template and build service tree / methods
+  //#endregion expand and build service tree / methods
 
-  proto = R.merge(proto, methods)
+  // proto = R.merge(proto, methods)
 
   api = mixin(proto, R.merge(api, services))
 
   //#region api utilities
 
   //api.client('commerce.order.getOrder', {orderId: 'asdf'})
-  api.client = (path = '', ...args) =>
+  proto.client = (path = '', ...args) =>
     R.compose(
       client =>
         isObj(client)
@@ -402,48 +336,20 @@ let Api = (
           : isFn(client)
           ? client(...args)
           : api.reject(`invalid client path: ${client}`),
-      path => R.pathOr(path, detectPath(path), api)
+      path => R.pathOr(path, util.detectPath(path), api)
     )(path)
-
-  api.action = (name = '', ...args) => {
-    let dashCase = toDashCase(name)
-    let splitName = name
-      .split('.')
-      .map(toDashCase)
-      .reverse()
-    let nodeAction = nodeActions[name]
-    let storefrontAction = R.pathOr(null, splitName, api.storefrontActions)
-    if (!nodeAction && !storefrontAction) splitName[1] = 'defaults'
-    storefrontAction = R.pathOr(null, splitName, api.storefrontActions)
-    if (!nodeAction && !storefrontAction)
-      return api.reject('invalid action invocation')
-    if (nodeAction) return request(...args)
-    return api.request(
-      storefrontAction.verb || 'GET',
-      storefrontAction.template,
-      args[0] || {},
-      R.merge(args[1] || {}, {
-        returnType: storefrontAction.returnType,
-        storefrontAction: 1
-      })
-    )
-  }
-
-  api.actions = nodeActions
 
   proto.auth = authenticate(api)
 
   //#endregion api utilities
 
   console.timeEnd('construct api')
-  //api takes 70ms to construct 50 of which is the template expansion
-  //compressing the template saved about 100kb (half the size)
 
   return api
 }
 
-Api.hooks = hooks
-Api.hookReference = hookReference
+Api.hooks = CONSTANTS.hooks
+Api.hookReference = CONSTANTS.hookReference
 Api.defaultOptions = defaultOptions
 
 export default Api

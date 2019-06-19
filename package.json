@@ -6,8 +6,8 @@
   "module": "index.mjs",
   "scripts": {
     "test": "node -r esm ./test/node.js",
-    "debugg": "node --nolazy -r esm --inspect-brk=9229 ./generate.js",
-    "debug": "node --nolazy -r esm --inspect-brk=9229 ./test/node.js",
+    "debug": "node --nolazy -r esm --inspect-brk=9229 ./generate.js",
+    "debugg": "node --nolazy -r esm --inspect-brk=9229 ./test/node.js",
     "generate": "node -r esm generate",
     "dev-build": "rollup -c",
     "build": "rollup -c && uglifyjs index.umd.js -c -m -o index.umd.js",
@@ -19,8 +19,9 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
-    "fluture": "^10.3.0",
-    "ramda": "^0.26.1"
+    "fluture": "^11.0.1",
+    "ramda": "^0.26.1",
+    "spdy": "^4.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

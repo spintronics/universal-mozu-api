@@ -339,7 +339,10 @@ export const flatten = function flatten(target = {}, opts = {}) {
   return output
 }
 
-export const crawl = curry((process = id, obj = {}) => {
+export const detectPath = path =>
+  'string' === typeof path ? R.split(/[^a-zA-Z0-9]/g, path) : path
+
+export const crawl = curry((process, obj) => {
   let step = (obj, path = []) => {
     Object.entries(obj).forEach(([key, value]) => {
       if (type(value) === 'Object' || type(value) === 'Function') {

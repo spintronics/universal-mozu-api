@@ -783,27 +783,6 @@ var _toObject = function (it) {
   return Object(_defined(it));
 };
 
-// most Object methods by ES6 should accept primitives
-
-
-
-var _objectSap = function (KEY, exec) {
-  var fn = (_core.Object || {})[KEY] || Object[KEY];
-  var exp = {};
-  exp[KEY] = exec(fn);
-  _export(_export.S + _export.F * _fails(function () { fn(1); }), 'Object', exp);
-};
-
-// 19.1.2.14 Object.keys(O)
-
-
-
-_objectSap('keys', function () {
-  return function keys(it) {
-    return _objectKeys(_toObject(it));
-  };
-});
-
 var max$1 = Math.max;
 var min$2 = Math.min;
 var floor$1 = Math.floor;
@@ -7787,6 +7766,27 @@ _export(_export.P + _export.F * (_fails(function () {
   }
 });
 
+// most Object methods by ES6 should accept primitives
+
+
+
+var _objectSap = function (KEY, exec) {
+  var fn = (_core.Object || {})[KEY] || Object[KEY];
+  var exp = {};
+  exp[KEY] = exec(fn);
+  _export(_export.S + _export.F * _fails(function () { fn(1); }), 'Object', exp);
+};
+
+// 19.1.2.14 Object.keys(O)
+
+
+
+_objectSap('keys', function () {
+  return function keys(it) {
+    return _objectKeys(_toObject(it));
+  };
+});
+
 var f$3 = _wks;
 
 var _wksExt = {
@@ -8738,1246 +8738,7 @@ var authenticate = (function (api) {
   return authenticate;
 });
 
-var basicOps = {
-	get: "GET",
-	update: "PUT",
-	create: "POST",
-	del: "DELETE"
-};
-var urls = {
-	productService: "/api/commerce/catalog/storefront/products/",
-	documentListService: "/api/content/documentlists/",
-	entityListService: "/api/platform/entitylists/",
-	categoryService: "/api/commerce/catalog/storefront/categories/",
-	cartService: "/api/commerce/carts/",
-	customerService: "/api/commerce/customer/accounts/",
-	customerAttributeDefService: "/api/commerce/customer/attributedefinition/attributes/",
-	inStockNotificationService: "/api/commerce/instocknotifications/",
-	shippingService: "/api/commerce/catalog/storefront/shipping/",
-	orderService: "/api/commerce/orders/",
-	searchService: "/api/commerce/catalog/storefront/productsearch/",
-	referenceService: "/api/platform/reference/",
-	paymentService: "https://pmts.mozu.com/payments/commerce/payments/cards/",
-	addressValidationService: "/api/commerce/customer/addressvalidation/",
-	wishlistService: "/api/commerce/wishlists/",
-	returnService: "/api/commerce/returns/",
-	storefrontUserService: "/user/",
-	locationService: "/api/commerce/storefront/",
-	creditService: "/api/commerce/customer/credits/",
-	paypalExpress: "https://paypal.com/cgi-bin/webscr?cmd=_express-checkout",
-	orderAttributeDefService: "/api/commerce/orders/attributedefinition/attributes/",
-	locationAttributeDefService: "/api/commerce/admin/locations/attributedefinition/attributes/",
-	checkoutService: "/api/commerce/checkouts/",
-	tokenService: "https://pmts.mozu.com/payments/commerce/payments/tokens/",
-	discountService: "/api/commerce/catalog/storefront/discounts/"
-};
-var headerPrefix = "x-vol-";
-var methods = {
-	document: {
-		template: "{+documentListService}{listName}/documents/{id}{?_*}",
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	documentList: {
-		template: "{+documentListService}{listName}/documents{?_*}",
-		shortcutParam: "listName",
-		defaultParams: {
-			startIndex: 0,
-			pageSize: 15
-		},
-		collectionOf: "document",
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	documentView: {
-		template: "{+documentListService}{listName}/views/{viewName}/documents{?_*}",
-		shortcutParam: "listName",
-		defaultParams: {
-			viewName: "default",
-			startIndex: 0,
-			pageSize: 15
-		},
-		collectionOf: "document",
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	entityList: {
-		template: {
-			templateText: "{+entityListService}{listName}/entities{?_*}",
-			expressions: [
-				{
-					templateText: "+entityListService",
-					operator: {
-						symbol: "+",
-						separator: ",",
-						named: false,
-						ifEmpty: "",
-						first: ""
-					},
-					varspecs: [
-						{
-							varname: "entityListService",
-							exploded: false,
-							maxLength: null
-						}
-					]
-				},
-				{
-					templateText: "listName",
-					operator: {
-						symbol: "",
-						separator: ",",
-						named: false,
-						ifEmpty: "",
-						first: ""
-					},
-					varspecs: [
-						{
-							varname: "listName",
-							exploded: false,
-							maxLength: null
-						}
-					]
-				},
-				{
-					literal: "/entities"
-				},
-				{
-					templateText: "?_*",
-					operator: {
-						symbol: "?",
-						separator: "&",
-						named: true,
-						ifEmpty: "=",
-						first: "?"
-					},
-					varspecs: [
-						{
-							varname: "_",
-							exploded: true,
-							maxLength: null
-						}
-					]
-				}
-			]
-		},
-		shortcutParam: "listName",
-		defaultParams: {
-			startIndex: 0,
-			pageSize: 15
-		},
-		collectionOf: "entity",
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	entityView: {
-		template: "{+entityListService}{listName}/views/{viewName}/entities{?_*}",
-		shortcutParam: "listName",
-		defaultParams: {
-			viewName: "default",
-			startIndex: 0,
-			pageSize: 15
-		},
-		collectionOf: "entity",
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	entity: {
-		template: {
-			templateText: "{+entityListService}{listName}/entities/{id}{?_*}",
-			expressions: [
-				{
-					templateText: "+entityListService",
-					operator: {
-						symbol: "+",
-						separator: ",",
-						named: false,
-						ifEmpty: "",
-						first: ""
-					},
-					varspecs: [
-						{
-							varname: "entityListService",
-							exploded: false,
-							maxLength: null
-						}
-					]
-				},
-				{
-					templateText: "listName",
-					operator: {
-						symbol: "",
-						separator: ",",
-						named: false,
-						ifEmpty: "",
-						first: ""
-					},
-					varspecs: [
-						{
-							varname: "listName",
-							exploded: false,
-							maxLength: null
-						}
-					]
-				},
-				{
-					literal: "/entities/"
-				},
-				{
-					templateText: "id",
-					operator: {
-						symbol: "",
-						separator: ",",
-						named: false,
-						ifEmpty: "",
-						first: ""
-					},
-					varspecs: [
-						{
-							varname: "id",
-							exploded: false,
-							maxLength: null
-						}
-					]
-				},
-				{
-					templateText: "?_*",
-					operator: {
-						symbol: "?",
-						separator: "&",
-						named: true,
-						ifEmpty: "=",
-						first: "?"
-					},
-					varspecs: [
-						{
-							varname: "_",
-							exploded: true,
-							maxLength: null
-						}
-					]
-				}
-			]
-		},
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	entityContainer: {
-		template: "{+entityListService}{listName}/entityContainers/{id}{?_*}",
-		shortcutParam: "listName",
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	entityContainerList: {
-		template: "{+entityListService}{listName}/entityContainers{?_*}",
-		shortcutParam: "listName",
-		defaultParams: {
-			startIndex: 0,
-			pageSize: 15
-		},
-		collectionOf: "entityContainer",
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	entityContainerView: {
-		template: "{+entityListService}{listName}/views/{viewName}/entityContainers{?_*}",
-		shortcutParam: "listName",
-		defaultParams: {
-			startIndex: 0,
-			viewName: "default",
-			pageSize: 15
-		},
-		collectionOf: "entityContainer",
-		useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-	},
-	products: {
-		template: {
-			templateText: "{+productService}{?_*}",
-			expressions: [
-				{
-					templateText: "+productService",
-					operator: {
-						symbol: "+",
-						separator: ",",
-						named: false,
-						ifEmpty: "",
-						first: ""
-					},
-					varspecs: [
-						{
-							varname: "productService",
-							exploded: false,
-							maxLength: null
-						}
-					]
-				},
-				{
-					templateText: "?_*",
-					operator: {
-						symbol: "?",
-						separator: "&",
-						named: true,
-						ifEmpty: "=",
-						first: "?"
-					},
-					varspecs: [
-						{
-							varname: "_",
-							exploded: true,
-							maxLength: null
-						}
-					]
-				}
-			]
-		},
-		shortcutParam: "filter",
-		defaultParams: {
-			startIndex: 0,
-			pageSize: 15
-		},
-		collectionOf: "product"
-	},
-	categories: {
-		template: "{+categoryService}{?_*}",
-		shortcutParam: "filter",
-		defaultParams: {
-			startIndex: 0,
-			pageSize: 15
-		},
-		collectionOf: "category"
-	},
-	category: {
-		template: "{+categoryService}{id}{?allowInactive}",
-		shortcutParam: "id",
-		defaultParams: {
-			allowInactive: false
-		}
-	},
-	categorytree: {
-		template: "{+categoryService}tree",
-		returnType: "json"
-	},
-	search: {
-		template: "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,facetPrefix,sortBy,pageSize,PageSize,startIndex,StartIndex}",
-		shortcutParam: "query",
-		defaultParams: {
-			startIndex: 0,
-			query: "*:*",
-			pageSize: 15
-		},
-		collectionOf: "product"
-	},
-	suggest: {
-		template: "{+searchService}suggest{?_*}",
-		shortcutParam: "query"
-	},
-	customers: {
-		collectionOf: "customer"
-	},
-	orders: {
-		template: "{+orderService}{?_*}",
-		defaultParams: {
-			filter: "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned and Status ne Errored",
-			startIndex: 0,
-			pageSize: 5
-		},
-		collectionOf: "order"
-	},
-	product: {
-		get: {
-			template: "{+productService}{productCode}?{&allowInactive,acceptVariantProductCode}",
-			shortcutParam: "productCode",
-			defaultParams: {
-				allowInactive: false
-			}
-		},
-		configure: {
-			verb: "POST",
-			template: "{+productService}{productCode}/configure{?includeOptionDetails,quantity}",
-			defaultParams: {
-				includeOptionDetails: true,
-				quantity: 1
-			},
-			includeSelf: true
-		},
-		"add-to-cart": {
-			verb: "POST",
-			returnType: "cartitem",
-			template: "{+cartService}current/items/"
-		},
-		"get-inventory": {
-			template: "{+productService}{productCode}/locationinventory{?locationCodes}",
-			includeSelf: true,
-			shortcutParam: "locationcodes",
-			returnType: "string"
-		}
-	},
-	location: {
-		get: {
-			template: "{+locationService}locationUsageTypes/SP/locations/{code}",
-			shortcutParam: "code"
-		}
-	},
-	locations: {
-		defaultParams: {
-			pageSize: 15
-		},
-		collectionOf: "location",
-		get: {
-			defaultParams: {
-				includeAttributeDefinition: true
-			},
-			template: "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition,nearZipcode,nearZipcodeRadius}"
-		},
-		"get-by-lat-long": {
-			defaultParams: {
-				includeAttributeDefinition: true
-			},
-			template: "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
-		},
-		"get-by-zipcode": {
-			defaultParams: {
-				includeAttributeDefinition: false
-			},
-			template: "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
-		}
-	},
-	cartsummary: "{+cartService}summary",
-	cart: {
-		defaults: {
-			template: "{+cartService}current"
-		},
-		"add-product": {
-			verb: "POST",
-			returnType: "cartitem",
-			template: "{+cartService}current/items/"
-		},
-		empty: {
-			verb: "DELETE",
-			template: "{+cartService}current/items/"
-		},
-		"get-extended-properties": {
-			template: "{+cartService}current/extendedproperties",
-			returnType: "json"
-		},
-		"add-extended-properties": {
-			verb: "POST",
-			template: "{+cartService}current/extendedproperties"
-		},
-		"update-extended-properties": {
-			verb: "PUT",
-			template: "{+cartService}current/extendedproperties"
-		},
-		"remove-extended-property": {
-			verb: "DELETE",
-			template: "{+cartService}current/extendedproperties/{key}"
-		},
-		"remove-extended-properties": {
-			verb: "DELETE",
-			template: "{+cartService}current/extendedproperties"
-		},
-		checkout: {
-			verb: "POST",
-			template: "{+orderService}?cartId={id}",
-			returnType: "order",
-			noBody: true,
-			includeSelf: true
-		},
-		checkout2: {
-			verb: "POST",
-			template: "{+checkoutService}?cartId={id}",
-			returnType: "checkout",
-			noBody: true,
-			includeSelf: true
-		},
-		"apply-coupon": {
-			verb: "PUT",
-			template: "{+cartService}{id}/coupons/{couponCode}",
-			shortcutParam: "couponCode",
-			includeSelf: true,
-			noBody: true,
-			returnType: "coupon"
-		},
-		"remove-coupon": {
-			verb: "DELETE",
-			template: "{+cartService}{id}/coupons/{couponCode}",
-			shortcutParam: "couponCode",
-			includeSelf: true
-		},
-		"remove-all-coupons": {
-			verb: "DELETE",
-			template: "{+cartService}{id}/coupons",
-			includeSelf: true
-		},
-		"reject-suggested-discount": {
-			verb: "POST",
-			template: "{+cartService}{id}/rejectautodiscount/{discountId}"
-		}
-	},
-	cartitem: {
-		defaults: {
-			template: "{+cartService}current/items/{id}",
-			shortcutParam: "id"
-		},
-		"update-quantity": {
-			verb: "PUT",
-			template: "{+cartService}current/items{/id,quantity}",
-			shortcutParam: "quantity",
-			includeSelf: true,
-			noBody: true
-		}
-	},
-	attributedefinition: {
-		template: "{+customerAttributeDefService}{attributeFQN}",
-		shortcutParam: "attributeFQN",
-		defaults: {
-			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-		}
-	},
-	customerattribute: {
-		template: "{+customerService}{accountId}/attributes/{attributeFQN}",
-		defaults: {
-			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-		}
-	},
-	customerattributes: {
-		collectionOf: "customerattribute",
-		template: "{+customerService}{accountId}/attributes/{?_*}",
-		defaultParams: {
-			startIndex: 0,
-			pageSize: 5
-		}
-	},
-	customer: {
-		template: "{+customerService}{id}",
-		defaults: {
-			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-		},
-		shortcutParam: "id",
-		includeSelf: true,
-		create: {
-			verb: "POST",
-			template: "{+customerService}add-account-and-login",
-			returnType: "login"
-		},
-		"create-storefront": {
-			verb: "POST",
-			template: "{+storefrontUserService}create",
-			returnType: "login"
-		},
-		login: {
-			verb: "POST",
-			template: "{+customerService}../authtickets",
-			returnType: "login"
-		},
-		"login-storefront": {
-			verb: "POST",
-			template: "{+storefrontUserService}login",
-			returnType: "login"
-		},
-		"order-status-login": {
-			verb: "POST",
-			template: "{+storefrontUserService}anonymous-login"
-		},
-		update: {
-			verb: "PUT",
-			template: "{+customerService}{id}",
-			includeSelf: true
-		},
-		"reset-password": {
-			verb: "POST",
-			template: "{+customerService}reset-password",
-			returnType: "string"
-		},
-		"reset-password-storefront": {
-			verb: "POST",
-			template: "{+storefrontUserService}resetpassword",
-			returnType: "string"
-		},
-		"change-password": {
-			verb: "POST",
-			template: "{+customerService}{id}/change-password",
-			includeSelf: true
-		},
-		"get-attributes": {
-			template: "{+customerService}{customer.id}/attributes/{?startIndex,pageSize,sortBy,filter}",
-			defaultParams: {
-				startIndex: 0,
-				pageSize: 5
-			},
-			includeSelf: {
-				asProperty: "customer"
-			},
-			returnType: "customerattributes"
-		},
-		"get-attribute": {
-			template: "{+customerService}{customer.id}/attributes/{attributeFQN}",
-			includeSelf: {
-				asProperty: "customer"
-			},
-			shortcutParam: "attributeFQN",
-			returnType: "customerattribute"
-		},
-		"update-attribute": {
-			verb: "PUT",
-			template: "{+customerService}{customer.id}/attributes/{attributeFQN}",
-			includeSelf: {
-				asProperty: "customer"
-			},
-			shortcutParam: "attributeFQN",
-			returnType: "customerattribute"
-		},
-		"get-attribute-definition": {
-			template: "{+customerAttributeDefService}{attributeFQN}",
-			shortcutParam: "attributeFQN",
-			returnType: "attributedefinition"
-		},
-		"get-attribute-definitions": {
-			template: "{+customerAttributeDefService}",
-			returnType: "customerattribute"
-		},
-		"get-orders": {
-			template: "{+orderService}?filter=OrderNumber ne null",
-			includeSelf: true,
-			returnType: "orders"
-		},
-		"get-cards": {
-			template: "{+customerService}{id}/cards",
-			includeSelf: true,
-			returnType: "accountcards"
-		},
-		"add-card": {
-			verb: "POST",
-			template: "{+customerService}{customer.id}/cards",
-			includeSelf: {
-				asProperty: "customer"
-			},
-			returnType: "accountcard"
-		},
-		"update-card": {
-			verb: "PUT",
-			template: "{+customerService}{customer.id}/cards/{id}",
-			includeSelf: {
-				asProperty: "customer"
-			},
-			returnType: "accountcard"
-		},
-		"delete-card": {
-			verb: "DELETE",
-			template: "{+customerService}{customer.id}/cards/{id}",
-			shortcutParam: "id",
-			includeSelf: {
-				asProperty: "customer"
-			},
-			returnType: "accountcard"
-		},
-		"add-contact": {
-			verb: "POST",
-			template: "{+customerService}{id}/contacts",
-			includeSelf: true,
-			returnType: "contact"
-		},
-		"update-contact": {
-			verb: "PUT",
-			template: "{+customerService}{accountId}/contacts/{id}",
-			includeSelf: true,
-			returnType: "contact"
-		},
-		"get-contacts": {
-			template: "{+customerService}{id}/contacts",
-			includeSelf: true,
-			returnType: "contacts"
-		},
-		"delete-contact": {
-			verb: "DELETE",
-			template: "{+customerService}{customer.id}/contacts/{id}",
-			shortcutParam: "id",
-			includeSelf: {
-				asProperty: "customer"
-			},
-			returnType: "contact"
-		},
-		"get-credits": {
-			template: "{+creditService}",
-			returnType: "storecredits"
-		},
-		"get-credit": {
-			verb: "GET",
-			template: "{+creditService}/{id}",
-			includeSelf: true,
-			returnType: "storecredit"
-		},
-		"update-customer-contacts": {
-			verb: "PUT",
-			template: "{+customerService}{id}/contacts",
-			returnType: "contacts",
-			specifyPostData: true
-		}
-	},
-	storecredit: {
-		"associate-to-shopper": {
-			verb: "PUT",
-			template: "{+creditService}{code}/associate-to-shopper",
-			includeSelf: true
-		},
-		"get-credit": {
-			verb: "GET",
-			template: "{+creditService}{code}",
-			includeSelf: true,
-			returnType: "storecredit"
-		}
-	},
-	storecredits: {
-		verb: "GET",
-		template: "{+creditService}{?startIndex,pageSize,sortBy,filter}",
-		collectionOf: "storecredit"
-	},
-	contact: {
-		template: "{+customerService}{accountId}/contacts/{id}",
-		includeSelf: true
-	},
-	contacts: {
-		collectionOf: "contact"
-	},
-	login: "{+userService}login",
-	address: {
-		"validate-address": {
-			verb: "POST",
-			template: "{+addressValidationService}",
-			includeSelf: {
-				asProperty: "address"
-			},
-			overridePostData: true,
-			returnType: "address"
-		},
-		"validate-address-lenient": {
-			verb: "POST",
-			template: "{+addressValidationService}",
-			includeSelf: {
-				asProperty: "address"
-			},
-			overridePostData: true,
-			returnType: "address",
-			suppressErrors: true
-		}
-	},
-	order: {
-		template: "{+orderService}{id}",
-		includeSelf: true,
-		"create-from-cart": {
-			template: "{+orderService}{?cartId*}",
-			shortcutParam: "cartId",
-			method: "POST",
-			noBody: true
-		},
-		"update-shipping-info": {
-			template: "{+orderService}{id}/fulfillmentinfo",
-			verb: "PUT",
-			returnType: "shipment",
-			includeSelf: true
-		},
-		"get-shipping-methods": {
-			template: "{+orderService}{id}/shipments/methods",
-			returnType: "shippingmethods"
-		},
-		"set-user-id": {
-			verb: "PUT",
-			template: "{+orderService}{id}/users",
-			noBody: true,
-			includeSelf: true,
-			returnType: "user"
-		},
-		"create-payment": {
-			verb: "POST",
-			template: "{+orderService}{id}/payments/actions",
-			includeSelf: true
-		},
-		"perform-payment-action": {
-			verb: "POST",
-			template: "{+orderService}{id}/payments/{paymentId}/actions",
-			includeSelf: true,
-			shortcutParam: "paymentId",
-			returnType: "string"
-		},
-		"apply-coupon": {
-			verb: "PUT",
-			template: "{+orderService}{id}/coupons/{couponCode}",
-			shortcutParam: "couponCode",
-			includeSelf: true,
-			noBody: true,
-			returnType: "coupon"
-		},
-		"remove-coupon": {
-			verb: "DELETE",
-			template: "{+orderService}{id}/coupons/{couponCode}",
-			shortcutParam: "couponCode",
-			includeSelf: true
-		},
-		"remove-all-coupons": {
-			verb: "DELETE",
-			template: "{+orderService}{id}/coupons",
-			includeSelf: true
-		},
-		"get-available-actions": {
-			template: "{+orderService}{id}/actions",
-			includeSelf: true,
-			returnType: "orderactions"
-		},
-		"perform-order-action": {
-			verb: "POST",
-			template: "{+orderService}{id}/actions",
-			shortcutParam: "actionName",
-			overridePostData: [
-				"actionName"
-			],
-			includeSelf: true
-		},
-		"add-order-note": {
-			verb: "POST",
-			template: "{+orderService}{id}/notes",
-			includeSelf: true,
-			returnType: "ordernote"
-		},
-		"get-extended-properties": {
-			template: "{+orderService}{id}/extendedproperties",
-			returnType: "json"
-		},
-		"add-extended-properties": {
-			verb: "POST",
-			template: "{+orderService}{id}/extendedproperties"
-		},
-		"update-extended-properties": {
-			verb: "PUT",
-			template: "{+orderService}{id}/extendedproperties"
-		},
-		"remove-extended-property": {
-			verb: "DELETE",
-			template: "{+orderService}{id}/extendedproperties/{key}"
-		},
-		"remove-extended-properties": {
-			verb: "DELETE",
-			template: "{+orderService}{id}/extendedproperties"
-		},
-		"process-digital-wallet": {
-			verb: "PUT",
-			template: "{+orderService}{id}/digitalWallet/VisaCheckout",
-			includeSelf: true,
-			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-		},
-		"get-attribute-definitions": {
-			template: "{+orderAttributeDefService}",
-			returnType: "orderattribute"
-		},
-		"update-attributes": {
-			verb: "PUT",
-			includeSelf: true,
-			template: "{+orderService}{id}/attributes{?removeMissing}",
-			shortcutParam: "removeMissing",
-			returnType: "orderattributes"
-		},
-		"get-returnable-items": {
-			verb: "GET",
-			includeSelf: true,
-			template: "{+orderService}{id}/returnableitems",
-			returnType: "json"
-		}
-	},
-	rma: {
-		create: {
-			verb: "POST",
-			template: "{+returnService}"
-		},
-		"get-return-label": {
-			verb: "GET",
-			template: "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64Png}",
-			returnType: "string"
-		}
-	},
-	rmas: {
-		template: "{+returnService}{?_*}",
-		defaultParams: {
-			startIndex: 0,
-			pageSize: 5
-		},
-		collectionOf: "rma"
-	},
-	shipment: {
-		defaults: {
-			template: "{+orderService}{orderId}/fulfillmentinfo",
-			includeSelf: true
-		},
-		"get-shipping-methods": {
-			template: "{+orderService}{orderId}/shipments/methods",
-			returnType: "shippingmethods"
-		}
-	},
-	payment: {
-		create: {
-			template: "{+orderService}{orderId}/payments/actions",
-			includeSelf: true
-		}
-	},
-	token: {
-		defaults: {
-			useIframeTransport: "{+tokenService}../../../Assets/mozu_receiver_v2.html"
-		},
-		create: {
-			verb: "POST",
-			template: "{+tokenService}",
-			returnType: "json"
-		},
-		execute: {
-			verb: "POST",
-			shortcutParam: "cardType",
-			template: "{+tokenService}/{cardType}/execute",
-			returnType: "json"
-		}
-	},
-	accountcard: {
-		template: "{+customerService}{id}/cards"
-	},
-	accountcards: {
-		collectionOf: "accountcard"
-	},
-	creditcard: {
-		defaults: {
-			useIframeTransport: "{+paymentService}../../../Assets/mozu_receiver_v2.html"
-		},
-		save: {
-			verb: "POST",
-			template: "{+paymentService}",
-			returnType: "json"
-		},
-		update: {
-			verb: "PUT",
-			template: "{+paymentService}{cardId}",
-			returnType: "string"
-		},
-		del: {
-			verb: "DELETE",
-			shortcutParam: "cardId",
-			template: "{+paymentService}{cardId}"
-		},
-		"get-gift-card-balance": {
-			verb: "POST",
-			shortcutParam: "cardId",
-			template: "{+paymentService}{cardId}/balance{?responseFields}",
-			defaultParams: {
-				responseFields: "amount"
-			}
-		},
-		"get-unregistered-gift-card-balance": {
-			verb: "POST",
-			template: "{+paymentService}balance",
-			defaultParams: {
-				responseFields: "amount"
-			}
-		}
-	},
-	creditcards: {
-		collectionOf: "creditcard"
-	},
-	ordernote: {
-		template: "{+orderService}{orderId}/notes/{id}"
-	},
-	addressschemas: "{+referenceService}addressschemas",
-	wishlist: {
-		get: {
-			template: "{+wishlistService}{id}",
-			includeSelf: true
-		},
-		"get-by-name": {
-			template: "{+wishlistService}customers/{customerAccountId}/{name}",
-			includeSelf: true
-		},
-		"get-default": {
-			template: {
-				templateText: "{+wishlistService}customers/{customerAccountId}/my_wishlist",
-				expressions: [
-					{
-						templateText: "+wishlistService",
-						operator: {
-							symbol: "+",
-							separator: ",",
-							named: false,
-							ifEmpty: "",
-							first: ""
-						},
-						varspecs: [
-							{
-								varname: "wishlistService",
-								exploded: false,
-								maxLength: null
-							}
-						]
-					},
-					{
-						literal: "customers/"
-					},
-					{
-						templateText: "customerAccountId",
-						operator: {
-							symbol: "",
-							separator: ",",
-							named: false,
-							ifEmpty: "",
-							first: ""
-						},
-						varspecs: [
-							{
-								varname: "customerAccountId",
-								exploded: false,
-								maxLength: null
-							}
-						]
-					},
-					{
-						literal: "/my_wishlist"
-					}
-				]
-			},
-			includeSelf: true
-		},
-		"create-default": {
-			verb: "POST",
-			template: "{+wishlistService}",
-			defaultParams: {
-				name: "my_wishlist",
-				typeTag: "default"
-			},
-			overridePostData: true
-		},
-		"add-item": {
-			verb: "POST",
-			template: "{+wishlistService}{id}/items/",
-			includeSelf: true
-		},
-		"delete-all-items": {
-			verb: "DELETE",
-			template: "{+wishlistService}{id}/items/"
-		},
-		"delete-item": {
-			verb: "DELETE",
-			template: "{+wishlistService}{id}/items/{itemId}",
-			includeSelf: true,
-			shortcutParam: "itemId"
-		},
-		"edit-item": {
-			verb: "PUT",
-			template: "{+wishlistService}{id}/items/{itemId}",
-			includeSelf: true
-		},
-		"add-item-to-cart": {
-			verb: "POST",
-			returnType: "cartitem",
-			template: "{+cartService}current/items/"
-		},
-		"get-items-by-name": {
-			returnType: "wishlistitems",
-			template: "{+wishlistService}customers/{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}",
-			defaultParams: {
-				sortBy: "UpdateDate asc"
-			},
-			includeSelf: true
-		}
-	},
-	wishlists: {
-		collectionOf: "wishlist"
-	},
-	instockrequest: {
-		create: {
-			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}",
-			verb: "POST",
-			template: "{+inStockNotificationService}"
-		}
-	},
-	destination: {
-		template: "{+checkoutService}{id}/destinations/{destinationId}",
-		includeSelf: true
-	},
-	destinations: {
-		collectionOf: "destination"
-	},
-	toCheckout: {
-		verb: "POST",
-		template: "{+checkoutService}?cartId={id}",
-		returnType: "checkout",
-		noBody: true,
-		includeSelf: true
-	},
-	checkout: {
-		template: "{+checkoutService}{id}",
-		includeSelf: true,
-		"create-from-cart": {
-			template: "{+checkoutService}{?cartId*}",
-			shortcutParam: "cartId",
-			method: "POST",
-			noBody: true
-		},
-		"get-shipping-destinations": {
-			template: "{+checkoutService}{id}/destinations",
-			returnType: "destinations"
-		},
-		"add-shipping-destination": {
-			template: "{+checkoutService}{id}/destinations",
-			verb: "POST",
-			returnType: "destination",
-			includeSelf: true
-		},
-		"update-shipping-destination": {
-			template: "{+checkoutService}{checkoutId}/destinations/{destinationId}",
-			verb: "PUT",
-			returnType: "destination"
-		},
-		"remove-shipping-destination": {
-			template: "{+checkoutService}{id}/destinations/{destinationId}",
-			verb: "DELETE"
-		},
-		"get-checkout-items": {
-			template: "{+checkoutService}{id}/items"
-		},
-		"get-checkout-item": {
-			template: "{+checkoutService}{id}/items{itemId}"
-		},
-		"split-checkout-item": {
-			template: "{+checkoutService}{id}/items/{itemId}/split?quantity={quantity}",
-			verb: "POST"
-		},
-		"merge-duplicate-checkout-items": {
-			template: "{+checkoutService}{id}/items/mergeDuplicateItems",
-			verb: "POST"
-		},
-		"update-checkout-item-destination": {
-			template: "{+checkoutService}{id}/items/{itemId}/destination/{destinationId}",
-			verb: "PUT"
-		},
-		"update-checkout-item-destination-bulk": {
-			template: "{+checkoutService}{id}/items/destinations",
-			verb: "POST",
-			specifyPostData: true
-		},
-		"update-checkout": {
-			template: "{+checkoutService}{id}",
-			verb: "POST",
-			includeSelf: true
-		},
-		"get-avaiable-shipping-methods": {
-			template: "{+checkoutService}{id}/shippingMethods",
-			verb: "GET",
-			returnType: "shippingmethods"
-		},
-		"update-checkout-item-fulfillment": {
-			template: "{+checkoutService}{id}/items/{itemId}/fulfillment",
-			verb: "PUT",
-			returnType: "shipment",
-			includeSelf: true
-		},
-		"set-shipping-methods": {
-			template: "{+checkoutService}{id}/shippingMethods",
-			verb: "POST",
-			specifyPostData: true
-		},
-		"get-shipping-methods": {
-			template: "{+checkoutService}{id}/shippingMethods",
-			returnType: "shippingmethods"
-		},
-		"set-user-id": {
-			verb: "PUT",
-			template: "{+checkoutService}{id}/users",
-			noBody: true,
-			includeSelf: true,
-			returnType: "user"
-		},
-		"create-payment": {
-			verb: "POST",
-			template: "{+checkoutService}{id}/payments/actions",
-			includeSelf: true
-		},
-		"perform-payment-action": {
-			verb: "POST",
-			template: "{+checkoutService}{id}/payments/{paymentId}/actions",
-			includeSelf: true,
-			shortcutParam: "paymentId",
-			returnType: "string"
-		},
-		"apply-coupon": {
-			verb: "PUT",
-			template: "{+checkoutService}{id}/coupons/{couponCode}",
-			shortcutParam: "couponCode",
-			includeSelf: true,
-			noBody: true,
-			returnType: "coupon"
-		},
-		"remove-coupon": {
-			verb: "DELETE",
-			template: "{+checkoutService}{id}/coupons/{couponCode}",
-			shortcutParam: "couponCode",
-			includeSelf: true
-		},
-		"remove-all-coupons": {
-			verb: "DELETE",
-			template: "{+checkoutService}{id}/coupons",
-			includeSelf: true
-		},
-		"get-available-actions": {
-			template: "{+checkoutService}{id}/actions",
-			includeSelf: true,
-			returnType: "checkoutactions"
-		},
-		"perform-checkout-action": {
-			verb: "POST",
-			template: "{+checkoutService}{id}/actions",
-			shortcutParam: "actionName",
-			overridePostData: [
-				"actionName"
-			],
-			includeSelf: true
-		},
-		"add-checkout-note": {
-			verb: "POST",
-			template: "{+checkoutService}{id}/notes",
-			includeSelf: true,
-			returnType: "checkoutnote"
-		},
-		"process-digital-wallet": {
-			verb: "PUT",
-			template: "{+checkoutService}{id}/digitalWallet/VisaCheckout",
-			includeSelf: true,
-			useIframeTransport: "{+storefrontUserService}../../receiver{?receiverVersion}"
-		},
-		"get-attribute-definitions": {
-			template: "{+checkoutAttributeDefService}",
-			returnType: "checkoutattribute"
-		},
-		"update-attributes": {
-			verb: "PUT",
-			includeSelf: true,
-			template: "{+checkoutService}{id}/attributes{?removeMissing}",
-			shortcutParam: "removeMissing",
-			returnType: "checkoutattributes"
-		},
-		"get-returnable-items": {
-			verb: "GET",
-			includeSelf: true,
-			template: "{+checkoutService}{id}/returnableitems",
-			returnType: "json"
-		}
-	},
-	discounts: {
-		get: {
-			returnType: "discount",
-			template: "{+discountService}autoaddtarget/{discountId}",
-			shortcutParam: "discountId"
-		}
-	}
-};
-var storefrontReference = {
-	basicOps: basicOps,
-	urls: urls,
-	headerPrefix: headerPrefix,
-	methods: methods
-};
-
-/**
- * work in both environments or standalone
- * pass tests from storefront/node sdk
- * retain simplified interface from storefront and some of the utility methods
- * generate typing files
- * --end mvp
- * caching
- */
+// import circularJson from 'circular-json'
 
 var isServer = testIsServer();
 var hooks = ['beforeRequest', 'withRequest', 'afterRequest'];
@@ -9987,7 +8748,7 @@ var hookReference = {
   afterRequest: 'accepts as the first parameter and should return the response that will occur after the request promise/future settles'
 };
 var defaultOptions = {
-  useFutures: true,
+  useFutures: false,
   hooks: {}
 };
 var delimiter = '_';
@@ -10055,29 +8816,35 @@ var Api = function Api() {
       }
     }
   } else {
-    var contextPreload = document.getElementById('data-mz-preload-apicontext');
-    var contextPreloadText = contextPreload && (contextPreload.textContent || contextPreload.innerText || contextPreload.text || contextPreload.innerHTML);
+    context = {
+      baseUrl: '/api',
+      tenantUrl: '/api',
+      basePciUrl: '/api' // let contextPreload = document.getElementById('data-mz-preload-apicontext')
+      // let contextPreloadText =
+      //   contextPreload &&
+      //   (contextPreload.textContent ||
+      //     contextPreload.innerText ||
+      //     contextPreload.text ||
+      //     contextPreload.innerHTML)
+      // try {
+      //   let contextJSON = contextPreloadText && JSON.parse(contextPreloadText)
+      //   if (contextJSON.headers) {
+      //     context = R.mergeDeepRight(
+      //       context,
+      //       R.toPairs(contextJSON.headers).reduce((a, [key, v]) => {
+      //         a[fromDashCase(key.replace(constants.headerPrefix, ''))] = v
+      //         return a
+      //       }, {})
+      //     )
+      //   }
+      //   if (contextJSON.urls) {
+      //     storefrontReference.urls = contextJSON.urls
+      //   }
+      // } catch (e) {
+      //   console.error(e)
+      // }
 
-    try {
-      var contextJSON = contextPreloadText && JSON.parse(contextPreloadText);
-
-      if (contextJSON.headers) {
-        context = R.mergeDeepRight(context, R.toPairs(contextJSON.headers).reduce(function (a, _ref) {
-          var _ref2 = _slicedToArray(_ref, 2),
-              key = _ref2[0],
-              v = _ref2[1];
-
-          a[fromDashCase(key.replace(constants.headerPrefix, ''))] = v;
-          return a;
-        }, {}));
-      }
-
-      if (contextJSON.urls) {
-        storefrontReference.urls = contextJSON.urls;
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    };
   }
 
   var headerDefaults = {
@@ -10093,10 +8860,10 @@ var Api = function Api() {
   context.tenantPod = context.tenantPod || "https://t".concat(context.tenant, ".sandbox.mozu.com/");
   proto.context = context;
   proto.options = options;
-  proto.headers = R.reduce(function (headers, _ref3) {
-    var _ref4 = _slicedToArray(_ref3, 2),
-        key = _ref4[0],
-        name = _ref4[1];
+  proto.headers = R.reduce(function (headers, _ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        key = _ref2[0],
+        name = _ref2[1];
 
     var value = proto.context[normalizedContextKeys[key] || key] || headerDefaults[key];
     if (value) headers[constants.headerPrefix + name] = value;
@@ -10107,7 +8874,7 @@ var Api = function Api() {
   });
 
   if (isServer) {
-    proto.headers['User-Agent'] = "Mozu Universal SDK v".concat(constants.version, " (Node.js ").concat(process.version, "; ").concat(process.platform, " ").concat(process.arch, ")");
+    proto.headers['User-Agent'] = "Universal SDK v".concat(constants.version, " (Node.js ").concat(process.version, "; ").concat(process.platform, " ").concat(process.arch, ")");
   } //#endregion set context
   //#region request handler
 
@@ -10141,59 +8908,60 @@ var Api = function Api() {
       usedKeys: usedKeys
     };
   };
+  //   context = storefrontReference.urls,
+  //   template = '',
+  //   data = {}
+  // ) => {
+  //   //ignoring the explode operator bc it is only used by entity
+  //   //and i don't care about that
+  //   let usedKeys = []
+  //   R.replace()
+  //   let url = R.replace(
+  //     constants.templateBraceRegex,
+  //     str => {
+  //       let innerMatch = str.substring(1, str.length - 1)
+  //       if (innerMatch[0] === '+') {
+  //         return api.storefrontReference.urls[innerMatch.substring(1)]
+  //       }
+  //       if (innerMatch[0] === '?') {
+  //         let values =
+  //           innerMatch === '?_*'
+  //             ? data
+  //             : R.pick(innerMatch.substring(1).split(','), data)
+  //         usedKeys.concat(Object.keys(values))
+  //         return R.compose(
+  //           R.reduce(queryStringReducer, ''),
+  //           R.toPairs
+  //         )(values)
+  //       }
+  //       let value = data[innerMatch]
+  //       if (value) usedKeys.push(value)
+  //       return value || ''
+  //     },
+  //     template
+  //   )
+  //   return { url, usedKeys }
+  // }
 
-  var queryStringReducer = function queryStringReducer(acc, _ref5, dex, pairs) {
-    var _ref6 = _slicedToArray(_ref5, 2),
-        key = _ref6[0],
-        value = _ref6[1];
-
-    return acc + (!dex ? '?' : '') + key + '=' + value + (dex < pairs.length - 1 ? '&' : '');
-  };
-
-  proto.parseStorefrontTemplate = function () {
-    var template = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-    var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    //ignoring the explode operator bc it is only used by entity
-    //and i don't care about that
-    var usedKeys = [];
-    R.replace();
-    var url = R.replace(constants.templateBraceRegex, function (str) {
-      var innerMatch = str.substring(1, str.length - 1);
-
-      if (innerMatch[0] === '+') {
-        return api.storefrontReference.urls[innerMatch.substring(1)];
-      }
-
-      if (innerMatch[0] === '?') {
-        var values = innerMatch === '?_*' ? data : R.pick(innerMatch.substring(1).split(','), data);
-        return R.compose(R.reduce(queryStringReducer, ''), R.toPairs)(values);
-      }
-
-      var value = data[innerMatch];
-      if (value) usedKeys.push(value);
-      return value || '';
-    }, template);
-    return {
-      url: url,
-      usedKeys: usedKeys
-    };
-  };
 
   api.request = R.curryN(3, function (method, templateOrId) {
     var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var requestOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
     var context = requestOptions.context || api.context || {};
     var headers = requestOptions.headers || api.headers || {};
-    var returnType = requestOptions.returnType || '';
-    var storefrontAction = requestOptions.storefrontAction; //check for storefront interface id
+    var returnType = requestOptions.returnType || ''; // let storefrontAction = requestOptions.storefrontAction
+    //check for storefront interface id
     //data is overloaded.. it fills in template keys and is sent as the body
     //if the method is PUT/POST. this was changed in node-sdk at some point
     //if it becomes a problem consider removing used keys from body
     //also consider removing items from the body that are used in the template
+    // let { url, usedKeys } = api[
+    //   storefrontAction ? 'parseStorefrontTemplate' : 'parseTemplate'
+    // ](context, templateOrId, data)
 
-    var _api = api[storefrontAction ? 'parseStorefrontTemplate' : 'parseTemplate'](context, templateOrId, data),
-        url = _api.url,
-        usedKeys = _api.usedKeys;
+    var _api$parseTemplate = api.parseTemplate(context, templateOrId, data),
+        url = _api$parseTemplate.url,
+        usedKeys = _api$parseTemplate.usedKeys;
 
     var config = R.merge(requestOptions.config || {}, {
       headers: headers,
@@ -10273,14 +9041,14 @@ var Api = function Api() {
   }));
   console.timeEnd('expand template'); //api.(set|post|etc)
 
-  var methods$$1 = Object.values(constants.verbs).reduce(function (a, verb) {
+  var methods = Object.values(constants.verbs).reduce(function (a, verb) {
     return R.merge(_defineProperty({}, verb.toLowerCase(), api.request(verb)), a);
   }, {});
-  proto.nodeActions = nodeActions;
-  proto.storefrontReference = storefrontReference;
-  proto.storefrontActions = storefrontReference.methods; //#endregion expand template and build service tree / methods
+  proto.nodeActions = nodeActions; // proto.storefrontReference = storefrontReference
+  // proto.storefrontActions = storefrontReference.methods
+  //#endregion expand template and build service tree / methods
 
-  proto = R.merge(proto, methods$$1);
+  proto = R.merge(proto, methods);
   api = mixin(proto, R.merge(api, services)); //#region api utilities
   //api.client('commerce.order.getOrder', {orderId: 'asdf'})
 
