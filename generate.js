@@ -176,10 +176,7 @@ walk('./node_modules/mozu-node-sdk/clients')
           )}
         }`.replace(/".*":/gm, match => match.replace(/"/g, ''))
       ).then(() => {
-        Promise.all([
-          prettier.resolveConfig('./index.d.ts'),
-          import('./api.js')
-        ])
+        Promise.all([prettier.resolveConfig('./api.d.ts'), import('./api.js')])
           .then(([options, apiModule]) => {
             let Api = apiModule.default
             let api = Api(exampleConfig)
@@ -306,7 +303,7 @@ walk('./node_modules/mozu-node-sdk/clients')
               Object.assign(options, { parser: 'typescript' })
             )
           })
-          .then(output => writeFile('./index.d.ts', log(output)))
+          .then(output => writeFile('./api.d.ts', log(output)))
       })
     ])
   })

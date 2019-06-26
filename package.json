@@ -19,9 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.1",
-    "fluture": "^11.0.1",
-    "ramda": "^0.26.1",
-    "spdy": "^4.0.0"
+    "ramda": "^0.26.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

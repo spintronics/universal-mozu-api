@@ -1,5 +1,4 @@
-//hey mom!
-(function(global,factory){typeof exports==='object'&&typeof module!=='undefined'?module.exports=factory():typeof define==='function'&&define.amd?define(factory):global.api=factory();}(typeof self!=='undefined'?self:this,function(){'use strict';function _defineProperty(obj, key, value) {
+function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -70,41 +69,61 @@ function _nonIterableSpread() {
 
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance");
-}function createCommonjsModule(fn, module) {
+}
+
+function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}var _global = createCommonjsModule(function (module) {
+}
+
+var _global = createCommonjsModule(function (module) {
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 var global = module.exports = typeof window != 'undefined' && window.Math == Math
   ? window : typeof self != 'undefined' && self.Math == Math ? self
   // eslint-disable-next-line no-new-func
   : Function('return this')();
 if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
-});var _core = createCommonjsModule(function (module) {
+});
+
+var _core = createCommonjsModule(function (module) {
 var core = module.exports = { version: '2.6.4' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 });
-var _core_1 = _core.version;var _isObject = function (it) {
+var _core_1 = _core.version;
+
+var _isObject = function (it) {
   return typeof it === 'object' ? it !== null : typeof it === 'function';
-};var _anObject = function (it) {
+};
+
+var _anObject = function (it) {
   if (!_isObject(it)) throw TypeError(it + ' is not an object!');
   return it;
-};var _fails = function (exec) {
+};
+
+var _fails = function (exec) {
   try {
     return !!exec();
   } catch (e) {
     return true;
   }
-};// Thank's IE8 for his funny defineProperty
+};
+
+// Thank's IE8 for his funny defineProperty
 var _descriptors = !_fails(function () {
   return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
-});var document$1 = _global.document;
+});
+
+var document$1 = _global.document;
 // typeof document.createElement is 'object' in old IE
 var is = _isObject(document$1) && _isObject(document$1.createElement);
 var _domCreate = function (it) {
   return is ? document$1.createElement(it) : {};
-};var _ie8DomDefine = !_descriptors && !_fails(function () {
+};
+
+var _ie8DomDefine = !_descriptors && !_fails(function () {
   return Object.defineProperty(_domCreate('div'), 'a', { get: function () { return 7; } }).a != 7;
-});// 7.1.1 ToPrimitive(input [, PreferredType])
+});
+
+// 7.1.1 ToPrimitive(input [, PreferredType])
 
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
@@ -115,7 +134,9 @@ var _toPrimitive$1 = function (it, S) {
   if (typeof (fn = it.valueOf) == 'function' && !_isObject(val = fn.call(it))) return val;
   if (!S && typeof (fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) return val;
   throw TypeError("Can't convert object to primitive value");
-};var dP = Object.defineProperty;
+};
+
+var dP = Object.defineProperty;
 
 var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes) {
   _anObject(O);
@@ -131,26 +152,38 @@ var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Att
 
 var _objectDp = {
 	f: f
-};var _propertyDesc = function (bitmap, value) {
+};
+
+var _propertyDesc = function (bitmap, value) {
   return {
     enumerable: !(bitmap & 1),
     configurable: !(bitmap & 2),
     writable: !(bitmap & 4),
     value: value
   };
-};var _hide = _descriptors ? function (object, key, value) {
+};
+
+var _hide = _descriptors ? function (object, key, value) {
   return _objectDp.f(object, key, _propertyDesc(1, value));
 } : function (object, key, value) {
   object[key] = value;
   return object;
-};var hasOwnProperty = {}.hasOwnProperty;
+};
+
+var hasOwnProperty = {}.hasOwnProperty;
 var _has = function (it, key) {
   return hasOwnProperty.call(it, key);
-};var id$1 = 0;
+};
+
+var id$1 = 0;
 var px = Math.random();
 var _uid = function (key) {
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id$1 + px).toString(36));
-};var _library = false;var _shared = createCommonjsModule(function (module) {
+};
+
+var _library = false;
+
+var _shared = createCommonjsModule(function (module) {
 var SHARED = '__core-js_shared__';
 var store = _global[SHARED] || (_global[SHARED] = {});
 
@@ -161,7 +194,11 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   mode: 'global',
   copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
 });
-});var _functionToString = _shared('native-function-to-string', Function.toString);var _redefine = createCommonjsModule(function (module) {
+});
+
+var _functionToString = _shared('native-function-to-string', Function.toString);
+
+var _redefine = createCommonjsModule(function (module) {
 var SRC = _uid('src');
 
 var TO_STRING = 'toString';
@@ -190,10 +227,14 @@ _core.inspectSource = function (it) {
 })(Function.prototype, TO_STRING, function toString() {
   return typeof this == 'function' && this[SRC] || _functionToString.call(this);
 });
-});var _aFunction = function (it) {
+});
+
+var _aFunction = function (it) {
   if (typeof it != 'function') throw TypeError(it + ' is not a function!');
   return it;
-};// optional / simple context binding
+};
+
+// optional / simple context binding
 
 var _ctx = function (fn, that, length) {
   _aFunction(fn);
@@ -212,7 +253,9 @@ var _ctx = function (fn, that, length) {
   return function (/* ...args */) {
     return fn.apply(that, arguments);
   };
-};var PROTOTYPE = 'prototype';
+};
+
+var PROTOTYPE = 'prototype';
 
 var $export = function (type, name, source) {
   var IS_FORCED = type & $export.F;
@@ -249,40 +292,56 @@ $export.B = 16;  // bind
 $export.W = 32;  // wrap
 $export.U = 64;  // safe
 $export.R = 128; // real proto method for `library`
-var _export = $export;var toString = {}.toString;
+var _export = $export;
+
+var toString = {}.toString;
 
 var _cof = function (it) {
   return toString.call(it).slice(8, -1);
-};// fallback for non-array-like ES3 and non-enumerable old V8 strings
+};
+
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
 
 // eslint-disable-next-line no-prototype-builtins
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return _cof(it) == 'String' ? it.split('') : Object(it);
-};// 7.2.1 RequireObjectCoercible(argument)
+};
+
+// 7.2.1 RequireObjectCoercible(argument)
 var _defined = function (it) {
   if (it == undefined) throw TypeError("Can't call method on  " + it);
   return it;
-};// to indexed object, toObject with fallback for non-array-like ES3 strings
+};
+
+// to indexed object, toObject with fallback for non-array-like ES3 strings
 
 
 var _toIobject = function (it) {
   return _iobject(_defined(it));
-};// 7.1.4 ToInteger
+};
+
+// 7.1.4 ToInteger
 var ceil = Math.ceil;
 var floor = Math.floor;
 var _toInteger = function (it) {
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-};// 7.1.15 ToLength
+};
+
+// 7.1.15 ToLength
 
 var min = Math.min;
 var _toLength = function (it) {
   return it > 0 ? min(_toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-};var max = Math.max;
+};
+
+var max = Math.max;
 var min$1 = Math.min;
 var _toAbsoluteIndex = function (index, length) {
   index = _toInteger(index);
   return index < 0 ? max(index + length, 0) : min$1(index, length);
-};// false -> Array#indexOf
+};
+
+// false -> Array#indexOf
 // true  -> Array#includes
 
 
@@ -304,11 +363,15 @@ var _arrayIncludes = function (IS_INCLUDES) {
       if (O[index] === el) return IS_INCLUDES || index || 0;
     } return !IS_INCLUDES && -1;
   };
-};var shared = _shared('keys');
+};
+
+var shared = _shared('keys');
 
 var _sharedKey = function (key) {
   return shared[key] || (shared[key] = _uid(key));
-};var arrayIndexOf = _arrayIncludes(false);
+};
+
+var arrayIndexOf = _arrayIncludes(false);
 var IE_PROTO = _sharedKey('IE_PROTO');
 
 var _objectKeysInternal = function (object, names) {
@@ -322,20 +385,28 @@ var _objectKeysInternal = function (object, names) {
     ~arrayIndexOf(result, key) || result.push(key);
   }
   return result;
-};// IE 8- don't enum bug keys
+};
+
+// IE 8- don't enum bug keys
 var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
-).split(',');// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+).split(',');
+
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
 
 
 
 var _objectKeys = Object.keys || function keys(O) {
   return _objectKeysInternal(O, _enumBugKeys);
-};var f$1 = {}.propertyIsEnumerable;
+};
+
+var f$1 = {}.propertyIsEnumerable;
 
 var _objectPie = {
 	f: f$1
-};var isEnum = _objectPie.f;
+};
+
+var isEnum = _objectPie.f;
 var _objectToArray = function (isEntries) {
   return function (it) {
     var O = _toIobject(it);
@@ -348,7 +419,9 @@ var _objectToArray = function (isEntries) {
       result.push(isEntries ? [key, O[key]] : O[key]);
     } return result;
   };
-};// https://github.com/tc39/proposal-object-values-entries
+};
+
+// https://github.com/tc39/proposal-object-values-entries
 
 var $values = _objectToArray(false);
 
@@ -356,7 +429,9 @@ _export(_export.S, 'Object', {
   values: function values(it) {
     return $values(it);
   }
-});// true  -> String#at
+});
+
+// true  -> String#at
 // false -> String#codePointAt
 var _stringAt = function (TO_STRING) {
   return function (that, pos) {
@@ -370,13 +445,17 @@ var _stringAt = function (TO_STRING) {
       ? TO_STRING ? s.charAt(i) : a
       : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
-};var at = _stringAt(true);
+};
+
+var at = _stringAt(true);
 
  // `AdvanceStringIndex` abstract operation
 // https://tc39.github.io/ecma262/#sec-advancestringindex
 var _advanceStringIndex = function (S, index, unicode) {
   return index + (unicode ? at(S, index).length : 1);
-};var _wks = createCommonjsModule(function (module) {
+};
+
+var _wks = createCommonjsModule(function (module) {
 var store = _shared('wks');
 
 var Symbol = _global.Symbol;
@@ -388,7 +467,9 @@ var $exports = module.exports = function (name) {
 };
 
 $exports.store = store;
-});// getting tag from 19.1.3.6 Object.prototype.toString()
+});
+
+// getting tag from 19.1.3.6 Object.prototype.toString()
 
 var TAG = _wks('toStringTag');
 // ES3 wrong here
@@ -410,7 +491,9 @@ var _classof = function (it) {
     : ARG ? _cof(O)
     // ES3 arguments fallback
     : (B = _cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
-};var builtinExec = RegExp.prototype.exec;
+};
+
+var builtinExec = RegExp.prototype.exec;
 
  // `RegExpExec` abstract operation
 // https://tc39.github.io/ecma262/#sec-regexpexec
@@ -427,7 +510,9 @@ var _regexpExecAbstract = function (R, S) {
     throw new TypeError('RegExp#exec called on incompatible receiver');
   }
   return builtinExec.call(R, S);
-};// 21.2.5.3 get RegExp.prototype.flags
+};
+
+// 21.2.5.3 get RegExp.prototype.flags
 
 var _flags = function () {
   var that = _anObject(this);
@@ -438,7 +523,9 @@ var _flags = function () {
   if (that.unicode) result += 'u';
   if (that.sticky) result += 'y';
   return result;
-};var nativeExec = RegExp.prototype.exec;
+};
+
+var nativeExec = RegExp.prototype.exec;
 // This always refers to the native implementation, because the
 // String#replace polyfill uses ./fix-regexp-well-known-symbol-logic.js,
 // which loads this file before patching the method.
@@ -491,13 +578,17 @@ if (PATCH) {
   };
 }
 
-var _regexpExec = patchedExec;_export({
+var _regexpExec = patchedExec;
+
+_export({
   target: 'RegExp',
   proto: true,
   forced: _regexpExec !== /./.exec
 }, {
   exec: _regexpExec
-});var SPECIES = _wks('species');
+});
+
+var SPECIES = _wks('species');
 
 var REPLACE_SUPPORTS_NAMED_GROUPS = !_fails(function () {
   // #replace needs built-in support for named groups.
@@ -583,7 +674,9 @@ var _fixReWks = function (KEY, length, exec) {
       : function (string) { return rxfn.call(string, this); }
     );
   }
-};// @@match logic
+};
+
+// @@match logic
 _fixReWks('match', 1, function (defined, MATCH, $match, maybeCallNative) {
   return [
     // `String.prototype.match` method
@@ -615,7 +708,11 @@ _fixReWks('match', 1, function (defined, MATCH, $match, maybeCallNative) {
       return n === 0 ? null : A;
     }
   ];
-});var _iterators = {};var _objectDps = _descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
+});
+
+var _iterators = {};
+
+var _objectDps = _descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
   _anObject(O);
   var keys = _objectKeys(Properties);
   var length = keys.length;
@@ -623,8 +720,12 @@ _fixReWks('match', 1, function (defined, MATCH, $match, maybeCallNative) {
   var P;
   while (length > i) _objectDp.f(O, P = keys[i++], Properties[P]);
   return O;
-};var document$2 = _global.document;
-var _html = document$2 && document$2.documentElement;// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+};
+
+var document$2 = _global.document;
+var _html = document$2 && document$2.documentElement;
+
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 
 
 
@@ -664,13 +765,17 @@ var _objectCreate = Object.create || function create(O, Properties) {
     result[IE_PROTO$1] = O;
   } else result = createDict();
   return Properties === undefined ? result : _objectDps(result, Properties);
-};var def = _objectDp.f;
+};
+
+var def = _objectDp.f;
 
 var TAG$1 = _wks('toStringTag');
 
 var _setToStringTag = function (it, tag, stat) {
   if (it && !_has(it = stat ? it : it.prototype, TAG$1)) def(it, TAG$1, { configurable: true, value: tag });
-};var IteratorPrototype = {};
+};
+
+var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
 _hide(IteratorPrototype, _wks('iterator'), function () { return this; });
@@ -678,11 +783,15 @@ _hide(IteratorPrototype, _wks('iterator'), function () { return this; });
 var _iterCreate = function (Constructor, NAME, next) {
   Constructor.prototype = _objectCreate(IteratorPrototype, { next: _propertyDesc(1, next) });
   _setToStringTag(Constructor, NAME + ' Iterator');
-};// 7.1.13 ToObject(argument)
+};
+
+// 7.1.13 ToObject(argument)
 
 var _toObject = function (it) {
   return Object(_defined(it));
-};// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
+};
+
+// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
 
 
 var IE_PROTO$2 = _sharedKey('IE_PROTO');
@@ -694,7 +803,9 @@ var _objectGpo = Object.getPrototypeOf || function (O) {
   if (typeof O.constructor == 'function' && O instanceof O.constructor) {
     return O.constructor.prototype;
   } return O instanceof Object ? ObjectProto : null;
-};var ITERATOR = _wks('iterator');
+};
+
+var ITERATOR = _wks('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
 var KEYS = 'keys';
@@ -753,7 +864,9 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     } else _export(_export.P + _export.F * (BUGGY || VALUES_BUG), NAME, methods);
   }
   return methods;
-};var $at = _stringAt(true);
+};
+
+var $at = _stringAt(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
 _iterDefine(String, 'String', function (iterated) {
@@ -768,7 +881,9 @@ _iterDefine(String, 'String', function (iterated) {
   point = $at(O, index);
   this._i += point.length;
   return { value: point, done: false };
-});// call something on iterator step with safe closing on error
+});
+
+// call something on iterator step with safe closing on error
 
 var _iterCall = function (iterator, fn, value, entries) {
   try {
@@ -779,23 +894,31 @@ var _iterCall = function (iterator, fn, value, entries) {
     if (ret !== undefined) _anObject(ret.call(iterator));
     throw e;
   }
-};// check on default Array iterator
+};
+
+// check on default Array iterator
 
 var ITERATOR$1 = _wks('iterator');
 var ArrayProto = Array.prototype;
 
 var _isArrayIter = function (it) {
   return it !== undefined && (_iterators.Array === it || ArrayProto[ITERATOR$1] === it);
-};var _createProperty = function (object, index, value) {
+};
+
+var _createProperty = function (object, index, value) {
   if (index in object) _objectDp.f(object, index, _propertyDesc(0, value));
   else object[index] = value;
-};var ITERATOR$2 = _wks('iterator');
+};
+
+var ITERATOR$2 = _wks('iterator');
 
 var core_getIteratorMethod = _core.getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR$2]
     || it['@@iterator']
     || _iterators[_classof(it)];
-};var ITERATOR$3 = _wks('iterator');
+};
+
+var ITERATOR$3 = _wks('iterator');
 var SAFE_CLOSING = false;
 
 try {
@@ -814,7 +937,9 @@ var _iterDetect = function (exec, skipClosing) {
     exec(arr);
   } catch (e) { /* empty */ }
   return safe;
-};_export(_export.S + _export.F * !_iterDetect(function (iter) { }), 'Array', {
+};
+
+_export(_export.S + _export.F * !_iterDetect(function (iter) { }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
     var O = _toObject(arrayLike);
@@ -840,13 +965,17 @@ var _iterDetect = function (exec, skipClosing) {
     result.length = index;
     return result;
   }
-});// 22.1.3.31 Array.prototype[@@unscopables]
+});
+
+// 22.1.3.31 Array.prototype[@@unscopables]
 var UNSCOPABLES = _wks('unscopables');
 var ArrayProto$1 = Array.prototype;
 if (ArrayProto$1[UNSCOPABLES] == undefined) _hide(ArrayProto$1, UNSCOPABLES, {});
 var _addToUnscopables = function (key) {
   ArrayProto$1[UNSCOPABLES][key] = true;
-};// https://github.com/tc39/Array.prototype.includes
+};
+
+// https://github.com/tc39/Array.prototype.includes
 
 var $includes = _arrayIncludes(true);
 
@@ -856,21 +985,27 @@ _export(_export.P, 'Array', {
   }
 });
 
-_addToUnscopables('includes');// 7.2.8 IsRegExp(argument)
+_addToUnscopables('includes');
+
+// 7.2.8 IsRegExp(argument)
 
 
 var MATCH = _wks('match');
 var _isRegexp = function (it) {
   var isRegExp;
   return _isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : _cof(it) == 'RegExp');
-};// helper for String#{startsWith, endsWith, includes}
+};
+
+// helper for String#{startsWith, endsWith, includes}
 
 
 
 var _stringContext = function (that, searchString, NAME) {
   if (_isRegexp(searchString)) throw TypeError('String#' + NAME + " doesn't accept regex!");
   return String(_defined(that));
-};var MATCH$1 = _wks('match');
+};
+
+var MATCH$1 = _wks('match');
 var _failsIsRegexp = function (KEY) {
   var re = /./;
   try {
@@ -881,14 +1016,18 @@ var _failsIsRegexp = function (KEY) {
       return !'/./'[KEY](re);
     } catch (f) { /* empty */ }
   } return true;
-};var INCLUDES = 'includes';
+};
+
+var INCLUDES = 'includes';
 
 _export(_export.P + _export.F * _failsIsRegexp(INCLUDES), 'String', {
   includes: function includes(searchString /* , position = 0 */) {
     return !!~_stringContext(this, searchString, INCLUDES)
       .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
   }
-});// 7.3.20 SpeciesConstructor(O, defaultConstructor)
+});
+
+// 7.3.20 SpeciesConstructor(O, defaultConstructor)
 
 
 var SPECIES$1 = _wks('species');
@@ -896,7 +1035,9 @@ var _speciesConstructor = function (O, D) {
   var C = _anObject(O).constructor;
   var S;
   return C === undefined || (S = _anObject(C)[SPECIES$1]) == undefined ? D : _aFunction(S);
-};var $min = Math.min;
+};
+
+var $min = Math.min;
 var $push = [].push;
 var $SPLIT = 'split';
 var LENGTH = 'length';
@@ -1019,9 +1160,13 @@ _fixReWks('split', 2, function (defined, SPLIT, $split, maybeCallNative) {
       return A;
     }
   ];
-});var _iterStep = function (done, value) {
+});
+
+var _iterStep = function (done, value) {
   return { value: value, done: !!done };
-};// 22.1.3.4 Array.prototype.entries()
+};
+
+// 22.1.3.4 Array.prototype.entries()
 // 22.1.3.13 Array.prototype.keys()
 // 22.1.3.29 Array.prototype.values()
 // 22.1.3.30 Array.prototype[@@iterator]()
@@ -1048,7 +1193,9 @@ _iterators.Arguments = _iterators.Array;
 
 _addToUnscopables('keys');
 _addToUnscopables('values');
-_addToUnscopables('entries');var ITERATOR$4 = _wks('iterator');
+_addToUnscopables('entries');
+
+var ITERATOR$4 = _wks('iterator');
 var TO_STRING_TAG = _wks('toStringTag');
 var ArrayValues = _iterators.Array;
 
@@ -1098,7 +1245,9 @@ for (var collections = _objectKeys(DOMIterables), i = 0; i < collections.length;
     _iterators[NAME] = ArrayValues;
     if (explicit) for (key in es6_array_iterator) if (!proto[key]) _redefine(proto, key, es6_array_iterator[key], true);
   }
-}var max$1 = Math.max;
+}
+
+var max$1 = Math.max;
 var min$2 = Math.min;
 var floor$1 = Math.floor;
 var SUBSTITUTION_SYMBOLS = /\$([$&`']|\d\d?|<[^>]*>)/g;
@@ -1207,11 +1356,15 @@ _fixReWks('replace', 2, function (defined, REPLACE, $replace, maybeCallNative) {
       return capture === undefined ? '' : capture;
     });
   }
-});var _anInstance = function (it, Constructor, name, forbiddenField) {
+});
+
+var _anInstance = function (it, Constructor, name, forbiddenField) {
   if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
     throw TypeError(name + ': incorrect invocation!');
   } return it;
-};var _forOf = createCommonjsModule(function (module) {
+};
+
+var _forOf = createCommonjsModule(function (module) {
 var BREAK = {};
 var RETURN = {};
 var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) {
@@ -1231,7 +1384,9 @@ var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) 
 };
 exports.BREAK = BREAK;
 exports.RETURN = RETURN;
-});// fast apply, http://jsperf.lnkit.com/fast-apply/5
+});
+
+// fast apply, http://jsperf.lnkit.com/fast-apply/5
 var _invoke = function (fn, args, that) {
   var un = that === undefined;
   switch (args.length) {
@@ -1246,7 +1401,9 @@ var _invoke = function (fn, args, that) {
     case 4: return un ? fn(args[0], args[1], args[2], args[3])
                       : fn.call(that, args[0], args[1], args[2], args[3]);
   } return fn.apply(that, args);
-};var process$1 = _global.process;
+};
+
+var process$1 = _global.process;
 var setTask = _global.setImmediate;
 var clearTask = _global.clearImmediate;
 var MessageChannel = _global.MessageChannel;
@@ -1324,7 +1481,9 @@ if (!setTask || !clearTask) {
 var _task = {
   set: setTask,
   clear: clearTask
-};var macrotask = _task.set;
+};
+
+var macrotask = _task.set;
 var Observer = _global.MutationObserver || _global.WebKitMutationObserver;
 var process$2 = _global.process;
 var Promise$1 = _global.Promise;
@@ -1391,7 +1550,9 @@ var _microtask = function () {
       notify();
     } last = task;
   };
-};// 25.4.1.5 NewPromiseCapability(C)
+};
+
+// 25.4.1.5 NewPromiseCapability(C)
 
 
 function PromiseCapability(C) {
@@ -1411,25 +1572,35 @@ var f$2 = function (C) {
 
 var _newPromiseCapability = {
 	f: f$2
-};var _perform = function (exec) {
+};
+
+var _perform = function (exec) {
   try {
     return { e: false, v: exec() };
   } catch (e) {
     return { e: true, v: e };
   }
-};var navigator = _global.navigator;
+};
 
-var _userAgent = navigator && navigator.userAgent || '';var _promiseResolve = function (C, x) {
+var navigator = _global.navigator;
+
+var _userAgent = navigator && navigator.userAgent || '';
+
+var _promiseResolve = function (C, x) {
   _anObject(C);
   if (_isObject(x) && x.constructor === C) return x;
   var promiseCapability = _newPromiseCapability.f(C);
   var resolve = promiseCapability.resolve;
   resolve(x);
   return promiseCapability.promise;
-};var _redefineAll = function (target, src, safe) {
+};
+
+var _redefineAll = function (target, src, safe) {
   for (var key in src) _redefine(target, key, src[key], safe);
   return target;
-};var SPECIES$2 = _wks('species');
+};
+
+var SPECIES$2 = _wks('species');
 
 var _setSpecies = function (KEY) {
   var C = _global[KEY];
@@ -1437,7 +1608,9 @@ var _setSpecies = function (KEY) {
     configurable: true,
     get: function () { return this; }
   });
-};var task = _task.set;
+};
+
+var task = _task.set;
 var microtask = _microtask();
 
 
@@ -1711,7 +1884,9 @@ _export(_export.S + _export.F * !(USE_NATIVE && _iterDetect(function (iter) {
     if (result.e) reject(result.v);
     return capability.promise;
   }
-});var _meta = createCommonjsModule(function (module) {
+});
+
+var _meta = createCommonjsModule(function (module) {
 var META = _uid('meta');
 
 
@@ -1770,7 +1945,9 @@ var _meta_1 = _meta.KEY;
 var _meta_2 = _meta.NEED;
 var _meta_3 = _meta.fastKey;
 var _meta_4 = _meta.getWeak;
-var _meta_5 = _meta.onFreeze;// most Object methods by ES6 should accept primitives
+var _meta_5 = _meta.onFreeze;
+
+// most Object methods by ES6 should accept primitives
 
 
 
@@ -1779,7 +1956,9 @@ var _objectSap = function (KEY, exec) {
   var exp = {};
   exp[KEY] = exec(fn);
   _export(_export.S + _export.F * _fails(function () { fn(1); }), 'Object', exp);
-};// 19.1.2.5 Object.freeze(O)
+};
+
+// 19.1.2.5 Object.freeze(O)
 
 var meta = _meta.onFreeze;
 
@@ -1787,7 +1966,9 @@ _objectSap('freeze', function ($freeze) {
   return function freeze(it) {
     return $freeze && _isObject(it) ? $freeze(meta(it)) : it;
   };
-});var defaultDefinition = {
+});
+
+var defaultDefinition = {
   output: {
     a_A_b_B_c: "_g",
     a_A_b_B_C: "_tp~a/A/b/B/c?C=d&D=e&E=f&F=g&G=h",
@@ -4536,10 +4717,14 @@ _objectSap('freeze', function ($freeze) {
       _o: "POST"
     }
   }
-};function _isPlaceholder(a) {
+};
+
+function _isPlaceholder(a) {
        return a != null && typeof a === 'object' && a['@@functional/placeholder'] === true;
 }
-var _isPlaceholder_1 = _isPlaceholder;/**
+var _isPlaceholder_1 = _isPlaceholder;
+
+/**
  * Optimized internal one-arity curry function.
  *
  * @private
@@ -4558,7 +4743,9 @@ function _curry1(fn) {
     }
   };
 }
-var _curry1_1 = _curry1;/**
+var _curry1_1 = _curry1;
+
+/**
  * Optimized internal two-arity curry function.
  *
  * @private
@@ -4586,7 +4773,9 @@ function _curry2(fn) {
     }
   };
 }
-var _curry2_1 = _curry2;/**
+var _curry2_1 = _curry2;
+
+/**
  * Optimized internal three-arity curry function.
  *
  * @private
@@ -4630,10 +4819,14 @@ function _curry3(fn) {
     }
   };
 }
-var _curry3_1 = _curry3;function _has$1(prop, obj) {
+var _curry3_1 = _curry3;
+
+function _has$1(prop, obj) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
-var _has_1 = _has$1;/**
+var _has_1 = _has$1;
+
+/**
  * Tests whether or not an object is an array.
  *
  * @private
@@ -4647,7 +4840,9 @@ var _has_1 = _has$1;/**
  */
 var _isArray = Array.isArray || function _isArray(val) {
   return val != null && val.length >= 0 && Object.prototype.toString.call(val) === '[object Array]';
-};/**
+};
+
+/**
  * Determine if the passed argument is an integer.
  *
  * @private
@@ -4657,7 +4852,9 @@ var _isArray = Array.isArray || function _isArray(val) {
  */
 var _isInteger = Number.isInteger || function _isInteger(n) {
   return n << 0 === n;
-};/**
+};
+
+/**
  * Makes a shallow clone of an object, setting or overriding the specified
  * property with the given value. Note that this copies and flattens prototype
  * properties onto the new object as well. All non-primitive properties are
@@ -4687,7 +4884,9 @@ var assoc = /*#__PURE__*/_curry3_1(function assoc(prop, val, obj) {
   result[prop] = val;
   return result;
 });
-var assoc_1 = assoc;/**
+var assoc_1 = assoc;
+
+/**
  * Checks if the input value is `null` or `undefined`.
  *
  * @func
@@ -4709,7 +4908,9 @@ var assoc_1 = assoc;/**
 var isNil = /*#__PURE__*/_curry1_1(function isNil(x) {
   return x == null;
 });
-var isNil_1 = isNil;/**
+var isNil_1 = isNil;
+
+/**
  * Makes a shallow clone of an object, setting or overriding the nodes required
  * to create the given path, and placing the specific value at the tail end of
  * that path. Note that this copies and flattens prototype properties onto the
@@ -4752,10 +4953,14 @@ var assocPath = /*#__PURE__*/_curry3_1(function assocPath(path, val, obj) {
     return assoc_1(idx, val, obj);
   }
 });
-var assocPath_1 = assocPath;function _isTransformer(obj) {
+var assocPath_1 = assocPath;
+
+function _isTransformer(obj) {
   return obj != null && typeof obj['@@transducer/step'] === 'function';
 }
-var _isTransformer_1 = _isTransformer;/**
+var _isTransformer_1 = _isTransformer;
+
+/**
  * Returns a function that dispatches with different strategies based on the
  * object in list position (last argument). If it is an array, executes [fn].
  * Otherwise, if it has a function with one of the given method names, it will
@@ -4794,7 +4999,9 @@ function _dispatchable(methodNames, xf, fn) {
     return fn.apply(this, arguments);
   };
 }
-var _dispatchable_1 = _dispatchable;function _map(fn, functor) {
+var _dispatchable_1 = _dispatchable;
+
+function _map(fn, functor) {
   var idx = 0;
   var len = functor.length;
   var result = Array(len);
@@ -4804,10 +5011,14 @@ var _dispatchable_1 = _dispatchable;function _map(fn, functor) {
   }
   return result;
 }
-var _map_1 = _map;function _isString(x) {
+var _map_1 = _map;
+
+function _isString(x) {
   return Object.prototype.toString.call(x) === '[object String]';
 }
-var _isString_1 = _isString;/**
+var _isString_1 = _isString;
+
+/**
  * Tests whether or not an object is similar to an array.
  *
  * @private
@@ -4850,7 +5061,9 @@ var _isArrayLike = /*#__PURE__*/_curry1_1(function isArrayLike(x) {
   }
   return false;
 });
-var _isArrayLike_1 = _isArrayLike;var XWrap = /*#__PURE__*/function () {
+var _isArrayLike_1 = _isArrayLike;
+
+var XWrap = /*#__PURE__*/function () {
   function XWrap(fn) {
     this.f = fn;
   }
@@ -4870,7 +5083,9 @@ var _isArrayLike_1 = _isArrayLike;var XWrap = /*#__PURE__*/function () {
 function _xwrap(fn) {
   return new XWrap(fn);
 }
-var _xwrap_1 = _xwrap;function _arity(n, fn) {
+var _xwrap_1 = _xwrap;
+
+function _arity(n, fn) {
   /* eslint-disable no-unused-vars */
   switch (n) {
     case 0:
@@ -4921,7 +5136,9 @@ var _xwrap_1 = _xwrap;function _arity(n, fn) {
       throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
   }
 }
-var _arity_1 = _arity;/**
+var _arity_1 = _arity;
+
+/**
  * Creates a function that is bound to a context.
  * Note: `R.bind` does not provide the additional argument-binding capabilities of
  * [Function.prototype.bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
@@ -4950,7 +5167,9 @@ var bind = /*#__PURE__*/_curry2_1(function bind(fn, thisObj) {
     return fn.apply(thisObj, arguments);
   });
 });
-var bind_1 = bind;function _arrayReduce(xf, acc, list) {
+var bind_1 = bind;
+
+function _arrayReduce(xf, acc, list) {
   var idx = 0;
   var len = list.length;
   while (idx < len) {
@@ -5005,14 +5224,18 @@ function _reduce(fn, acc, list) {
 
   throw new TypeError('reduce: list must be array or iterable');
 }
-var _reduce_1 = _reduce;var _xfBase = {
+var _reduce_1 = _reduce;
+
+var _xfBase = {
   init: function () {
     return this.xf['@@transducer/init']();
   },
   result: function (result) {
     return this.xf['@@transducer/result'](result);
   }
-};var XMap = /*#__PURE__*/function () {
+};
+
+var XMap = /*#__PURE__*/function () {
 
   function XMap(f, xf) {
     this.xf = xf;
@@ -5030,7 +5253,9 @@ var _reduce_1 = _reduce;var _xfBase = {
 var _xmap = /*#__PURE__*/_curry2_1(function _xmap(f, xf) {
   return new XMap(f, xf);
 });
-var _xmap_1 = _xmap;/**
+var _xmap_1 = _xmap;
+
+/**
  * Internal curryN function.
  *
  * @private
@@ -5065,7 +5290,9 @@ function _curryN(length, received, fn) {
     return left <= 0 ? fn.apply(this, combined) : _arity_1(left, _curryN(length, combined, fn));
   };
 }
-var _curryN_1 = _curryN;/**
+var _curryN_1 = _curryN;
+
+/**
  * Returns a curried equivalent of the provided function, with the specified
  * arity. The curried function has two unusual capabilities. First, its
  * arguments needn't be provided one at a time. If `g` is `R.curryN(3, f)`, the
@@ -5115,7 +5342,9 @@ var curryN = /*#__PURE__*/_curry2_1(function curryN(length, fn) {
   }
   return _arity_1(length, _curryN_1(length, [], fn));
 });
-var curryN_1 = curryN;var toString$1 = Object.prototype.toString;
+var curryN_1 = curryN;
+
+var toString$1 = Object.prototype.toString;
 var _isArguments = /*#__PURE__*/function () {
   return toString$1.call(arguments) === '[object Arguments]' ? function _isArguments(x) {
     return toString$1.call(x) === '[object Arguments]';
@@ -5124,7 +5353,9 @@ var _isArguments = /*#__PURE__*/function () {
   };
 }();
 
-var _isArguments_1 = _isArguments;// cover IE < 9 keys issues
+var _isArguments_1 = _isArguments;
+
+// cover IE < 9 keys issues
 
 
 var hasEnumBug = ! /*#__PURE__*/{ toString: null }.propertyIsEnumerable('toString');
@@ -5190,7 +5421,9 @@ var keys = typeof Object.keys === 'function' && !hasArgsEnumBug ? /*#__PURE__*/_
   }
   return ks;
 });
-var keys_1 = keys;/**
+var keys_1 = keys;
+
+/**
  * Takes a function and
  * a [functor](https://github.com/fantasyland/fantasy-land#functor),
  * applies the function to each of the functor's values, and returns
@@ -5242,7 +5475,9 @@ var map = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['fantasy-land/ma
       return _map_1(fn, functor);
   }
 }));
-var map_1 = map;/**
+var map_1 = map;
+
+/**
  * Returns a lens for the given getter and setter functions. The getter "gets"
  * the value of the focus; the setter "sets" the value of the focus. The setter
  * should not mutate the data structure.
@@ -5276,7 +5511,9 @@ var lens = /*#__PURE__*/_curry2_1(function lens(getter, setter) {
     };
   };
 });
-var lens_1 = lens;/**
+var lens_1 = lens;
+
+/**
  * Retrieve the value at a given path.
  *
  * @func
@@ -5308,7 +5545,9 @@ var path = /*#__PURE__*/_curry2_1(function path(paths, obj) {
   }
   return val;
 });
-var path_1 = path;/**
+var path_1 = path;
+
+/**
  * Returns a lens whose focus is the specified path.
  *
  * @func
@@ -5337,10 +5576,14 @@ var path_1 = path;/**
 var lensPath = /*#__PURE__*/_curry1_1(function lensPath(p) {
   return lens_1(path_1(p), assocPath_1(p));
 });
-var lensPath_1 = lensPath;function _isObject$1(x) {
+var lensPath_1 = lensPath;
+
+function _isObject$1(x) {
   return Object.prototype.toString.call(x) === '[object Object]';
 }
-var _isObject_1 = _isObject$1;/**
+var _isObject_1 = _isObject$1;
+
+/**
  * Creates a new object with the own properties of the two provided objects. If
  * a key exists in both objects, the provided function is applied to the key
  * and the values associated with the key in each object, with the result being
@@ -5385,7 +5628,9 @@ var mergeWithKey = /*#__PURE__*/_curry3_1(function mergeWithKey(fn, l, r) {
 
   return result;
 });
-var mergeWithKey_1 = mergeWithKey;/**
+var mergeWithKey_1 = mergeWithKey;
+
+/**
  * Creates a new object with the own properties of the two provided objects.
  * If a key exists in both objects:
  * - and both associated values are also objects then the values will be
@@ -5424,7 +5669,9 @@ var mergeDeepWithKey = /*#__PURE__*/_curry3_1(function mergeDeepWithKey(fn, lObj
     }
   }, lObj, rObj);
 });
-var mergeDeepWithKey_1 = mergeDeepWithKey;/**
+var mergeDeepWithKey_1 = mergeDeepWithKey;
+
+/**
  * Creates a new object with the own properties of the first object merged with
  * the own properties of the second object. If a key exists in both objects:
  * - and both values are objects, the two values will be recursively merged
@@ -5452,10 +5699,14 @@ var mergeDeepRight = /*#__PURE__*/_curry2_1(function mergeDeepRight(lObj, rObj) 
     return rVal;
   }, lObj, rObj);
 });
-var mergeDeepRight_1 = mergeDeepRight;function _identity(x) {
+var mergeDeepRight_1 = mergeDeepRight;
+
+function _identity(x) {
   return x;
 }
-var _identity_1 = _identity;/**
+var _identity_1 = _identity;
+
+/**
  * A function that does nothing but return the parameter supplied to it. Good
  * as a default or placeholder function.
  *
@@ -5477,7 +5728,9 @@ var _identity_1 = _identity;/**
 
 
 var identity = /*#__PURE__*/_curry1_1(_identity_1);
-var identity_1 = identity;function _arrayFromIterator(iter) {
+var identity_1 = identity;
+
+function _arrayFromIterator(iter) {
   var list = [];
   var next;
   while (!(next = iter.next()).done) {
@@ -5485,7 +5738,9 @@ var identity_1 = identity;function _arrayFromIterator(iter) {
   }
   return list;
 }
-var _arrayFromIterator_1 = _arrayFromIterator;function _includesWith(pred, x, list) {
+var _arrayFromIterator_1 = _arrayFromIterator;
+
+function _includesWith(pred, x, list) {
   var idx = 0;
   var len = list.length;
 
@@ -5497,12 +5752,16 @@ var _arrayFromIterator_1 = _arrayFromIterator;function _includesWith(pred, x, li
   }
   return false;
 }
-var _includesWith_1 = _includesWith;function _functionName(f) {
+var _includesWith_1 = _includesWith;
+
+function _functionName(f) {
   // String(x => x) evaluates to "x => x", so the pattern may not match.
   var match = String(f).match(/^function (\w*)/);
   return match == null ? '' : match[1];
 }
-var _functionName_1 = _functionName;// Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+var _functionName_1 = _functionName;
+
+// Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
 function _objectIs(a, b) {
   // SameValue algorithm
   if (a === b) {
@@ -5515,7 +5774,9 @@ function _objectIs(a, b) {
   }
 }
 
-var _objectIs_1 = typeof Object.is === 'function' ? Object.is : _objectIs;/**
+var _objectIs_1 = typeof Object.is === 'function' ? Object.is : _objectIs;
+
+/**
  * Gives a single-word string description of the (native) type of a value,
  * returning such answers as 'Object', 'Number', 'Array', or 'Null'. Does not
  * attempt to distinguish user Object types any further, reporting them all as
@@ -5545,7 +5806,9 @@ var _objectIs_1 = typeof Object.is === 'function' ? Object.is : _objectIs;/**
 var type = /*#__PURE__*/_curry1_1(function type(val) {
   return val === null ? 'Null' : val === undefined ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1);
 });
-var type_1 = type;/**
+var type_1 = type;
+
+/**
  * private _uniqContentEquals function.
  * That function is checking equality of 2 iterator contents with 2 assumptions
  * - iterators lengths are the same
@@ -5686,7 +5949,9 @@ function _equals(a, b, stackA, stackB) {
   }
   return true;
 }
-var _equals_1 = _equals;/**
+var _equals_1 = _equals;
+
+/**
  * Returns `true` if its arguments are equivalent, `false` otherwise. Handles
  * cyclical data structures.
  *
@@ -5716,7 +5981,9 @@ var _equals_1 = _equals;/**
 var equals = /*#__PURE__*/_curry2_1(function equals(a, b) {
   return _equals_1(a, b, [], []);
 });
-var equals_1 = equals;function _indexOf(list, a, idx) {
+var equals_1 = equals;
+
+function _indexOf(list, a, idx) {
   var inf, item;
   // Array.prototype.indexOf doesn't exist below IE9
   if (typeof list.indexOf === 'function') {
@@ -5770,10 +6037,14 @@ var equals_1 = equals;function _indexOf(list, a, idx) {
   }
   return -1;
 }
-var _indexOf_1 = _indexOf;function _includes(a, list) {
+var _indexOf_1 = _indexOf;
+
+function _includes(a, list) {
   return _indexOf_1(list, a, 0) >= 0;
 }
-var _includes_1 = _includes;var _Set = /*#__PURE__*/function () {
+var _includes_1 = _includes;
+
+var _Set = /*#__PURE__*/function () {
 
   function _Set() {
     /* globals Set */
@@ -5944,7 +6215,9 @@ function hasOrAdd(item, shouldAdd, set) {
 }
 
 // A simple Set type that honours R.equals semantics
-var _Set_1 = _Set;/**
+var _Set_1 = _Set;
+
+/**
  * Returns a new list containing only one copy of each element in the original
  * list, based upon the value returned by applying the supplied function to
  * each list element. Prefers the first item if the supplied function produces
@@ -5980,7 +6253,9 @@ var uniqBy = /*#__PURE__*/_curry2_1(function uniqBy(fn, list) {
   }
   return result;
 });
-var uniqBy_1 = uniqBy;/**
+var uniqBy_1 = uniqBy;
+
+/**
  * Returns a new list containing only one copy of each element in the original
  * list. [`R.equals`](#equals) is used to determine equality.
  *
@@ -6000,7 +6275,9 @@ var uniqBy_1 = uniqBy;/**
 
 
 var uniq = /*#__PURE__*/uniqBy_1(identity_1);
-var uniq_1 = uniq;/**
+var uniq_1 = uniq;
+
+/**
  * Returns a partial copy of an object containing only the keys specified. If
  * the key does not exist, the property is ignored.
  *
@@ -6031,12 +6308,16 @@ var pick = /*#__PURE__*/_curry2_1(function pick(names, obj) {
   }
   return result;
 });
-var pick_1 = pick;function _pipe(f, g) {
+var pick_1 = pick;
+
+function _pipe(f, g) {
   return function () {
     return g.call(this, f.apply(this, arguments));
   };
 }
-var _pipe_1 = _pipe;/**
+var _pipe_1 = _pipe;
+
+/**
  * Returns a single item by iterating through the list, successively calling
  * the iterator function and passing it an accumulator value and the current
  * value from the array, and then passing the result to the next call.
@@ -6085,7 +6366,9 @@ var _pipe_1 = _pipe;/**
 
 
 var reduce = /*#__PURE__*/_curry3_1(_reduce_1);
-var reduce_1 = reduce;/**
+var reduce_1 = reduce;
+
+/**
  * This checks whether a function has a [methodname] function. If it isn't an
  * array it will execute that function otherwise it will default to the ramda
  * implementation.
@@ -6107,7 +6390,9 @@ function _checkForMethod(methodname, fn) {
     return _isArray(obj) || typeof obj[methodname] !== 'function' ? fn.apply(this, arguments) : obj[methodname].apply(obj, Array.prototype.slice.call(arguments, 0, length - 1));
   };
 }
-var _checkForMethod_1 = _checkForMethod;/**
+var _checkForMethod_1 = _checkForMethod;
+
+/**
  * Returns the elements of the given list or string (or object with a `slice`
  * method) from `fromIndex` (inclusive) to `toIndex` (exclusive).
  *
@@ -6136,7 +6421,9 @@ var _checkForMethod_1 = _checkForMethod;/**
 var slice = /*#__PURE__*/_curry3_1( /*#__PURE__*/_checkForMethod_1('slice', function slice(fromIndex, toIndex, list) {
   return Array.prototype.slice.call(list, fromIndex, toIndex);
 }));
-var slice_1 = slice;/**
+var slice_1 = slice;
+
+/**
  * Returns all but the first element of the given list or string (or object
  * with a `tail` method).
  *
@@ -6166,7 +6453,9 @@ var slice_1 = slice;/**
 
 
 var tail = /*#__PURE__*/_curry1_1( /*#__PURE__*/_checkForMethod_1('tail', /*#__PURE__*/slice_1(1, Infinity)));
-var tail_1 = tail;/**
+var tail_1 = tail;
+
+/**
  * Performs left-to-right function composition. The leftmost function may have
  * any arity; the remaining functions must be unary.
  *
@@ -6197,7 +6486,9 @@ function pipe() {
   }
   return _arity_1(arguments[0].length, reduce_1(_pipe_1, arguments[0], tail_1(arguments)));
 }
-var pipe_1 = pipe;/**
+var pipe_1 = pipe;
+
+/**
  * Returns a new list or string with the elements or characters in reverse
  * order.
  *
@@ -6226,7 +6517,9 @@ var pipe_1 = pipe;/**
 var reverse = /*#__PURE__*/_curry1_1(function reverse(list) {
   return _isString_1(list) ? list.split('').reverse().join('') : Array.prototype.slice.call(list, 0).reverse();
 });
-var reverse_1 = reverse;/**
+var reverse_1 = reverse;
+
+/**
  * Performs right-to-left function composition. The rightmost function may have
  * any arity; the remaining functions must be unary.
  *
@@ -6258,16 +6551,22 @@ function compose() {
   }
   return pipe_1.apply(this, reverse_1(arguments));
 }
-var compose_1 = compose;function _isFunction(x) {
+var compose_1 = compose;
+
+function _isFunction(x) {
   return Object.prototype.toString.call(x) === '[object Function]';
 }
-var _isFunction_1 = _isFunction;function _quote(s) {
+var _isFunction_1 = _isFunction;
+
+function _quote(s) {
   var escaped = s.replace(/\\/g, '\\\\').replace(/[\b]/g, '\\b') // \b matches word boundary; [\b] matches backspace
   .replace(/\f/g, '\\f').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t').replace(/\v/g, '\\v').replace(/\0/g, '\\0');
 
   return '"' + escaped.replace(/"/g, '\\"') + '"';
 }
-var _quote_1 = _quote;/**
+var _quote_1 = _quote;
+
+/**
  * Polyfill from <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString>.
  */
 var pad = function pad(n) {
@@ -6280,12 +6579,16 @@ var _toISOString = typeof Date.prototype.toISOString === 'function' ? function _
   return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + '.' + (d.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) + 'Z';
 };
 
-var _toISOString_1 = _toISOString;function _complement(f) {
+var _toISOString_1 = _toISOString;
+
+function _complement(f) {
   return function () {
     return !f.apply(this, arguments);
   };
 }
-var _complement_1 = _complement;function _filter(fn, list) {
+var _complement_1 = _complement;
+
+function _filter(fn, list) {
   var idx = 0;
   var len = list.length;
   var result = [];
@@ -6298,7 +6601,9 @@ var _complement_1 = _complement;function _filter(fn, list) {
   }
   return result;
 }
-var _filter_1 = _filter;var XFilter = /*#__PURE__*/function () {
+var _filter_1 = _filter;
+
+var XFilter = /*#__PURE__*/function () {
 
   function XFilter(f, xf) {
     this.xf = xf;
@@ -6316,7 +6621,9 @@ var _filter_1 = _filter;var XFilter = /*#__PURE__*/function () {
 var _xfilter = /*#__PURE__*/_curry2_1(function _xfilter(f, xf) {
   return new XFilter(f, xf);
 });
-var _xfilter_1 = _xfilter;/**
+var _xfilter_1 = _xfilter;
+
+/**
  * Takes a predicate and a `Filterable`, and returns a new filterable of the
  * same type containing the members of the given filterable which satisfy the
  * given predicate. Filterable objects include plain objects or any object
@@ -6355,7 +6662,9 @@ var filter = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['filter'], _x
   // else
   _filter_1(pred, filterable);
 }));
-var filter_1 = filter;/**
+var filter_1 = filter;
+
+/**
  * The complement of [`filter`](#filter).
  *
  * Acts as a transducer if a transformer is given in list position. Filterable
@@ -6384,7 +6693,9 @@ var filter_1 = filter;/**
 var reject = /*#__PURE__*/_curry2_1(function reject(pred, filterable) {
   return filter_1(_complement_1(pred), filterable);
 });
-var reject_1 = reject;function _toString(x, seen) {
+var reject_1 = reject;
+
+function _toString(x, seen) {
   var recur = function recur(y) {
     var xs = seen.concat([x]);
     return _includes_1(y, xs) ? '<Circular>' : _toString(y, xs);
@@ -6427,7 +6738,9 @@ var reject_1 = reject;function _toString(x, seen) {
       return '{' + mapPairs(x, keys_1(x)).join(', ') + '}';
   }
 }
-var _toString_1 = _toString;/**
+var _toString_1 = _toString;
+
+/**
  * Returns the string representation of the given value. `eval`'ing the output
  * should result in a value equivalent to the input value. Many of the built-in
  * `toString` methods do not satisfy this requirement.
@@ -6468,7 +6781,9 @@ var _toString_1 = _toString;/**
 var toString$2 = /*#__PURE__*/_curry1_1(function toString(val) {
   return _toString_1(val, []);
 });
-var toString_1 = toString$2;/**
+var toString_1 = toString$2;
+
+/**
  * Turns a named method with a specified arity into a function that can be
  * called directly supplied with arguments and a target object.
  *
@@ -6506,7 +6821,9 @@ var invoker = /*#__PURE__*/_curry2_1(function invoker(arity, method) {
     throw new TypeError(toString_1(target) + ' does not have a method named "' + method + '"');
   });
 });
-var invoker_1 = invoker;/**
+var invoker_1 = invoker;
+
+/**
  * Returns a string made by inserting the `separator` between each element and
  * concatenating all the elements into a single string.
  *
@@ -6528,7 +6845,9 @@ var invoker_1 = invoker;/**
 
 
 var join = /*#__PURE__*/invoker_1(1, 'join');
-var join_1 = join;/**
+var join_1 = join;
+
+/**
  * Private `concat` function to merge two array-like objects.
  *
  * @private
@@ -6559,7 +6878,9 @@ function _concat(set1, set2) {
   }
   return result;
 }
-var _concat_1 = _concat;/**
+var _concat_1 = _concat;
+
+/**
  * Creates a new list iteration function from an existing one by adding two new
  * parameters to its callback function: the current index, and the entire list.
  *
@@ -6599,7 +6920,9 @@ var addIndex = /*#__PURE__*/_curry1_1(function addIndex(fn) {
     return fn.apply(this, args);
   });
 });
-var addIndex_1 = addIndex;/**
+var addIndex_1 = addIndex;
+
+/**
  * Replace a substring or regex match in a string with a replacement.
  *
  * The first two parameters correspond to the parameters of the
@@ -6628,7 +6951,9 @@ var addIndex_1 = addIndex;/**
 var replace = /*#__PURE__*/_curry3_1(function replace(regex, replacement, str) {
   return str.replace(regex, replacement);
 });
-var replace_1 = replace;/**
+var replace_1 = replace;
+
+/**
  * Returns a curried equivalent of the provided function. The curried function
  * has two unusual capabilities. First, its arguments needn't be provided one
  * at a time. If `f` is a ternary function and `g` is `R.curry(f)`, the
@@ -6674,7 +6999,9 @@ var replace_1 = replace;/**
 var curry = /*#__PURE__*/_curry1_1(function curry(fn) {
   return curryN_1(fn.length, fn);
 });
-var curry_1 = curry;/**
+var curry_1 = curry;
+
+/**
  * Returns a partial copy of an object omitting the keys specified.
  *
  * @func
@@ -6710,7 +7037,9 @@ var omit = /*#__PURE__*/_curry2_1(function omit(names, obj) {
   }
   return result;
 });
-var omit_1 = omit;// Based on https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+var omit_1 = omit;
+
+// Based on https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
 
 function _objectAssign(target) {
@@ -6735,7 +7064,9 @@ function _objectAssign(target) {
   return output;
 }
 
-var _objectAssign_1 = typeof Object.assign === 'function' ? Object.assign : _objectAssign;/**
+var _objectAssign_1 = typeof Object.assign === 'function' ? Object.assign : _objectAssign;
+
+/**
  * Create a new object with the own properties of the first object merged with
  * the own properties of the second object. If a key exists in both objects,
  * the value from the second object will be used.
@@ -6764,7 +7095,9 @@ var _objectAssign_1 = typeof Object.assign === 'function' ? Object.assign : _obj
 var merge = /*#__PURE__*/_curry2_1(function merge(l, r) {
   return _objectAssign_1({}, l, r);
 });
-var merge_1 = merge;/**
+var merge_1 = merge;
+
+/**
  * Converts an object into an array of key, value arrays. Only the object's
  * own properties are used.
  * Note that the order of the output array is not guaranteed to be consistent
@@ -6793,7 +7126,9 @@ var toPairs = /*#__PURE__*/_curry1_1(function toPairs(obj) {
   }
   return pairs;
 });
-var toPairs_1 = toPairs;/**
+var toPairs_1 = toPairs;
+
+/**
  * Returns a function that always returns the given value. Note that for
  * non-primitives the value returned is a reference to the original value.
  *
@@ -6819,7 +7154,9 @@ var always = /*#__PURE__*/_curry1_1(function always(val) {
     return val;
   };
 });
-var always_1 = always;// `Identity` is a functor that holds a single value, where `map` simply
+var always_1 = always;
+
+// `Identity` is a functor that holds a single value, where `map` simply
 // transforms the held value with the provided function.
 
 
@@ -6859,7 +7196,9 @@ var over = /*#__PURE__*/_curry3_1(function over(lens, f, x) {
     return Identity(f(y));
   })(x).value;
 });
-var over_1 = over;/**
+var over_1 = over;
+
+/**
  * Returns the result of "setting" the portion of the given data structure
  * focused by the given lens to the given value.
  *
@@ -6886,7 +7225,9 @@ var over_1 = over;/**
 var set$1 = /*#__PURE__*/_curry3_1(function set(lens, v, x) {
   return over_1(lens, always_1(v), x);
 });
-var set_1 = set$1;/**
+var set_1 = set$1;
+
+/**
  * Returns a function that when supplied an object returns the indicated
  * property of that object, if it exists.
  *
@@ -6909,7 +7250,9 @@ var set_1 = set$1;/**
 var prop = /*#__PURE__*/_curry2_1(function prop(p, obj) {
   return path_1([p], obj);
 });
-var prop_1 = prop;/**
+var prop_1 = prop;
+
+/**
  * Returns a lens whose focus is the specified property.
  *
  * @func
@@ -6934,7 +7277,9 @@ var prop_1 = prop;/**
 var lensProp = /*#__PURE__*/_curry1_1(function lensProp(k) {
   return lens_1(prop_1(k), assoc_1(k));
 });
-var lensProp_1 = lensProp;/**
+var lensProp_1 = lensProp;
+
+/**
  * Returns the second argument if it is not `null`, `undefined` or `NaN`;
  * otherwise the first argument is returned.
  *
@@ -6962,7 +7307,9 @@ var lensProp_1 = lensProp;/**
 var defaultTo = /*#__PURE__*/_curry2_1(function defaultTo(d, v) {
   return v == null || v !== v ? d : v;
 });
-var defaultTo_1 = defaultTo;/**
+var defaultTo_1 = defaultTo;
+
+/**
  * If the given, non-null object has a value at the given path, returns the
  * value at that path. Otherwise returns the provided default value.
  *
@@ -6986,7 +7333,9 @@ var defaultTo_1 = defaultTo;/**
 var pathOr = /*#__PURE__*/_curry3_1(function pathOr(d, p, obj) {
   return defaultTo_1(d, path_1(p, obj));
 });
-var pathOr_1 = pathOr;/**
+var pathOr_1 = pathOr;
+
+/**
  * Create a new object with the own properties of the first object merged with
  * the own properties of the second object. If a key exists in both objects,
  * the value from the second object will be used.
@@ -7013,7 +7362,9 @@ var pathOr_1 = pathOr;/**
 var mergeRight = /*#__PURE__*/_curry2_1(function mergeRight(l, r) {
   return _objectAssign_1({}, l, r);
 });
-var mergeRight_1 = mergeRight;/**
+var mergeRight_1 = mergeRight;
+
+/**
  * Creates a function that will process either the `onTrue` or the `onFalse`
  * function depending upon the result of the `condition` predicate.
  *
@@ -7045,7 +7396,9 @@ var ifElse = /*#__PURE__*/_curry3_1(function ifElse(condition, onTrue, onFalse) 
     return condition.apply(this, arguments) ? onTrue.apply(this, arguments) : onFalse.apply(this, arguments);
   });
 });
-var ifElse_1 = ifElse;/**
+var ifElse_1 = ifElse;
+
+/**
  * Splits a string into an array of strings based on the given
  * separator.
  *
@@ -7068,7 +7421,9 @@ var ifElse_1 = ifElse;/**
 
 
 var split = /*#__PURE__*/invoker_1(1, 'split');
-var split_1 = split;/**
+var split_1 = split;
+
+/**
  * Returns a new function much like the supplied one, except that the first two
  * arguments' order is reversed.
  *
@@ -7098,10 +7453,14 @@ var flip = /*#__PURE__*/_curry1_1(function flip(fn) {
     return fn.apply(this, args);
   });
 });
-var flip_1 = flip;function _cloneRegExp(pattern) {
+var flip_1 = flip;
+
+function _cloneRegExp(pattern) {
                                   return new RegExp(pattern.source, (pattern.global ? 'g' : '') + (pattern.ignoreCase ? 'i' : '') + (pattern.multiline ? 'm' : '') + (pattern.sticky ? 'y' : '') + (pattern.unicode ? 'u' : ''));
 }
-var _cloneRegExp_1 = _cloneRegExp;/**
+var _cloneRegExp_1 = _cloneRegExp;
+
+/**
  * Copies an object.
  *
  * @private
@@ -7143,7 +7502,9 @@ function _clone(value, refFrom, refTo, deep) {
       return value;
   }
 }
-var _clone_1 = _clone;/**
+var _clone_1 = _clone;
+
+/**
  * Creates a deep copy of the value which may contain (nested) `Array`s and
  * `Object`s, `Number`s, `String`s, `Boolean`s and `Date`s. `Function`s are
  * assigned by reference rather than copied
@@ -7169,10 +7530,14 @@ var _clone_1 = _clone;/**
 var clone = /*#__PURE__*/_curry1_1(function clone(value) {
   return value != null && typeof value.clone === 'function' ? value.clone() : _clone_1(value, [], [], true);
 });
-var clone_1 = clone;function _isRegExp(x) {
+var clone_1 = clone;
+
+function _isRegExp(x) {
   return Object.prototype.toString.call(x) === '[object RegExp]';
 }
-var _isRegExp_1 = _isRegExp;/**
+var _isRegExp_1 = _isRegExp;
+
+/**
  * Determines whether a given string matches a given regular expression.
  *
  * @func
@@ -7197,7 +7562,9 @@ var test = /*#__PURE__*/_curry2_1(function test(pattern, str) {
   }
   return _cloneRegExp_1(pattern).test(str);
 });
-var test_1 = test;/**
+var test_1 = test;
+
+/**
  * If the given, non-null object has an own property with the specified name,
  * returns the value of that property. Otherwise returns the provided default
  * value.
@@ -7228,7 +7595,9 @@ var test_1 = test;/**
 var propOr = /*#__PURE__*/_curry3_1(function propOr(val, p, obj) {
   return pathOr_1(val, [p], obj);
 });
-var propOr_1 = propOr;/**
+var propOr_1 = propOr;
+
+/**
  * Returns a list of all the enumerable own properties of the supplied object.
  * Note that the order of the output array is not guaranteed across different
  * JS platforms.
@@ -7258,7 +7627,9 @@ var values = /*#__PURE__*/_curry1_1(function values(obj) {
   }
   return vals;
 });
-var values_1 = values;/**
+var values_1 = values;
+
+/**
  * Creates a new object by recursively evolving a shallow copy of `object`,
  * according to the `transformation` functions. All non-primitive properties
  * are copied by reference.
@@ -7297,7 +7668,9 @@ var evolve = /*#__PURE__*/_curry2_1(function evolve(transformations, object) {
   }
   return result;
 });
-var evolve_1 = evolve;/**
+var evolve_1 = evolve;
+
+/**
  * Merges a list of objects together into one object.
  *
  * @func
@@ -7319,7 +7692,9 @@ var evolve_1 = evolve;/**
 var mergeAll = /*#__PURE__*/_curry1_1(function mergeAll(list) {
   return _objectAssign_1.apply(null, [{}].concat(list));
 });
-var mergeAll_1 = mergeAll;/**
+var mergeAll_1 = mergeAll;
+
+/**
  * Tests a regular expression against a String. Note that this function will
  * return an empty array when there are no matches. This differs from
  * [`String.prototype.match`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match)
@@ -7345,7 +7720,9 @@ var mergeAll_1 = mergeAll;/**
 var match = /*#__PURE__*/_curry2_1(function match(rx, str) {
   return str.match(rx) || [];
 });
-var match_1 = match;/**
+var match_1 = match;
+
+/**
  * Returns the nth element of the given list or string. If n is negative the
  * element at index length + n is returned.
  *
@@ -7377,7 +7754,9 @@ var nth = /*#__PURE__*/_curry2_1(function nth(offset, list) {
   var idx = offset < 0 ? list.length + offset : offset;
   return _isString_1(list) ? list.charAt(idx) : list[idx];
 });
-var nth_1 = nth;/**
+var nth_1 = nth;
+
+/**
  * Returns the last element of the given list or string.
  *
  * @func
@@ -7400,7 +7779,9 @@ var nth_1 = nth;/**
 
 
 var last = /*#__PURE__*/nth_1(-1);
-var last_1 = last;var R$1 = {
+var last_1 = last;
+
+var R$1 = {
   lensPath: lensPath_1,
   mergeDeepRight: mergeDeepRight_1,
   uniq: uniq_1,
@@ -7435,12 +7816,16 @@ var last_1 = last;var R$1 = {
   mergeAll: mergeAll_1,
   match: match_1,
   last: last_1
-};var _strictMethod = function (method, arg) {
+};
+
+var _strictMethod = function (method, arg) {
   return !!method && _fails(function () {
     // eslint-disable-next-line no-useless-call
     arg ? method.call(null, function () { /* empty */ }, 1) : method.call(null);
   });
-};var $sort = [].sort;
+};
+
+var $sort = [].sort;
 var test$1 = [1, 2, 3];
 
 _export(_export.P + _export.F * (_fails(function () {
@@ -7457,7 +7842,9 @@ _export(_export.P + _export.F * (_fails(function () {
       ? $sort.call(_toObject(this))
       : $sort.call(_toObject(this), _aFunction(comparefn));
   }
-});// 19.1.2.14 Object.keys(O)
+});
+
+// 19.1.2.14 Object.keys(O)
 
 
 
@@ -7465,19 +7852,29 @@ _objectSap('keys', function () {
   return function keys(it) {
     return _objectKeys(_toObject(it));
   };
-});var f$3 = _wks;
+});
+
+var f$3 = _wks;
 
 var _wksExt = {
 	f: f$3
-};var defineProperty = _objectDp.f;
+};
+
+var defineProperty = _objectDp.f;
 var _wksDefine = function (name) {
   var $Symbol = _core.Symbol || (_core.Symbol = _global.Symbol || {});
   if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty($Symbol, name, { value: _wksExt.f(name) });
-};_wksDefine('asyncIterator');var f$4 = Object.getOwnPropertySymbols;
+};
+
+_wksDefine('asyncIterator');
+
+var f$4 = Object.getOwnPropertySymbols;
 
 var _objectGops = {
 	f: f$4
-};// all enumerable object keys, includes symbols
+};
+
+// all enumerable object keys, includes symbols
 
 
 
@@ -7491,11 +7888,15 @@ var _enumKeys = function (it) {
     var key;
     while (symbols.length > i) if (isEnum.call(it, key = symbols[i++])) result.push(key);
   } return result;
-};// 7.2.2 IsArray(argument)
+};
+
+// 7.2.2 IsArray(argument)
 
 var _isArray$1 = Array.isArray || function isArray(arg) {
   return _cof(arg) == 'Array';
-};// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
+};
+
+// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
 
 var hiddenKeys = _enumBugKeys.concat('length', 'prototype');
 
@@ -7505,7 +7906,9 @@ var f$5 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 
 var _objectGopn = {
 	f: f$5
-};// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+};
+
+// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 
 var gOPN = _objectGopn.f;
 var toString$3 = {}.toString;
@@ -7527,7 +7930,9 @@ var f$6 = function getOwnPropertyNames(it) {
 
 var _objectGopnExt = {
 	f: f$6
-};var gOPD = Object.getOwnPropertyDescriptor;
+};
+
+var gOPD = Object.getOwnPropertyDescriptor;
 
 var f$7 = _descriptors ? gOPD : function getOwnPropertyDescriptor(O, P) {
   O = _toIobject(O);
@@ -7540,7 +7945,9 @@ var f$7 = _descriptors ? gOPD : function getOwnPropertyDescriptor(O, P) {
 
 var _objectGopd = {
 	f: f$7
-};// ECMAScript 6 symbols shim
+};
+
+// ECMAScript 6 symbols shim
 
 
 
@@ -7772,7 +8179,9 @@ _setToStringTag($Symbol, 'Symbol');
 // 20.2.1.9 Math[@@toStringTag]
 _setToStringTag(Math, 'Math', true);
 // 24.3.3 JSON[@@toStringTag]
-_setToStringTag(_global.JSON, 'JSON', true);// https://github.com/tc39/proposal-object-values-entries
+_setToStringTag(_global.JSON, 'JSON', true);
+
+// https://github.com/tc39/proposal-object-values-entries
 
 var $entries = _objectToArray(true);
 
@@ -7780,7 +8189,9 @@ _export(_export.S, 'Object', {
   entries: function entries(it) {
     return $entries(it);
   }
-});// 19.1.2.1 Object.assign(target, source, ...)
+});
+
+// 19.1.2.1 Object.assign(target, source, ...)
 
 
 
@@ -7812,14 +8223,20 @@ var _objectAssign$1 = !$assign || _fails(function () {
     var key;
     while (length > j) if (isEnum.call(S, key = keys[j++])) T[key] = S[key];
   } return T;
-} : $assign;// 19.1.3.1 Object.assign(target, source)
+} : $assign;
+
+// 19.1.3.1 Object.assign(target, source)
 
 
-_export(_export.S + _export.F, 'Object', { assign: _objectAssign$1 });// 21.2.5.3 get RegExp.prototype.flags()
+_export(_export.S + _export.F, 'Object', { assign: _objectAssign$1 });
+
+// 21.2.5.3 get RegExp.prototype.flags()
 if (_descriptors && /./g.flags != 'g') _objectDp.f(RegExp.prototype, 'flags', {
   configurable: true,
   get: _flags
-});var TO_STRING = 'toString';
+});
+
+var TO_STRING = 'toString';
 var $toString = /./[TO_STRING];
 
 var define = function (fn) {
@@ -7838,7 +8255,9 @@ if (_fails(function () { return $toString.call({ source: 'a', flags: 'b' }) != '
   define(function toString() {
     return $toString.call(this);
   });
-}var type$1 = function type(val) {
+}
+
+var type$1 = function type(val) {
   return val === null ? 'Null' : val === undefined ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1);
 };
 var mixin = function mixin(proto) {
@@ -8084,7 +8503,9 @@ var unflatten = function unflatten() {
     container[key1] = unflatten(target[joinedKey]);
     return result;
   }, {});
-};var version = '1.1705.17038.0',
+};
+
+var version = '1.1705.17038.0',
     DEVELOPER = 1,
     ADMINUSER = 2,
     SHOPPER = 4,
@@ -8144,7 +8565,9 @@ var constants = {
   version: version,
   templateBraceRegex: /\{([^}]+)\}/g,
   urlTemplateSplitRegex: /[\/\?=\&~]/g
-};var authenticate = (function (api) {
+};
+
+var authenticate = (function (api) {
   var auth = {};
   var assignKey = R$1.curry(function (key, ref, val) {
     ref[key] = val;
@@ -8309,7 +8732,9 @@ var constants = {
   authenticate.setUserClaim = setUserClaim;
   authenticate.getUserClaim = getUserClaim;
   return authenticate;
-});var CONSTANTS = Object.freeze({
+});
+
+var CONSTANTS = Object.freeze({
   isServer: testIsServer(),
   hooks: ['beforeRequest', 'withRequest', 'afterRequest'],
   hookReference: {
@@ -8550,4 +8975,6 @@ var Api = function Api() {
 
 Api.hooks = CONSTANTS.hooks;
 Api.hookReference = CONSTANTS.hookReference;
-Api.defaultOptions = CONSTANTS.defaultOptions;return Api;}));
+Api.defaultOptions = CONSTANTS.defaultOptions;
+
+export default Api;

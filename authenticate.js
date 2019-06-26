@@ -184,7 +184,6 @@ export default api => {
      * using either application credentials (checked first) or user credentials
      *
      */
-    console.log(isServer, requestOptions.context)
     if (isServer) {
       if (appClaim.accessToken || requestOptions.context.sharedSecret) {
         appClaim.valid = validClaim(appClaim)

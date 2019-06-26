@@ -1,4 +1,4 @@
-import axiosClient from 'axios'
+// import axiosClient from 'requestClient'
 import defaultDefinition from './definition.js'
 import R from './ramda'
 import {
@@ -35,7 +35,8 @@ const CONSTANTS = Object.freeze({
 
   defaultOptions: {
     hooks: {},
-    apiBasePath: '/api'
+    apiBasePath: '/api',
+    requestClient: () => Promise.reject('requestClient not defined')
   },
 
   delimiter: '_'
@@ -153,7 +154,7 @@ let Api = (
 
   //#region request handler
 
-  proto.axios = axiosClient
+  proto.requestClient = options.requestClient
 
   proto.parseTemplate = (context = {}, template = '', data = {}) => {
     /**
@@ -195,14 +196,14 @@ let Api = (
    * requestOptions should be the same as the axios options with the addition
    * of the ability to pass in the context to make testing easier.
    */
-  proto.request = R.curryN(3, function(
+  proto.request = R.curryN(4, function(
+    clientPath = [],
     method,
     templateOrId,
     data = {},
     requestOptions = {}
   ) {
     let context = requestOptions.context || api.context || {}
-    let headers = requestOptions.headers || api.headers || {}
     //data is overloaded.. it fills in template keys and is sent as the body
     //if the method is PUT/POST. this was changed in node-sdk at some point
     //if it becomes a problem consider removing used keys from body
@@ -211,9 +212,9 @@ let Api = (
     if (CONSTANTS.isServer) {
       var { url, usedKeys } = api.parseTemplate(context, templateOrId, data)
 
-      var config = R.merge(
+      var config = R.mergeDeepRight(
         {
-          headers,
+          headers: api.headers,
           method,
           url
         },
@@ -233,22 +234,26 @@ let Api = (
         method: 'POST',
         url: options.apiBasePath,
         data: { args: Array.from(arguments) },
-        headers: R.merge(headers, {
-          //userid?
-        })
+        headers
       }
     }
 
     //this is mainly being used to prevent infinite recursion from the auth step
     //it might not be necessary anymore
-    if (requestOptions.internal) return api.axios(config)
+    if (requestOptions.internal) return api.requestClient(config)
 
     config = api.hookMap.beforeRequest(config)
 
+    console.log(config)
+
+    if (config instanceof Promise) return config
+
     return api.hookMap.withRequest(
-      api
-        .auth(R.merge({ context }, config))
-        .then(api.axios)
+      (config.headers[constants.headerPrefix + constants.headers.USERCLAIMS]
+        ? Promise.resolve(config)
+        : api.auth(R.merge({ context }, config))
+      )
+        .then(api.requestClient)
         .then(response => {
           if (!requestOptions.preserveRequest) response = response.data
           return api.hookMap.afterRequest(response)
@@ -300,8 +305,7 @@ let Api = (
       let params = R.match(constants.templateBraceRegex, query).map(match => {
         return match.substring(1, match.length - 1)
       })
-      // let name = R.last(key)
-      let request = proto.request(method, url)
+      let request = proto.request(path, method, url)
       //store useful information on the method
       request.url = url
       request.method = method

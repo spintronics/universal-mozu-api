@@ -36,6 +36,25 @@ export default [
   {
     input,
     output: {
+      name: 'mozu-universal-api',
+      compact: false,
+      format: 'esm',
+      file: main + '.mjs',
+      compress: true
+    },
+    external,
+    plugins: [
+      json(),
+      resolve({ preferBuiltins: true }),
+      babel({ exclude: 'node_modules/**' }),
+      commonjs({
+        sourceMap: false
+      })
+    ]
+  },
+  {
+    input,
+    output: {
       name: 'api',
       compact: false,
       banner: '//hey mom!',

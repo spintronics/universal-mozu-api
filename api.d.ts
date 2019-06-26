@@ -6352,13 +6352,13 @@ declare namespace api {
     preserveReqeust?: Boolean
   }
   interface Options {
-    useFutures?: boolean
+    apiBasePath?: string
     hooks: {
       //accepts as the first parameter the request configuration options and should return a modified version
       beforeRequest?: function
-      //accepts as the first parameter and should return the future or promise that will be returned by the request method
+      //accepts as the first parameter and should return the promise that will be returned by the request method
       withRequest?: function
-      //accepts as the first parameter and should return the response that will occur after the request promise/future settles
+      //accepts as the first parameter and should return the response that will occur after the request promise settles
       afterRequest?: function
     }
   }
