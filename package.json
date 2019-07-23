@@ -6,8 +6,8 @@
   "module": "api.mjs",
   "scripts": {
     "test": "node -r esm ./test/node.js",
-    "debug": "node --nolazy -r esm --inspect-brk=9229 ./generate.js",
-    "debugg": "node --nolazy -r esm --inspect-brk=9229 ./test/node.js",
+    "debugg": "node --nolazy -r esm --inspect-brk=9229 ./generate.js",
+    "debug": "node --nolazy -r esm --inspect-brk=9229 ./test/node.js",
     "generate": "node -r esm generate",
     "dev-build": "rollup -c",
     "build": "rollup -c && uglifyjs api.umd.js -c -m -o api.umd.js",

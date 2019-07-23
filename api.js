@@ -8613,7 +8613,9 @@ var authenticate = (function (api) {
 
   var internalAuthRequest = {
     internal: 1,
-    headers: {}
+    headers: {
+      Host: 'home.mozu.com'
+    }
   };
   var getAppAccessToken = R$1.compose(function (body) {
     return api.platform.applications.authTicket.authenticateApp(body, internalAuthRequest);
@@ -8626,78 +8628,95 @@ var authenticate = (function (api) {
   }, R$1.pick(['emailAddress', 'password']), R$1.prop('developerAccount'));
   var refreshUserAccessToken = R$1.compose(function (body) {
     return api.platform.developer.developerAdminUserAuthTicket.refreshDeveloperAuthTicket(body, internalAuthRequest);
-  }, R$1.pick(['refreshToken']));
-  var password;
-
-  var passwordPrompt = function () {
-    var readline = function readline() {
-      return Promise.resolve(require('readline'));
-    }; // let readline = new Function("return import('readline')")
-
-
-    var userLoginAttempts = 0;
-    return function (requestOptions) {
-      return (isObj(readline) ? Promise.resolve(readline) : readline().then(function (r) {
-        readline = r.createInterface({
-          input: process.stdin,
-          output: process.stdout,
-          terminal: true
-        });
-        readline.on('SIGINT', function () {
-          readline.clearLine();
-          return process.exit();
-        });
-
-        readline._writeToOutput = function (str) {
-          // log(arguments)
-          if (str.includes(this._prompt)) {
-            readline.history.pop();
-            readline.output.write(this._prompt + str.replace(this._prompt, '').replace(/[\r\n]/g, '').replace(/./g, '*'));
-            return;
-          }
-
-          if (str === '\r\n') return;
-          if (readline.mask) readline.output.write('*');else readline.output.write(str);
-        };
-
-        var question = readline.question.bind(readline);
-
-        readline.question = function (q, cb) {
-          readline.mask = false;
-          question(q, function (answer) {
-            readline.mask = false;
-            cb(answer);
-          });
-          readline.mask = true;
-        };
-
-        return readline;
-      })).then(function (readline) {
-        return api.newTask(function (reject, resolve) {
-          readline.question('developer password: ', function (answer) {
-            if (!answer) {
-              readline.output.write("\ni don't think your password is an empty string\n");
-              return reject('invalid password');
-            }
-
-            readline.write('\n');
-            resolve(password);
-          });
-        });
-      }).then(function (password) {
-        return getUserAccessToken(R$1.assocPath(['developerAccount', 'password'], password, api.context));
-      }).then(R$1.compose(setUserClaim(auth), R$1.prop('data'))).then(R$1.compose(addUserClaimToRequest(requestOptions), getUserClaim)).catch(function (e) {
-        if (e && e.response.status === 401 && userLoginAttempts < 3) {
-          userLoginAttempts += 1;
-          readline.output.write('\ninvalid password. try again?\n');
-          return passwordPrompt(requestOptions);
-        }
-
-        readline.close();
-        return Promise.reject(e);
-      });
-    };
-  }();
+  }, R$1.pick(['refreshToken'])); // let password
+  // let passwordPrompt = (() => {
+  //   let readline = () => import('readline')
+  //   // let readline = new Function("return import('readline')")
+  //   let userLoginAttempts = 0
+  //   return requestOptions => {
+  //     return (isObj(readline)
+  //       ? Promise.resolve(readline)
+  //       : readline().then(r => {
+  //           readline = r.createInterface({
+  //             input: process.stdin,
+  //             output: process.stdout,
+  //             terminal: true
+  //           })
+  //           readline.on('SIGINT', function() {
+  //             readline.clearLine()
+  //             return process.exit()
+  //           })
+  //           readline._writeToOutput = function(str) {
+  //             // log(arguments)
+  //             if (str.includes(this._prompt)) {
+  //               readline.history.pop()
+  //               readline.output.write(
+  //                 this._prompt +
+  //                   str
+  //                     .replace(this._prompt, '')
+  //                     .replace(/[\r\n]/g, '')
+  //                     .replace(/./g, '*')
+  //               )
+  //               return
+  //             }
+  //             if (str === '\r\n') return
+  //             if (readline.mask) readline.output.write('*')
+  //             else readline.output.write(str)
+  //           }
+  //           let question = readline.question.bind(readline)
+  //           readline.question = (q, cb) => {
+  //             readline.mask = false
+  //             question(q, answer => {
+  //               readline.mask = false
+  //               cb(answer)
+  //             })
+  //             readline.mask = true
+  //           }
+  //           return readline
+  //         })
+  //     )
+  //       .then(readline => {
+  //         return api.newTask((reject, resolve) => {
+  //           readline.question('developer password: ', answer => {
+  //             if (!answer) {
+  //               readline.output.write(
+  //                 "\ni don't think your password is an empty string\n"
+  //               )
+  //               return reject('invalid password')
+  //             }
+  //             readline.write('\n')
+  //             resolve(password)
+  //           })
+  //         })
+  //       })
+  //       .then(password =>
+  //         getUserAccessToken(
+  //           R.assocPath(['developerAccount', 'password'], password, api.context)
+  //         )
+  //       )
+  //       .then(
+  //         R.compose(
+  //           setUserClaim(auth),
+  //           R.prop('data')
+  //         )
+  //       )
+  //       .then(
+  //         R.compose(
+  //           addUserClaimToRequest(requestOptions),
+  //           getUserClaim
+  //         )
+  //       )
+  //       .catch(e => {
+  //         if (e && e.response.status === 401 && userLoginAttempts < 3) {
+  //           userLoginAttempts += 1
+  //           readline.output.write('\ninvalid password. try again?\n')
+  //           return passwordPrompt(requestOptions)
+  //         }
+  //         readline.close()
+  //         return Promise.reject(e)
+  //       })
+  //   }
+  // })()
 
   var authenticate = function authenticate(requestOptions) {
     var appClaim = getAppClaim(auth);
@@ -8708,6 +8727,7 @@ var authenticate = (function (api) {
      * using either application credentials (checked first) or user credentials
      *
      */
+    // console.log('auth', appClaim)
 
     if (isServer) {
       if (appClaim.accessToken || requestOptions.context.sharedSecret) {
@@ -8715,15 +8735,24 @@ var authenticate = (function (api) {
         appClaim.stale = !appClaim.valid && staleClaim(appClaim);
         if (appClaim.valid) return Promise.resolve(addAppClaimToRequest(requestOptions, appClaim));
         return appClaim.stale ? refreshAppAccessToken(appClaim) : getAppAccessToken(api.context).then(R$1.compose(setAppClaim(auth), R$1.prop('data'))).then(R$1.compose(addAppClaimToRequest(requestOptions), getAppClaim));
-      }
+      } // if (userClaim.accessToken || requestOptions.context.developerAccount) {
+      //   userClaim.valid = validClaim(userClaim)
+      //   userClaim.stale = !userClaim.valid && staleClaim(userClaim)
+      //   if (!password && requestOptions.context.developerAccount.password)
+      //     password = requestOptions.context.developerAccount.password
+      //   if (userClaim.valid)
+      //     return Promise.resolve(
+      //       addUserClaimToRequest(requestOptions, userClaim)
+      //     )
+      //   return userClaim.stale
+      //     ? refreshUserAccessToken(userClaim)
+      //     : password
+      //     ? Promise.resolve(password)
+      //     : !isServer
+      //     ? Promise.reject('no password for user auth in context')
+      //     : passwordPrompt(requestOptions)
+      // }
 
-      if (userClaim.accessToken || requestOptions.context.developerAccount) {
-        userClaim.valid = validClaim(userClaim);
-        userClaim.stale = !userClaim.valid && staleClaim(userClaim);
-        if (!password && requestOptions.context.developerAccount.password) password = requestOptions.context.developerAccount.password;
-        if (userClaim.valid) return Promise.resolve(addUserClaimToRequest(requestOptions, userClaim));
-        return userClaim.stale ? refreshUserAccessToken(userClaim) : password ? Promise.resolve(password) : !isServer ? Promise.reject('no password for user auth in context') : passwordPrompt(requestOptions);
-      }
     } else return Promise.resolve(requestOptions);
 
     return Promise.reject('unable to authenticate');
@@ -8738,11 +8767,12 @@ var authenticate = (function (api) {
 
 var CONSTANTS = Object.freeze({
   isServer: testIsServer(),
-  hooks: ['beforeRequest', 'withRequest', 'afterRequest'],
+  hooks: ['beforeRequest', 'withRequest', 'afterResolve', 'afterReject'],
   hookReference: {
     beforeRequest: 'accepts as the first parameter the request configuration options and should return a modified version',
     withRequest: 'accepts as the first parameter and should return the promise that will be returned by the request method',
-    afterRequest: 'accepts as the first parameter and should return the response that will occur after the request promise settles'
+    afterResolve: 'accepts as the first parameter and should return the response that will occur after the request promise settles',
+    afterReject: 'accepts as the first parameter and should return the error that occurs after the request rejects'
   },
   defaultOptions: {
     hooks: {},
@@ -8758,17 +8788,9 @@ var Api = function Api() {
   var context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : CONSTANTS.defaultOptions;
   var definition = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : defaultDefinition;
-  console.time('construct api');
-  /**
-   * only the interface intended for use when consuming the library should be exposed on
-   * api. everything else will be put in proto.
-   */
-
   var api = {};
   var proto = {};
   options = R$1.merge(CONSTANTS.defaultOptions, options); //#region set context
-
-  if (CONSTANTS.isServer) ;
 
   var headerDefaults = {
     VERSION: constants.version,
@@ -8857,22 +8879,24 @@ var Api = function Api() {
     //if it becomes a problem consider removing used keys from body
     //also consider removing items from the body that are used in the template
 
-    if (CONSTANTS.isServer) {
-      var _api$parseTemplate = api.parseTemplate(context, templateOrId, data),
-          url = _api$parseTemplate.url,
-          usedKeys = _api$parseTemplate.usedKeys;
+    var _api$parseTemplate = api.parseTemplate(context, templateOrId, data),
+        url = _api$parseTemplate.url,
+        usedKeys = _api$parseTemplate.usedKeys;
 
+    if (CONSTANTS.isServer) {
       var config = R$1.mergeDeepRight({
         headers: api.headers,
         method: method,
         url: url
-      }, R$1.omit(['context'], requestOptions));
+      }, R$1.omit(['context'], requestOptions)); // console.log(api.headers)
 
       if ([constants.verbs.POST, constants.verbs.PUT].map(function (str) {
         return str.toLowerCase();
       }).includes(method.toLowerCase())) {
         config.data = R$1.omit(usedKeys, data);
       }
+
+      if (requestOptions.internal) delete config.headers;
     } else {
       //call api.request from server with the arguments passed in the body of the client request
       config = {
@@ -8881,7 +8905,7 @@ var Api = function Api() {
         data: {
           args: Array.from(arguments)
         },
-        headers: headers
+        headers: {}
       };
     } //this is mainly being used to prevent infinite recursion from the auth step
     //it might not be necessary anymore
@@ -8889,14 +8913,17 @@ var Api = function Api() {
 
     if (requestOptions.internal) return api.requestClient(config);
     config = api.hookMap.beforeRequest(config);
-    console.log(config);
     if (config instanceof Promise) return config;
-    return api.hookMap.withRequest((config.headers[constants.headerPrefix + constants.headers.USERCLAIMS] ? Promise.resolve(config) : api.auth(R$1.merge({
+    return api.auth(R$1.merge({
       context: context
-    }, config))).then(api.requestClient).then(function (response) {
-      if (!requestOptions.preserveRequest) response = response.data;
-      return api.hookMap.afterRequest(response);
-    }));
+    }, config)).then(function (config) {
+      console.log(config);
+      return api.hookMap.withRequest(api.requestClient(config));
+    }).then(function (response) {
+      return api.hookMap.afterResolve(response);
+    }).catch(function (error) {
+      return Promise.reject(api.hookMap.afterReject(error));
+    });
   }); //#endregion request handler
   //#region set hookMap
 
@@ -8906,8 +8933,8 @@ var Api = function Api() {
     }), acc);
   }, {}); //#endregion set hookMap
   //#region expand and build service tree / methods
+  // console.time('expand')
 
-  console.time('expand');
   var templateReference = definition.reference.template;
   var uncompressedServices = R$1.map(R$1.compose(R$1.replace('~', ''), R$1.join(''), R$1.map(function (piece) {
     return R$1.propOr(piece, piece, templateReference);
@@ -8943,8 +8970,8 @@ var Api = function Api() {
     return request;
   }, unflatten(uncompressedServices, {
     delimiter: CONSTANTS.delimiter
-  }));
-  console.timeEnd('expand'); //api.(set|post|etc)
+  })); // console.timeEnd('expand')
+  //api.(set|post|etc)
 
   var methods = Object.values(constants.verbs).reduce(function (a, verb) {
     return R$1.merge(_defineProperty({}, verb.toLowerCase(), proto.request(verb)), a);
@@ -8970,8 +8997,8 @@ var Api = function Api() {
   };
 
   proto.auth = authenticate(api); //#endregion api utilities
+  // console.timeEnd('construct api')
 
-  console.timeEnd('construct api');
   return api;
 };
 

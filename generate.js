@@ -161,6 +161,10 @@ walk('./node_modules/mozu-node-sdk/clients')
 
     return Promise.all([
       writeFile(
+        './definition-uncompressed.js',
+        JSON.stringify(result, null, 2)
+      ),
+      writeFile(
         './definition.js',
         `export default {
           output: ${JSON.stringify(output, null, 2)},
@@ -195,11 +199,7 @@ walk('./node_modules/mozu-node-sdk/clients')
              * the same name as the entry point.
              */
             var definition = `
-              declare function api(
-                context: api.Context,
-                options?: api.Options
-              ): api.Api
-              declare namespace api {
+              declare namespace Api {
                 ${R.compose(
                   R.reduce((definition, [key, type]) => {
                     return (
@@ -250,12 +250,6 @@ walk('./node_modules/mozu-node-sdk/clients')
                     `
                   })
                 )(api)}
-                interface Api {
-                  ${Object.keys(api).reduce(
-                    (acc, key) => acc + key + ':' + key + ';',
-                    ''
-                  )}
-                }
                 interface Context {
                   sharedSecret?: string
                   homePod?: string
@@ -272,8 +266,8 @@ walk('./node_modules/mozu-node-sdk/clients')
                   site: number
                 }
                 interface RequestOptions {
-                  headers?: api.Headers
-                  context?: api.Context
+                  headers?: Api.Headers
+                  context?: Api.Context
                   config?: AxiosRequestConfig
                   internal?: Boolean
                   preserveReqeust?: Boolean
@@ -294,8 +288,21 @@ walk('./node_modules/mozu-node-sdk/clients')
                     )}
                   }
                 }
+                export interface api {
+                  setContext(
+                    context: Api.Context,
+                    options?: Api.Options
+                  ): api
+                  ${Object.keys(api).reduce(
+                    (acc, key) => acc + key + ':' + key + ';',
+                    ''
+                  )}
+                }
               }
-              export default api
+              
+              declare let api: Api.api
+
+              export default api;
             `
             definition = functions.join('\n') + definition
             return prettier.format(

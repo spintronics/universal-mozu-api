@@ -1,0 +1,10 @@
+{
+  "appKey": "HenCam.edge.1.0.0.Release",
+  "applicationId": "HenCam.edge.1.0.0.release",
+  "sharedSecret": "f3d81dedbe6f4c4ba1ad456006118e7c",
+  "tenant": 27174,
+  "site": 42759,
+  "baseUrl": "https://home.mozu.com/",
+  "basePciUrl": "https://pmts.mozu.com/",
+  "developerAccountId": 6570
+}

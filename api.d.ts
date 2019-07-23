@@ -1,20 +1,19 @@
-declare function api(context: api.Context, options?: api.Options): api.Api
-declare namespace api {
+declare namespace Api {
   interface commerce {
     cart: z_cart
     order: z_order
     return: z_return
     channel: z_channel
     checkout: z_checkout
-    wishlist: z_wishlist
     location: z_location
-    orders: z_orders
+    wishlist: z_wishlist
     customer: z_customer
+    orders: z_orders
     targetRule: z_targetRule
+    admin: z_admin
     carts: z_carts
     payments: z_payments
     returns: z_returns
-    admin: z_admin
     catalog: z_catalog
     channelGroup: z_channelGroup
     checkouts: z_checkouts
@@ -106,13 +105,13 @@ declare namespace api {
     priceOrder: z_priceOrder
     createOrder: z_createOrder
     updateOrder: z_updateOrder
-    deleteOrderDraft: z_deleteOrderDraft
     getTaxableOrders: z_getTaxableOrders
+    deleteOrderDraft: z_deleteOrderDraft
     changeOrderUserId: z_changeOrderUserId
     performOrderAction: z_performOrderAction
-    updateOrderDiscount: z_updateOrderDiscount
-    createOrderFromCart: z_createOrderFromCart
     getAvailableActions: z_getAvailableActions
+    createOrderFromCart: z_createOrderFromCart
+    updateOrderDiscount: z_updateOrderDiscount
     processDigitalWallet: z_processDigitalWallet
     changeOrderPriceList: z_changeOrderPriceList
     resendOrderConfirmationEmail: z_resendOrderConfirmationEmail
@@ -147,19 +146,19 @@ declare namespace api {
     (config: updateOrder_args, options: api.RequestOptions): Promise
   }
 
+  interface getTaxableOrders_args {
+    orderId: string
+  }
+  interface z_getTaxableOrders {
+    (config: getTaxableOrders_args, options: api.RequestOptions): Promise
+  }
+
   interface deleteOrderDraft_args {
     orderId: string
     version?: string
   }
   interface z_deleteOrderDraft {
     (config: deleteOrderDraft_args, options: api.RequestOptions): Promise
-  }
-
-  interface getTaxableOrders_args {
-    orderId: string
-  }
-  interface z_getTaxableOrders {
-    (config: getTaxableOrders_args, options: api.RequestOptions): Promise
   }
 
   interface changeOrderUserId_args {
@@ -178,12 +177,11 @@ declare namespace api {
     (config: performOrderAction_args, options: api.RequestOptions): Promise
   }
 
-  interface updateOrderDiscount_args {
-    discountId: string
-    responseFields?: string
+  interface getAvailableActions_args {
+    checkoutId: string
   }
-  interface z_updateOrderDiscount {
-    (config: updateOrderDiscount_args, options: api.RequestOptions): Promise
+  interface z_getAvailableActions {
+    (config: getAvailableActions_args, options: api.RequestOptions): Promise
   }
 
   interface createOrderFromCart_args {
@@ -193,11 +191,12 @@ declare namespace api {
     (config: createOrderFromCart_args, options: api.RequestOptions): Promise
   }
 
-  interface getAvailableActions_args {
-    checkoutId: string
+  interface updateOrderDiscount_args {
+    discountId: string
+    responseFields?: string
   }
-  interface z_getAvailableActions {
-    (config: getAvailableActions_args, options: api.RequestOptions): Promise
+  interface z_updateOrderDiscount {
+    (config: updateOrderDiscount_args, options: api.RequestOptions): Promise
   }
 
   interface processDigitalWallet_args {
@@ -236,24 +235,31 @@ declare namespace api {
 
   interface z_return {
     getReturn: z_getReturn
+    getReturns: z_getReturns
     getPayment: z_getPayment
     getReasons: z_getReasons
-    getReturns: z_getReturns
     getPayments: z_getPayments
-    deleteReturn: z_deleteReturn
     createReturn: z_createReturn
     updateReturn: z_updateReturn
+    deleteReturn: z_deleteReturn
     getReturnItem: z_getReturnItem
     getReturnItems: z_getReturnItems
     deleteOrderItem: z_deleteOrderItem
     createReturnItem: z_createReturnItem
     resendReturnEmail: z_resendReturnEmail
     performReturnActions: z_performReturnActions
-    createReturnShippingOrder: z_createReturnShippingOrder
     getAvailableReturnActions: z_getAvailableReturnActions
+    createReturnShippingOrder: z_createReturnShippingOrder
     createPaymentActionForReturn: z_createPaymentActionForReturn
     performPaymentActionForReturn: z_performPaymentActionForReturn
     getAvailablePaymentActionsForReturn: z_getAvailablePaymentActionsForReturn
+  }
+
+  interface getReturns_args {
+    responseFields?: string
+  }
+  interface z_getReturns {
+    (config: getReturns_args, options: api.RequestOptions): Promise
   }
 
   interface getPayment_args {
@@ -271,26 +277,12 @@ declare namespace api {
     (config: getReasons_args, options: api.RequestOptions): Promise
   }
 
-  interface getReturns_args {
-    responseFields?: string
-  }
-  interface z_getReturns {
-    (config: getReturns_args, options: api.RequestOptions): Promise
-  }
-
   interface getPayments_args {
     orderId: string
     responseFields?: string
   }
   interface z_getPayments {
     (config: getPayments_args, options: api.RequestOptions): Promise
-  }
-
-  interface deleteReturn_args {
-    returnId: string
-  }
-  interface z_deleteReturn {
-    (config: deleteReturn_args, options: api.RequestOptions): Promise
   }
 
   interface createReturn_args {
@@ -306,6 +298,13 @@ declare namespace api {
   }
   interface z_updateReturn {
     (config: updateReturn_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteReturn_args {
+    returnId: string
+  }
+  interface z_deleteReturn {
+    (config: deleteReturn_args, options: api.RequestOptions): Promise
   }
 
   interface getReturnItem_args {
@@ -352,6 +351,16 @@ declare namespace api {
     (config: performReturnActions_args, options: api.RequestOptions): Promise
   }
 
+  interface getAvailableReturnActions_args {
+    returnId: string
+  }
+  interface z_getAvailableReturnActions {
+    (
+      config: getAvailableReturnActions_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
   interface createReturnShippingOrder_args {
     returnId: string
     responseFields?: string
@@ -359,16 +368,6 @@ declare namespace api {
   interface z_createReturnShippingOrder {
     (
       config: createReturnShippingOrder_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface getAvailableReturnActions_args {
-    returnId: string
-  }
-  interface z_getAvailableReturnActions {
-    (
-      config: getAvailableReturnActions_args,
       options: api.RequestOptions
     ): Promise
   }
@@ -416,9 +415,9 @@ declare namespace api {
   interface z_channel {
     getChannel: z_getChannel
     getChannels: z_getChannels
-    deleteChannel: z_deleteChannel
-    updateChannel: z_updateChannel
     createChannel: z_createChannel
+    updateChannel: z_updateChannel
+    deleteChannel: z_deleteChannel
   }
 
   interface getChannels_args {
@@ -428,11 +427,11 @@ declare namespace api {
     (config: getChannels_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteChannel_args {
-    code: string
+  interface createChannel_args {
+    responseFields?: string
   }
-  interface z_deleteChannel {
-    (config: deleteChannel_args, options: api.RequestOptions): Promise
+  interface z_createChannel {
+    (config: createChannel_args, options: api.RequestOptions): Promise
   }
 
   interface updateChannel_args {
@@ -443,11 +442,11 @@ declare namespace api {
     (config: updateChannel_args, options: api.RequestOptions): Promise
   }
 
-  interface createChannel_args {
-    responseFields?: string
+  interface deleteChannel_args {
+    code: string
   }
-  interface z_createChannel {
-    (config: createChannel_args, options: api.RequestOptions): Promise
+  interface z_deleteChannel {
+    (config: deleteChannel_args, options: api.RequestOptions): Promise
   }
 
   interface getCheckout_args {
@@ -541,60 +540,6 @@ declare namespace api {
     ): Promise
   }
 
-  interface getWishlist_args {
-    wishlistId: string
-    responseFields?: string
-  }
-  interface z_getWishlist {
-    (config: getWishlist_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_wishlist {
-    getWishlist: z_getWishlist
-    getWishlists: z_getWishlists
-    deleteWishlist: z_deleteWishlist
-    updateWishlist: z_updateWishlist
-    createWishlist: z_createWishlist
-    getWishlistByName: z_getWishlistByName
-  }
-
-  interface getWishlists_args {
-    responseFields?: string
-  }
-  interface z_getWishlists {
-    (config: getWishlists_args, options: api.RequestOptions): Promise
-  }
-
-  interface deleteWishlist_args {
-    wishlistId: string
-  }
-  interface z_deleteWishlist {
-    (config: deleteWishlist_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateWishlist_args {
-    wishlistId: string
-    responseFields?: string
-  }
-  interface z_updateWishlist {
-    (config: updateWishlist_args, options: api.RequestOptions): Promise
-  }
-
-  interface createWishlist_args {
-    responseFields?: string
-  }
-  interface z_createWishlist {
-    (config: createWishlist_args, options: api.RequestOptions): Promise
-  }
-
-  interface getWishlistByName_args {
-    wishlistName: string
-    responseFields?: string
-  }
-  interface z_getWishlistByName {
-    (config: getWishlistByName_args, options: api.RequestOptions): Promise
-  }
-
   interface getLocation_args {
     locationCode: string
     responseFields?: string
@@ -611,8 +556,8 @@ declare namespace api {
     getInStorePickupLocations: z_getInStorePickupLocations
     addLocation: z_addLocation
     getLocations: z_getLocations
-    deleteLocation: z_deleteLocation
     updateLocation: z_updateLocation
+    deleteLocation: z_deleteLocation
   }
 
   interface getDirectShipLocation_args {
@@ -651,770 +596,70 @@ declare namespace api {
     ): Promise
   }
 
-  interface z_orders {
-    pickup: z_pickup
-    payment: z_payment
-    package: z_package
-    refund: z_refund
-    shipment: z_shipment
-    orderItem: z_orderItem
-    orderNote: z_orderNote
-    billingInfo: z_billingInfo
-    adjustment: z_adjustment
-    appliedDiscount: z_appliedDiscount
-    digitalPackage: z_digitalPackage
-    orderAttribute: z_orderAttribute
-    fulfillmentInfo: z_fulfillmentInfo
-    extendedProperty: z_extendedProperty
-    orderValidationResult: z_orderValidationResult
-    fulfillmentAction: z_fulfillmentAction
-    attributedefinition: z_attributedefinition
-    orderReturnableItem: z_orderReturnableItem
-  }
-
-  interface getPickup_args {
-    pickupId: string
+  interface getWishlist_args {
+    wishlistId: string
     responseFields?: string
   }
-  interface z_getPickup {
-    (config: getPickup_args, options: api.RequestOptions): Promise
+  interface z_getWishlist {
+    (config: getWishlist_args, options: api.RequestOptions): Promise
   }
 
-  interface z_pickup {
-    getPickup: z_getPickup
-    deletePickup: z_deletePickup
-    updatePickup: z_updatePickup
-    createPickup: z_createPickup
-    getAvailablePickupFulfillmentActions: z_getAvailablePickupFulfillmentActions
+  interface z_wishlist {
+    getWishlist: z_getWishlist
+    getWishlists: z_getWishlists
+    createWishlist: z_createWishlist
+    updateWishlist: z_updateWishlist
+    deleteWishlist: z_deleteWishlist
+    getWishlistByName: z_getWishlistByName
   }
 
-  interface deletePickup_args {
-    pickupId: string
-  }
-  interface z_deletePickup {
-    (config: deletePickup_args, options: api.RequestOptions): Promise
-  }
-
-  interface updatePickup_args {
-    pickupId: string
+  interface getWishlists_args {
     responseFields?: string
   }
-  interface z_updatePickup {
-    (config: updatePickup_args, options: api.RequestOptions): Promise
+  interface z_getWishlists {
+    (config: getWishlists_args, options: api.RequestOptions): Promise
   }
 
-  interface createPickup_args {
-    orderId: string
+  interface createWishlist_args {
     responseFields?: string
   }
-  interface z_createPickup {
-    (config: createPickup_args, options: api.RequestOptions): Promise
+  interface z_createWishlist {
+    (config: createWishlist_args, options: api.RequestOptions): Promise
   }
 
-  interface getAvailablePickupFulfillmentActions_args {
-    pickupId: string
-  }
-  interface z_getAvailablePickupFulfillmentActions {
-    (
-      config: getAvailablePickupFulfillmentActions_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface z_payment {
-    getPayment: z_getPayment
-    getPayments: z_getPayments
-    createPaymentAction: z_createPaymentAction
-    performPaymentAction: z_performPaymentAction
-    getAvailablePaymentActions: z_getAvailablePaymentActions
-  }
-
-  interface createPaymentAction_args {
-    checkoutId: string
+  interface updateWishlist_args {
+    wishlistId: string
     responseFields?: string
   }
-  interface z_createPaymentAction {
-    (config: createPaymentAction_args, options: api.RequestOptions): Promise
+  interface z_updateWishlist {
+    (config: updateWishlist_args, options: api.RequestOptions): Promise
   }
 
-  interface performPaymentAction_args {
-    paymentId: string
+  interface deleteWishlist_args {
+    wishlistId: string
+  }
+  interface z_deleteWishlist {
+    (config: deleteWishlist_args, options: api.RequestOptions): Promise
+  }
+
+  interface getWishlistByName_args {
+    wishlistName: string
     responseFields?: string
   }
-  interface z_performPaymentAction {
-    (config: performPaymentAction_args, options: api.RequestOptions): Promise
-  }
-
-  interface getAvailablePaymentActions_args {
-    paymentId: string
-  }
-  interface z_getAvailablePaymentActions {
-    (
-      config: getAvailablePaymentActions_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface getPackage_args {
-    applicationKey: string
-    responseFields?: string
-  }
-  interface z_getPackage {
-    (config: getPackage_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_package {
-    getPackage: z_getPackage
-    createPackage: z_createPackage
-    updatePackage: z_updatePackage
-    deletePackage: z_deletePackage
-    getPackageLabel: z_getPackageLabel
-    getAvailablePackageFulfillmentActions: z_getAvailablePackageFulfillmentActions
-    getFile: z_getFile
-  }
-
-  interface createPackage_args {
-    responseFields?: string
-  }
-  interface z_createPackage {
-    (config: createPackage_args, options: api.RequestOptions): Promise
-  }
-
-  interface updatePackage_args {
-    applicationKey: string
-    responseFields?: string
-  }
-  interface z_updatePackage {
-    (config: updatePackage_args, options: api.RequestOptions): Promise
-  }
-
-  interface deletePackage_args {
-    applicationKey: string
-  }
-  interface z_deletePackage {
-    (config: deletePackage_args, options: api.RequestOptions): Promise
-  }
-
-  interface getPackageLabel_args {
-    packageId: string
-    returnAsBase64Png?: string
-  }
-  interface z_getPackageLabel {
-    (config: getPackageLabel_args, options: api.RequestOptions): Promise
-  }
-
-  interface getAvailablePackageFulfillmentActions_args {
-    packageId: string
-  }
-  interface z_getAvailablePackageFulfillmentActions {
-    (
-      config: getAvailablePackageFulfillmentActions_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface createRefund_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_createRefund {
-    (config: createRefund_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_refund {
-    createRefund: z_createRefund
-    resendRefundEmail: z_resendRefundEmail
-  }
-
-  interface resendRefundEmail_args {
-    refundId: string
-  }
-  interface z_resendRefundEmail {
-    (config: resendRefundEmail_args, options: api.RequestOptions): Promise
-  }
-
-  interface getShipment_args {
-    shipmentId: string
-    responseFields?: string
-  }
-  interface z_getShipment {
-    (config: getShipment_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_shipment {
-    getShipment: z_getShipment
-    deleteShipment: z_deleteShipment
-    createPackageShipments: z_createPackageShipments
-    getAvailableShipmentMethods: z_getAvailableShipmentMethods
-  }
-
-  interface deleteShipment_args {
-    shipmentId: string
-  }
-  interface z_deleteShipment {
-    (config: deleteShipment_args, options: api.RequestOptions): Promise
-  }
-
-  interface createPackageShipments_args {
-    returnId: string
-  }
-  interface z_createPackageShipments {
-    (config: createPackageShipments_args, options: api.RequestOptions): Promise
-  }
-
-  interface getAvailableShipmentMethods_args {
-    orderId: string
-    draft?: string
-  }
-  interface z_getAvailableShipmentMethods {
-    (
-      config: getAvailableShipmentMethods_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface getOrderItem_args {
-    orderItemId: string
-    responseFields?: string
-  }
-  interface z_getOrderItem {
-    (config: getOrderItem_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_orderItem {
-    getOrderItem: z_getOrderItem
-    getOrderItems: z_getOrderItems
-    updateItemDuty: z_updateItemDuty
-    deleteOrderItem: z_deleteOrderItem
-    createOrderItem: z_createOrderItem
-    updateItemQuantity: z_updateItemQuantity
-    getOrderItemViaLineId: z_getOrderItemViaLineId
-    updateItemFulfillment: z_updateItemFulfillment
-    updateItemProductPrice: z_updateItemProductPrice
-    updateOrderItemDiscount: z_updateOrderItemDiscount
-    splitItem: z_splitItem
-    updateItemDestination: z_updateItemDestination
-    bulkUpdateItemDestinations: z_bulkUpdateItemDestinations
-  }
-
-  interface getOrderItems_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_getOrderItems {
-    (config: getOrderItems_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateItemDuty_args {
-    dutyAmount: string
-    responseFields?: string
-  }
-  interface z_updateItemDuty {
-    (config: updateItemDuty_args, options: api.RequestOptions): Promise
-  }
-
-  interface createOrderItem_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_createOrderItem {
-    (config: createOrderItem_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateItemQuantity_args {
-    quantity: string
-    responseFields?: string
-  }
-  interface z_updateItemQuantity {
-    (config: updateItemQuantity_args, options: api.RequestOptions): Promise
-  }
-
-  interface getOrderItemViaLineId_args {
-    lineId: string
-    responseFields?: string
-  }
-  interface z_getOrderItemViaLineId {
-    (config: getOrderItemViaLineId_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateItemFulfillment_args {
-    orderItemId: string
-    responseFields?: string
-  }
-  interface z_updateItemFulfillment {
-    (config: updateItemFulfillment_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateItemProductPrice_args {
-    price: string
-    responseFields?: string
-  }
-  interface z_updateItemProductPrice {
-    (config: updateItemProductPrice_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateOrderItemDiscount_args {
-    discountId: string
-    responseFields?: string
-  }
-  interface z_updateOrderItemDiscount {
-    (config: updateOrderItemDiscount_args, options: api.RequestOptions): Promise
-  }
-
-  interface getOrderNote_args {
-    noteId: string
-    responseFields?: string
-  }
-  interface z_getOrderNote {
-    (config: getOrderNote_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_orderNote {
-    getOrderNote: z_getOrderNote
-    getOrderNotes: z_getOrderNotes
-    deleteOrderNote: z_deleteOrderNote
-    updateOrderNote: z_updateOrderNote
-    createOrderNote: z_createOrderNote
-    getReturnNote: z_getReturnNote
-    getReturnNotes: z_getReturnNotes
-    deleteReturnNote: z_deleteReturnNote
-    updateReturnNote: z_updateReturnNote
-    createReturnNote: z_createReturnNote
-    getCheckoutNote: z_getCheckoutNote
-    getCheckoutNotes: z_getCheckoutNotes
-    createCheckoutNote: z_createCheckoutNote
-    updateCheckoutNote: z_updateCheckoutNote
-    deleteCheckoutNote: z_deleteCheckoutNote
-  }
-
-  interface getOrderNotes_args {
-    orderId: string
-  }
-  interface z_getOrderNotes {
-    (config: getOrderNotes_args, options: api.RequestOptions): Promise
-  }
-
-  interface deleteOrderNote_args {
-    noteId: string
-  }
-  interface z_deleteOrderNote {
-    (config: deleteOrderNote_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateOrderNote_args {
-    noteId: string
-    responseFields?: string
-  }
-  interface z_updateOrderNote {
-    (config: updateOrderNote_args, options: api.RequestOptions): Promise
-  }
-
-  interface createOrderNote_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_createOrderNote {
-    (config: createOrderNote_args, options: api.RequestOptions): Promise
-  }
-
-  interface setBillingInfo_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_setBillingInfo {
-    (config: setBillingInfo_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_billingInfo {
-    setBillingInfo: z_setBillingInfo
-    getBillingInfo: z_getBillingInfo
-  }
-
-  interface getBillingInfo_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_getBillingInfo {
-    (config: getBillingInfo_args, options: api.RequestOptions): Promise
-  }
-
-  interface applyAdjustment_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_applyAdjustment {
-    (config: applyAdjustment_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_adjustment {
-    applyAdjustment: z_applyAdjustment
-    removeAdjustment: z_removeAdjustment
-    applyShippingAdjustment: z_applyShippingAdjustment
-    applyHandlingAdjustment: z_applyHandlingAdjustment
-    removeShippingAdjustment: z_removeShippingAdjustment
-    removeHandlingAdjustment: z_removeHandlingAdjustment
-  }
-
-  interface removeAdjustment_args {
-    orderId: string
-    version?: string
-  }
-  interface z_removeAdjustment {
-    (config: removeAdjustment_args, options: api.RequestOptions): Promise
-  }
-
-  interface applyShippingAdjustment_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_applyShippingAdjustment {
-    (config: applyShippingAdjustment_args, options: api.RequestOptions): Promise
-  }
-
-  interface applyHandlingAdjustment_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_applyHandlingAdjustment {
-    (config: applyHandlingAdjustment_args, options: api.RequestOptions): Promise
-  }
-
-  interface removeShippingAdjustment_args {
-    orderId: string
-    version?: string
-  }
-  interface z_removeShippingAdjustment {
-    (
-      config: removeShippingAdjustment_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface removeHandlingAdjustment_args {
-    orderId: string
-    version?: string
-  }
-  interface z_removeHandlingAdjustment {
-    (
-      config: removeHandlingAdjustment_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface applyCoupon_args {
-    couponCode: string
-    responseFields?: string
-  }
-  interface z_applyCoupon {
-    (config: applyCoupon_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_appliedDiscount {
-    applyCoupon: z_applyCoupon
-    removeCoupon: z_removeCoupon
-    removeCoupons: z_removeCoupons
-  }
-
-  interface removeCoupon_args {
-    couponcode: string
-  }
-  interface z_removeCoupon {
-    (config: removeCoupon_args, options: api.RequestOptions): Promise
-  }
-
-  interface removeCoupons_args {
-    checkoutId: string
-  }
-  interface z_removeCoupons {
-    (config: removeCoupons_args, options: api.RequestOptions): Promise
-  }
-
-  interface getDigitalPackage_args {
-    digitalPackageId: string
-    responseFields?: string
-  }
-  interface z_getDigitalPackage {
-    (config: getDigitalPackage_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_digitalPackage {
-    getDigitalPackage: z_getDigitalPackage
-    deleteDigitalPackage: z_deleteDigitalPackage
-    updateDigitalPackage: z_updateDigitalPackage
-    createDigitalPackage: z_createDigitalPackage
-    getAvailableDigitalPackageFulfillmentActions: z_getAvailableDigitalPackageFulfillmentActions
-  }
-
-  interface deleteDigitalPackage_args {
-    digitalPackageId: string
-  }
-  interface z_deleteDigitalPackage {
-    (config: deleteDigitalPackage_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateDigitalPackage_args {
-    digitalPackageId: string
-    responseFields?: string
-  }
-  interface z_updateDigitalPackage {
-    (config: updateDigitalPackage_args, options: api.RequestOptions): Promise
-  }
-
-  interface createDigitalPackage_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_createDigitalPackage {
-    (config: createDigitalPackage_args, options: api.RequestOptions): Promise
-  }
-
-  interface getAvailableDigitalPackageFulfillmentActions_args {
-    digitalPackageId: string
-  }
-  interface z_getAvailableDigitalPackageFulfillmentActions {
-    (
-      config: getAvailableDigitalPackageFulfillmentActions_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface getOrderAttributes_args {
-    orderId: string
-  }
-  interface z_getOrderAttributes {
-    (config: getOrderAttributes_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_orderAttribute {
-    getOrderAttributes: z_getOrderAttributes
-    updateOrderAttributes: z_updateOrderAttributes
-    createOrderAttributes: z_createOrderAttributes
-    getCheckoutAttributes: z_getCheckoutAttributes
-    updateCheckoutAttribute: z_updateCheckoutAttribute
-    createCheckoutAttributes: z_createCheckoutAttributes
-  }
-
-  interface updateOrderAttributes_args {
-    orderId: string
-    removeMissing?: string
-  }
-  interface z_updateOrderAttributes {
-    (config: updateOrderAttributes_args, options: api.RequestOptions): Promise
-  }
-
-  interface createOrderAttributes_args {
-    orderId: string
-  }
-  interface z_createOrderAttributes {
-    (config: createOrderAttributes_args, options: api.RequestOptions): Promise
-  }
-
-  interface setFulFillmentInfo_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_setFulFillmentInfo {
-    (config: setFulFillmentInfo_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_fulfillmentInfo {
-    setFulFillmentInfo: z_setFulFillmentInfo
-    getFulfillmentInfo: z_getFulfillmentInfo
-  }
-
-  interface getFulfillmentInfo_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_getFulfillmentInfo {
-    (config: getFulfillmentInfo_args, options: api.RequestOptions): Promise
-  }
-
-  interface getExtendedProperties_args {
-    checkoutId: string
-  }
-  interface z_getExtendedProperties {
-    (config: getExtendedProperties_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_extendedProperty {
-    getExtendedProperties: z_getExtendedProperties
-    addExtendedProperties: z_addExtendedProperties
-    deleteExtendedProperty: z_deleteExtendedProperty
-    updateExtendedProperty: z_updateExtendedProperty
-    deleteExtendedProperties: z_deleteExtendedProperties
-    updateExtendedProperties: z_updateExtendedProperties
-  }
-
-  interface addExtendedProperties_args {
-    checkoutId: string
-  }
-  interface z_addExtendedProperties {
-    (config: addExtendedProperties_args, options: api.RequestOptions): Promise
-  }
-
-  interface deleteExtendedProperty_args {
-    key: string
-  }
-  interface z_deleteExtendedProperty {
-    (config: deleteExtendedProperty_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateExtendedProperty_args {
-    key: string
-    responseFields?: string
-  }
-  interface z_updateExtendedProperty {
-    (config: updateExtendedProperty_args, options: api.RequestOptions): Promise
-  }
-
-  interface deleteExtendedProperties_args {
-    checkoutId: string
-  }
-  interface z_deleteExtendedProperties {
-    (
-      config: deleteExtendedProperties_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface updateExtendedProperties_args {
-    checkoutId: string
-    upsert?: string
-  }
-  interface z_updateExtendedProperties {
-    (
-      config: updateExtendedProperties_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface addValidationResult_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_addValidationResult {
-    (config: addValidationResult_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_orderValidationResult {
-    addValidationResult: z_addValidationResult
-    getValidationResults: z_getValidationResults
-  }
-
-  interface getValidationResults_args {
-    orderId: string
-  }
-  interface z_getValidationResults {
-    (config: getValidationResults_args, options: api.RequestOptions): Promise
-  }
-
-  interface performFulfillmentAction_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_performFulfillmentAction {
-    (
-      config: performFulfillmentAction_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface z_fulfillmentAction {
-    performFulfillmentAction: z_performFulfillmentAction
-    resendPackageFulfillmentEmail: z_resendPackageFulfillmentEmail
-  }
-
-  interface resendPackageFulfillmentEmail_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_resendPackageFulfillmentEmail {
-    (
-      config: resendPackageFulfillmentEmail_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface z_attributedefinition {
-    attribute: z_attribute
-    productType: z_productType
-    producttypes: z_producttypes
-    attributes: z_attributes
-  }
-
-  interface getAttribute_args {
-    attributeFQN: string
-    responseFields?: string
-  }
-  interface z_getAttribute {
-    (config: getAttribute_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_attribute {
-    getAttribute: z_getAttribute
-    getAttributes: z_getAttributes
-    updateAttribute: z_updateAttribute
-    createAttribute: z_createAttribute
-    getAttributeVocabularyValues: z_getAttributeVocabularyValues
-    addAttribute: z_addAttribute
-    deleteAttribute: z_deleteAttribute
-  }
-
-  interface getAttributes_args {
-    responseFields?: string
-  }
-  interface z_getAttributes {
-    (config: getAttributes_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateAttribute_args {
-    attributeFQN: string
-    responseFields?: string
-  }
-  interface z_updateAttribute {
-    (config: updateAttribute_args, options: api.RequestOptions): Promise
-  }
-
-  interface createAttribute_args {
-    responseFields?: string
-  }
-  interface z_createAttribute {
-    (config: createAttribute_args, options: api.RequestOptions): Promise
-  }
-
-  interface getAttributeVocabularyValues_args {
-    attributeFQN: string
-  }
-  interface z_getAttributeVocabularyValues {
-    (
-      config: getAttributeVocabularyValues_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface getOrderReturnableItems_args {
-    orderId: string
-    responseFields?: string
-  }
-  interface z_getOrderReturnableItems {
-    (config: getOrderReturnableItems_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_orderReturnableItem {
-    getOrderReturnableItems: z_getOrderReturnableItems
+  interface z_getWishlistByName {
+    (config: getWishlistByName_args, options: api.RequestOptions): Promise
   }
 
   interface z_customer {
     visit: z_visit
     credit: z_credit
-    customerSegment: z_customerSegment
     customerAccount: z_customerAccount
+    customerSegment: z_customerSegment
     customerSet: z_customerSet
     accounts: z_accounts
     customerAuthTicket: z_customerAuthTicket
-    credits: z_credits
     addressValidationRequest: z_addressValidationRequest
+    credits: z_credits
     attributedefinition: z_attributedefinition
   }
 
@@ -1455,29 +700,29 @@ declare namespace api {
     (config: updateVisit_args, options: api.RequestOptions): Promise
   }
 
-  interface addCredit_args {
-    responseFields?: string
-  }
-  interface z_addCredit {
-    (config: addCredit_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_credit {
-    addCredit: z_addCredit
-    getCredit: z_getCredit
-    getCredits: z_getCredits
-    deleteCredit: z_deleteCredit
-    updateCredit: z_updateCredit
-    associateCreditToShopper: z_associateCreditToShopper
-    resendCreditCreatedEmail: z_resendCreditCreatedEmail
-  }
-
   interface getCredit_args {
     code: string
     responseFields?: string
   }
   interface z_getCredit {
     (config: getCredit_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_credit {
+    getCredit: z_getCredit
+    addCredit: z_addCredit
+    getCredits: z_getCredits
+    updateCredit: z_updateCredit
+    deleteCredit: z_deleteCredit
+    associateCreditToShopper: z_associateCreditToShopper
+    resendCreditCreatedEmail: z_resendCreditCreatedEmail
+  }
+
+  interface addCredit_args {
+    responseFields?: string
+  }
+  interface z_addCredit {
+    (config: addCredit_args, options: api.RequestOptions): Promise
   }
 
   interface getCredits_args {
@@ -1487,19 +732,19 @@ declare namespace api {
     (config: getCredits_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteCredit_args {
-    code: string
-  }
-  interface z_deleteCredit {
-    (config: deleteCredit_args, options: api.RequestOptions): Promise
-  }
-
   interface updateCredit_args {
     code: string
     responseFields?: string
   }
   interface z_updateCredit {
     (config: updateCredit_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteCredit_args {
+    code: string
+  }
+  interface z_deleteCredit {
+    (config: deleteCredit_args, options: api.RequestOptions): Promise
   }
 
   interface associateCreditToShopper_args {
@@ -1523,84 +768,23 @@ declare namespace api {
     ): Promise
   }
 
-  interface addSegment_args {
-    responseFields?: string
-  }
-  interface z_addSegment {
-    (config: addSegment_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_customerSegment {
-    addSegment: z_addSegment
-    getSegment: z_getSegment
-    getSegments: z_getSegments
-    deleteSegment: z_deleteSegment
-    updateSegment: z_updateSegment
-    addSegmentAccounts: z_addSegmentAccounts
-    removeSegmentAccount: z_removeSegmentAccount
-    getAccountSegments: z_getAccountSegments
-  }
-
-  interface getSegment_args {
-    id: string
-    responseFields?: string
-  }
-  interface z_getSegment {
-    (config: getSegment_args, options: api.RequestOptions): Promise
-  }
-
-  interface getSegments_args {
-    responseFields?: string
-  }
-  interface z_getSegments {
-    (config: getSegments_args, options: api.RequestOptions): Promise
-  }
-
-  interface deleteSegment_args {
-    id: string
-  }
-  interface z_deleteSegment {
-    (config: deleteSegment_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateSegment_args {
-    id: string
-    responseFields?: string
-  }
-  interface z_updateSegment {
-    (config: updateSegment_args, options: api.RequestOptions): Promise
-  }
-
-  interface addSegmentAccounts_args {
-    id: string
-  }
-  interface z_addSegmentAccounts {
-    (config: addSegmentAccounts_args, options: api.RequestOptions): Promise
-  }
-
-  interface removeSegmentAccount_args {
+  interface getAccount_args {
     accountId: string
-  }
-  interface z_removeSegmentAccount {
-    (config: removeSegmentAccount_args, options: api.RequestOptions): Promise
-  }
-
-  interface addAccount_args {
     responseFields?: string
   }
-  interface z_addAccount {
-    (config: addAccount_args, options: api.RequestOptions): Promise
+  interface z_getAccount {
+    (config: getAccount_args, options: api.RequestOptions): Promise
   }
 
   interface z_customerAccount {
-    addAccount: z_addAccount
     getAccount: z_getAccount
-    addAccounts: z_addAccounts
+    addAccount: z_addAccount
     getAccounts: z_getAccounts
-    updateAccount: z_updateAccount
+    addAccounts: z_addAccounts
     getLoginState: z_getLoginState
-    deleteAccount: z_deleteAccount
     resetPassword: z_resetPassword
+    updateAccount: z_updateAccount
+    deleteAccount: z_deleteAccount
     changePassword: z_changePassword
     setLoginLocked: z_setLoginLocked
     changePasswords: z_changePasswords
@@ -1613,19 +797,11 @@ declare namespace api {
     getCustomersPurchaseOrderAccounts: z_getCustomersPurchaseOrderAccounts
   }
 
-  interface getAccount_args {
-    accountId: string
+  interface addAccount_args {
     responseFields?: string
   }
-  interface z_getAccount {
-    (config: getAccount_args, options: api.RequestOptions): Promise
-  }
-
-  interface addAccounts_args {
-    responseFields?: string
-  }
-  interface z_addAccounts {
-    (config: addAccounts_args, options: api.RequestOptions): Promise
+  interface z_addAccount {
+    (config: addAccount_args, options: api.RequestOptions): Promise
   }
 
   interface getAccounts_args {
@@ -1635,12 +811,11 @@ declare namespace api {
     (config: getAccounts_args, options: api.RequestOptions): Promise
   }
 
-  interface updateAccount_args {
-    accountId: string
+  interface addAccounts_args {
     responseFields?: string
   }
-  interface z_updateAccount {
-    (config: updateAccount_args, options: api.RequestOptions): Promise
+  interface z_addAccounts {
+    (config: addAccounts_args, options: api.RequestOptions): Promise
   }
 
   interface getLoginState_args {
@@ -1651,16 +826,24 @@ declare namespace api {
     (config: getLoginState_args, options: api.RequestOptions): Promise
   }
 
+  interface resetPassword_args {}
+  interface z_resetPassword {
+    (config: resetPassword_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateAccount_args {
+    accountId: string
+    responseFields?: string
+  }
+  interface z_updateAccount {
+    (config: updateAccount_args, options: api.RequestOptions): Promise
+  }
+
   interface deleteAccount_args {
     accountId: string
   }
   interface z_deleteAccount {
     (config: deleteAccount_args, options: api.RequestOptions): Promise
-  }
-
-  interface resetPassword_args {}
-  interface z_resetPassword {
-    (config: resetPassword_args, options: api.RequestOptions): Promise
   }
 
   interface changePassword_args {
@@ -1750,6 +933,68 @@ declare namespace api {
     ): Promise
   }
 
+  interface getSegment_args {
+    id: string
+    responseFields?: string
+  }
+  interface z_getSegment {
+    (config: getSegment_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_customerSegment {
+    getSegment: z_getSegment
+    addSegment: z_addSegment
+    getSegments: z_getSegments
+    updateSegment: z_updateSegment
+    deleteSegment: z_deleteSegment
+    addSegmentAccounts: z_addSegmentAccounts
+    removeSegmentAccount: z_removeSegmentAccount
+    getAccountSegments: z_getAccountSegments
+  }
+
+  interface addSegment_args {
+    responseFields?: string
+  }
+  interface z_addSegment {
+    (config: addSegment_args, options: api.RequestOptions): Promise
+  }
+
+  interface getSegments_args {
+    responseFields?: string
+  }
+  interface z_getSegments {
+    (config: getSegments_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateSegment_args {
+    id: string
+    responseFields?: string
+  }
+  interface z_updateSegment {
+    (config: updateSegment_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteSegment_args {
+    id: string
+  }
+  interface z_deleteSegment {
+    (config: deleteSegment_args, options: api.RequestOptions): Promise
+  }
+
+  interface addSegmentAccounts_args {
+    id: string
+  }
+  interface z_addSegmentAccounts {
+    (config: addSegmentAccounts_args, options: api.RequestOptions): Promise
+  }
+
+  interface removeSegmentAccount_args {
+    accountId: string
+  }
+  interface z_removeSegmentAccount {
+    (config: removeSegmentAccount_args, options: api.RequestOptions): Promise
+  }
+
   interface getCustomerSet_args {
     code: string
     responseFields?: string
@@ -1776,8 +1021,8 @@ declare namespace api {
     customerNote: z_customerNote
     customerContact: z_customerContact
     customerSegment: z_customerSegment
-    customerAuditEntry: z_customerAuditEntry
     customerAttribute: z_customerAttribute
+    customerAuditEntry: z_customerAuditEntry
     customerPurchaseOrderAccount: z_customerPurchaseOrderAccount
   }
 
@@ -1793,8 +1038,8 @@ declare namespace api {
     getAccountCard: z_getAccountCard
     addAccountCard: z_addAccountCard
     getAccountCards: z_getAccountCards
-    deleteAccountCard: z_deleteAccountCard
     updateAccountCard: z_updateAccountCard
+    deleteAccountCard: z_deleteAccountCard
   }
 
   interface addAccountCard_args {
@@ -1813,19 +1058,19 @@ declare namespace api {
     (config: getAccountCards_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteAccountCard_args {
-    cardId: string
-  }
-  interface z_deleteAccountCard {
-    (config: deleteAccountCard_args, options: api.RequestOptions): Promise
-  }
-
   interface updateAccountCard_args {
     cardId: string
     responseFields?: string
   }
   interface z_updateAccountCard {
     (config: updateAccountCard_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteAccountCard_args {
+    cardId: string
+  }
+  interface z_deleteAccountCard {
+    (config: deleteAccountCard_args, options: api.RequestOptions): Promise
   }
 
   interface addTransaction_args {
@@ -1904,29 +1149,29 @@ declare namespace api {
     (config: deleteAccountNote_args, options: api.RequestOptions): Promise
   }
 
-  interface addAccountContact_args {
-    accountId: string
-    responseFields?: string
-  }
-  interface z_addAccountContact {
-    (config: addAccountContact_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_customerContact {
-    addAccountContact: z_addAccountContact
-    getAccountContact: z_getAccountContact
-    getAccountContacts: z_getAccountContacts
-    updateAccountContact: z_updateAccountContact
-    deleteAccountContact: z_deleteAccountContact
-    addAccountContactList: z_addAccountContactList
-  }
-
   interface getAccountContact_args {
     contactId: string
     responseFields?: string
   }
   interface z_getAccountContact {
     (config: getAccountContact_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_customerContact {
+    getAccountContact: z_getAccountContact
+    addAccountContact: z_addAccountContact
+    getAccountContacts: z_getAccountContacts
+    updateAccountContact: z_updateAccountContact
+    deleteAccountContact: z_deleteAccountContact
+    addAccountContactList: z_addAccountContactList
+  }
+
+  interface addAccountContact_args {
+    accountId: string
+    responseFields?: string
+  }
+  interface z_addAccountContact {
+    (config: addAccountContact_args, options: api.RequestOptions): Promise
   }
 
   interface getAccountContacts_args {
@@ -1968,16 +1213,20 @@ declare namespace api {
     (config: getAccountSegments_args, options: api.RequestOptions): Promise
   }
 
-  interface getAccountAuditLog_args {
-    accountId: string
+  interface getAccountAttribute_args {
+    attributeFQN: string
     responseFields?: string
   }
-  interface z_getAccountAuditLog {
-    (config: getAccountAuditLog_args, options: api.RequestOptions): Promise
+  interface z_getAccountAttribute {
+    (config: getAccountAttribute_args, options: api.RequestOptions): Promise
   }
 
-  interface z_customerAuditEntry {
-    getAccountAuditLog: z_getAccountAuditLog
+  interface z_customerAttribute {
+    getAccountAttribute: z_getAccountAttribute
+    addAccountAttribute: z_addAccountAttribute
+    getAccountAttributes: z_getAccountAttributes
+    updateAccountAttribute: z_updateAccountAttribute
+    deleteAccountAttribute: z_deleteAccountAttribute
   }
 
   interface addAccountAttribute_args {
@@ -1988,28 +1237,20 @@ declare namespace api {
     (config: addAccountAttribute_args, options: api.RequestOptions): Promise
   }
 
-  interface z_customerAttribute {
-    addAccountAttribute: z_addAccountAttribute
-    getAccountAttribute: z_getAccountAttribute
-    getAccountAttributes: z_getAccountAttributes
-    deleteAccountAttribute: z_deleteAccountAttribute
-    updateAccountAttribute: z_updateAccountAttribute
-  }
-
-  interface getAccountAttribute_args {
-    attributeFQN: string
-    responseFields?: string
-  }
-  interface z_getAccountAttribute {
-    (config: getAccountAttribute_args, options: api.RequestOptions): Promise
-  }
-
   interface getAccountAttributes_args {
     accountId: string
     responseFields?: string
   }
   interface z_getAccountAttributes {
     (config: getAccountAttributes_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateAccountAttribute_args {
+    attributeFQN: string
+    responseFields?: string
+  }
+  interface z_updateAccountAttribute {
+    (config: updateAccountAttribute_args, options: api.RequestOptions): Promise
   }
 
   interface deleteAccountAttribute_args {
@@ -2019,12 +1260,16 @@ declare namespace api {
     (config: deleteAccountAttribute_args, options: api.RequestOptions): Promise
   }
 
-  interface updateAccountAttribute_args {
-    attributeFQN: string
+  interface getAccountAuditLog_args {
+    accountId: string
     responseFields?: string
   }
-  interface z_updateAccountAttribute {
-    (config: updateAccountAttribute_args, options: api.RequestOptions): Promise
+  interface z_getAccountAuditLog {
+    (config: getAccountAuditLog_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_customerAuditEntry {
+    getAccountAuditLog: z_getAccountAuditLog
   }
 
   interface createPurchaseOrderTransaction_args {
@@ -2042,8 +1287,8 @@ declare namespace api {
     createPurchaseOrderTransaction: z_createPurchaseOrderTransaction
     getCustomerPurchaseOrderAccount: z_getCustomerPurchaseOrderAccount
     createCustomerPurchaseOrderAccount: z_createCustomerPurchaseOrderAccount
-    deleteCustomerPurchaseOrderAccount: z_deleteCustomerPurchaseOrderAccount
     updateCustomerPurchaseOrderAccount: z_updateCustomerPurchaseOrderAccount
+    deleteCustomerPurchaseOrderAccount: z_deleteCustomerPurchaseOrderAccount
     getCustomerPurchaseOrderTransactions: z_getCustomerPurchaseOrderTransactions
   }
 
@@ -2069,16 +1314,6 @@ declare namespace api {
     ): Promise
   }
 
-  interface deleteCustomerPurchaseOrderAccount_args {
-    accountId: string
-  }
-  interface z_deleteCustomerPurchaseOrderAccount {
-    (
-      config: deleteCustomerPurchaseOrderAccount_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
   interface updateCustomerPurchaseOrderAccount_args {
     accountId: string
     responseFields?: string
@@ -2086,6 +1321,16 @@ declare namespace api {
   interface z_updateCustomerPurchaseOrderAccount {
     (
       config: updateCustomerPurchaseOrderAccount_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface deleteCustomerPurchaseOrderAccount_args {
+    accountId: string
+  }
+  interface z_deleteCustomerPurchaseOrderAccount {
+    (
+      config: deleteCustomerPurchaseOrderAccount_args,
       options: api.RequestOptions
     ): Promise
   }
@@ -2131,6 +1376,17 @@ declare namespace api {
     ): Promise
   }
 
+  interface validateAddress_args {
+    responseFields?: string
+  }
+  interface z_validateAddress {
+    (config: validateAddress_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_addressValidationRequest {
+    validateAddress: z_validateAddress
+  }
+
   interface z_credits {
     creditAuditEntry: z_creditAuditEntry
     creditTransaction: z_creditTransaction
@@ -2153,15 +1409,758 @@ declare namespace api {
     getTransactions: z_getTransactions
   }
 
-  interface validateAddress_args {
-    responseFields?: string
-  }
-  interface z_validateAddress {
-    (config: validateAddress_args, options: api.RequestOptions): Promise
+  interface z_attributedefinition {
+    attribute: z_attribute
+    productType: z_productType
+    producttypes: z_producttypes
+    attributes: z_attributes
   }
 
-  interface z_addressValidationRequest {
-    validateAddress: z_validateAddress
+  interface getAttribute_args {
+    attributeFQN: string
+    responseFields?: string
+  }
+  interface z_getAttribute {
+    (config: getAttribute_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_attribute {
+    getAttribute: z_getAttribute
+    getAttributes: z_getAttributes
+    createAttribute: z_createAttribute
+    updateAttribute: z_updateAttribute
+    getAttributeVocabularyValues: z_getAttributeVocabularyValues
+    addAttribute: z_addAttribute
+    deleteAttribute: z_deleteAttribute
+  }
+
+  interface getAttributes_args {
+    responseFields?: string
+  }
+  interface z_getAttributes {
+    (config: getAttributes_args, options: api.RequestOptions): Promise
+  }
+
+  interface createAttribute_args {
+    responseFields?: string
+  }
+  interface z_createAttribute {
+    (config: createAttribute_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateAttribute_args {
+    attributeFQN: string
+    responseFields?: string
+  }
+  interface z_updateAttribute {
+    (config: updateAttribute_args, options: api.RequestOptions): Promise
+  }
+
+  interface getAttributeVocabularyValues_args {
+    attributeFQN: string
+  }
+  interface z_getAttributeVocabularyValues {
+    (
+      config: getAttributeVocabularyValues_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface z_orders {
+    pickup: z_pickup
+    package: z_package
+    payment: z_payment
+    refund: z_refund
+    shipment: z_shipment
+    orderItem: z_orderItem
+    orderNote: z_orderNote
+    adjustment: z_adjustment
+    billingInfo: z_billingInfo
+    appliedDiscount: z_appliedDiscount
+    digitalPackage: z_digitalPackage
+    orderAttribute: z_orderAttribute
+    fulfillmentInfo: z_fulfillmentInfo
+    extendedProperty: z_extendedProperty
+    orderValidationResult: z_orderValidationResult
+    attributedefinition: z_attributedefinition
+    fulfillmentAction: z_fulfillmentAction
+    orderReturnableItem: z_orderReturnableItem
+  }
+
+  interface getPickup_args {
+    pickupId: string
+    responseFields?: string
+  }
+  interface z_getPickup {
+    (config: getPickup_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_pickup {
+    getPickup: z_getPickup
+    createPickup: z_createPickup
+    updatePickup: z_updatePickup
+    deletePickup: z_deletePickup
+    getAvailablePickupFulfillmentActions: z_getAvailablePickupFulfillmentActions
+  }
+
+  interface createPickup_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_createPickup {
+    (config: createPickup_args, options: api.RequestOptions): Promise
+  }
+
+  interface updatePickup_args {
+    pickupId: string
+    responseFields?: string
+  }
+  interface z_updatePickup {
+    (config: updatePickup_args, options: api.RequestOptions): Promise
+  }
+
+  interface deletePickup_args {
+    pickupId: string
+  }
+  interface z_deletePickup {
+    (config: deletePickup_args, options: api.RequestOptions): Promise
+  }
+
+  interface getAvailablePickupFulfillmentActions_args {
+    pickupId: string
+  }
+  interface z_getAvailablePickupFulfillmentActions {
+    (
+      config: getAvailablePickupFulfillmentActions_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface getPackage_args {
+    applicationKey: string
+    responseFields?: string
+  }
+  interface z_getPackage {
+    (config: getPackage_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_package {
+    getPackage: z_getPackage
+    createPackage: z_createPackage
+    updatePackage: z_updatePackage
+    deletePackage: z_deletePackage
+    getPackageLabel: z_getPackageLabel
+    getAvailablePackageFulfillmentActions: z_getAvailablePackageFulfillmentActions
+    getFile: z_getFile
+  }
+
+  interface createPackage_args {
+    responseFields?: string
+  }
+  interface z_createPackage {
+    (config: createPackage_args, options: api.RequestOptions): Promise
+  }
+
+  interface updatePackage_args {
+    applicationKey: string
+    responseFields?: string
+  }
+  interface z_updatePackage {
+    (config: updatePackage_args, options: api.RequestOptions): Promise
+  }
+
+  interface deletePackage_args {
+    applicationKey: string
+  }
+  interface z_deletePackage {
+    (config: deletePackage_args, options: api.RequestOptions): Promise
+  }
+
+  interface getPackageLabel_args {
+    packageId: string
+    returnAsBase64Png?: string
+  }
+  interface z_getPackageLabel {
+    (config: getPackageLabel_args, options: api.RequestOptions): Promise
+  }
+
+  interface getAvailablePackageFulfillmentActions_args {
+    packageId: string
+  }
+  interface z_getAvailablePackageFulfillmentActions {
+    (
+      config: getAvailablePackageFulfillmentActions_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface z_payment {
+    getPayment: z_getPayment
+    getPayments: z_getPayments
+    createPaymentAction: z_createPaymentAction
+    performPaymentAction: z_performPaymentAction
+    getAvailablePaymentActions: z_getAvailablePaymentActions
+  }
+
+  interface createPaymentAction_args {
+    checkoutId: string
+    responseFields?: string
+  }
+  interface z_createPaymentAction {
+    (config: createPaymentAction_args, options: api.RequestOptions): Promise
+  }
+
+  interface performPaymentAction_args {
+    paymentId: string
+    responseFields?: string
+  }
+  interface z_performPaymentAction {
+    (config: performPaymentAction_args, options: api.RequestOptions): Promise
+  }
+
+  interface getAvailablePaymentActions_args {
+    paymentId: string
+  }
+  interface z_getAvailablePaymentActions {
+    (
+      config: getAvailablePaymentActions_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface createRefund_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_createRefund {
+    (config: createRefund_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_refund {
+    createRefund: z_createRefund
+    resendRefundEmail: z_resendRefundEmail
+  }
+
+  interface resendRefundEmail_args {
+    refundId: string
+  }
+  interface z_resendRefundEmail {
+    (config: resendRefundEmail_args, options: api.RequestOptions): Promise
+  }
+
+  interface getShipment_args {
+    shipmentId: string
+    responseFields?: string
+  }
+  interface z_getShipment {
+    (config: getShipment_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_shipment {
+    getShipment: z_getShipment
+    deleteShipment: z_deleteShipment
+    createPackageShipments: z_createPackageShipments
+    getAvailableShipmentMethods: z_getAvailableShipmentMethods
+  }
+
+  interface deleteShipment_args {
+    shipmentId: string
+  }
+  interface z_deleteShipment {
+    (config: deleteShipment_args, options: api.RequestOptions): Promise
+  }
+
+  interface createPackageShipments_args {
+    returnId: string
+  }
+  interface z_createPackageShipments {
+    (config: createPackageShipments_args, options: api.RequestOptions): Promise
+  }
+
+  interface getAvailableShipmentMethods_args {
+    orderId: string
+    draft?: string
+  }
+  interface z_getAvailableShipmentMethods {
+    (
+      config: getAvailableShipmentMethods_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface getOrderItem_args {
+    orderItemId: string
+    responseFields?: string
+  }
+  interface z_getOrderItem {
+    (config: getOrderItem_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_orderItem {
+    getOrderItem: z_getOrderItem
+    getOrderItems: z_getOrderItems
+    updateItemDuty: z_updateItemDuty
+    createOrderItem: z_createOrderItem
+    deleteOrderItem: z_deleteOrderItem
+    updateItemQuantity: z_updateItemQuantity
+    getOrderItemViaLineId: z_getOrderItemViaLineId
+    updateItemFulfillment: z_updateItemFulfillment
+    updateItemProductPrice: z_updateItemProductPrice
+    updateOrderItemDiscount: z_updateOrderItemDiscount
+    splitItem: z_splitItem
+    updateItemDestination: z_updateItemDestination
+    bulkUpdateItemDestinations: z_bulkUpdateItemDestinations
+  }
+
+  interface getOrderItems_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_getOrderItems {
+    (config: getOrderItems_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateItemDuty_args {
+    dutyAmount: string
+    responseFields?: string
+  }
+  interface z_updateItemDuty {
+    (config: updateItemDuty_args, options: api.RequestOptions): Promise
+  }
+
+  interface createOrderItem_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_createOrderItem {
+    (config: createOrderItem_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateItemQuantity_args {
+    quantity: string
+    responseFields?: string
+  }
+  interface z_updateItemQuantity {
+    (config: updateItemQuantity_args, options: api.RequestOptions): Promise
+  }
+
+  interface getOrderItemViaLineId_args {
+    lineId: string
+    responseFields?: string
+  }
+  interface z_getOrderItemViaLineId {
+    (config: getOrderItemViaLineId_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateItemFulfillment_args {
+    orderItemId: string
+    responseFields?: string
+  }
+  interface z_updateItemFulfillment {
+    (config: updateItemFulfillment_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateItemProductPrice_args {
+    price: string
+    responseFields?: string
+  }
+  interface z_updateItemProductPrice {
+    (config: updateItemProductPrice_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateOrderItemDiscount_args {
+    discountId: string
+    responseFields?: string
+  }
+  interface z_updateOrderItemDiscount {
+    (config: updateOrderItemDiscount_args, options: api.RequestOptions): Promise
+  }
+
+  interface getOrderNote_args {
+    noteId: string
+    responseFields?: string
+  }
+  interface z_getOrderNote {
+    (config: getOrderNote_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_orderNote {
+    getOrderNote: z_getOrderNote
+    getOrderNotes: z_getOrderNotes
+    createOrderNote: z_createOrderNote
+    updateOrderNote: z_updateOrderNote
+    deleteOrderNote: z_deleteOrderNote
+    getReturnNote: z_getReturnNote
+    getReturnNotes: z_getReturnNotes
+    createReturnNote: z_createReturnNote
+    updateReturnNote: z_updateReturnNote
+    deleteReturnNote: z_deleteReturnNote
+    getCheckoutNote: z_getCheckoutNote
+    getCheckoutNotes: z_getCheckoutNotes
+    createCheckoutNote: z_createCheckoutNote
+    updateCheckoutNote: z_updateCheckoutNote
+    deleteCheckoutNote: z_deleteCheckoutNote
+  }
+
+  interface getOrderNotes_args {
+    orderId: string
+  }
+  interface z_getOrderNotes {
+    (config: getOrderNotes_args, options: api.RequestOptions): Promise
+  }
+
+  interface createOrderNote_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_createOrderNote {
+    (config: createOrderNote_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateOrderNote_args {
+    noteId: string
+    responseFields?: string
+  }
+  interface z_updateOrderNote {
+    (config: updateOrderNote_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteOrderNote_args {
+    noteId: string
+  }
+  interface z_deleteOrderNote {
+    (config: deleteOrderNote_args, options: api.RequestOptions): Promise
+  }
+
+  interface applyAdjustment_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_applyAdjustment {
+    (config: applyAdjustment_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_adjustment {
+    applyAdjustment: z_applyAdjustment
+    removeAdjustment: z_removeAdjustment
+    applyHandlingAdjustment: z_applyHandlingAdjustment
+    applyShippingAdjustment: z_applyShippingAdjustment
+    removeHandlingAdjustment: z_removeHandlingAdjustment
+    removeShippingAdjustment: z_removeShippingAdjustment
+  }
+
+  interface removeAdjustment_args {
+    orderId: string
+    version?: string
+  }
+  interface z_removeAdjustment {
+    (config: removeAdjustment_args, options: api.RequestOptions): Promise
+  }
+
+  interface applyHandlingAdjustment_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_applyHandlingAdjustment {
+    (config: applyHandlingAdjustment_args, options: api.RequestOptions): Promise
+  }
+
+  interface applyShippingAdjustment_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_applyShippingAdjustment {
+    (config: applyShippingAdjustment_args, options: api.RequestOptions): Promise
+  }
+
+  interface removeHandlingAdjustment_args {
+    orderId: string
+    version?: string
+  }
+  interface z_removeHandlingAdjustment {
+    (
+      config: removeHandlingAdjustment_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface removeShippingAdjustment_args {
+    orderId: string
+    version?: string
+  }
+  interface z_removeShippingAdjustment {
+    (
+      config: removeShippingAdjustment_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface getBillingInfo_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_getBillingInfo {
+    (config: getBillingInfo_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_billingInfo {
+    getBillingInfo: z_getBillingInfo
+    setBillingInfo: z_setBillingInfo
+  }
+
+  interface setBillingInfo_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_setBillingInfo {
+    (config: setBillingInfo_args, options: api.RequestOptions): Promise
+  }
+
+  interface applyCoupon_args {
+    couponCode: string
+    responseFields?: string
+  }
+  interface z_applyCoupon {
+    (config: applyCoupon_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_appliedDiscount {
+    applyCoupon: z_applyCoupon
+    removeCoupon: z_removeCoupon
+    removeCoupons: z_removeCoupons
+  }
+
+  interface removeCoupon_args {
+    couponcode: string
+  }
+  interface z_removeCoupon {
+    (config: removeCoupon_args, options: api.RequestOptions): Promise
+  }
+
+  interface removeCoupons_args {
+    checkoutId: string
+  }
+  interface z_removeCoupons {
+    (config: removeCoupons_args, options: api.RequestOptions): Promise
+  }
+
+  interface getDigitalPackage_args {
+    digitalPackageId: string
+    responseFields?: string
+  }
+  interface z_getDigitalPackage {
+    (config: getDigitalPackage_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_digitalPackage {
+    getDigitalPackage: z_getDigitalPackage
+    createDigitalPackage: z_createDigitalPackage
+    updateDigitalPackage: z_updateDigitalPackage
+    deleteDigitalPackage: z_deleteDigitalPackage
+    getAvailableDigitalPackageFulfillmentActions: z_getAvailableDigitalPackageFulfillmentActions
+  }
+
+  interface createDigitalPackage_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_createDigitalPackage {
+    (config: createDigitalPackage_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateDigitalPackage_args {
+    digitalPackageId: string
+    responseFields?: string
+  }
+  interface z_updateDigitalPackage {
+    (config: updateDigitalPackage_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteDigitalPackage_args {
+    digitalPackageId: string
+  }
+  interface z_deleteDigitalPackage {
+    (config: deleteDigitalPackage_args, options: api.RequestOptions): Promise
+  }
+
+  interface getAvailableDigitalPackageFulfillmentActions_args {
+    digitalPackageId: string
+  }
+  interface z_getAvailableDigitalPackageFulfillmentActions {
+    (
+      config: getAvailableDigitalPackageFulfillmentActions_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface getOrderAttributes_args {
+    orderId: string
+  }
+  interface z_getOrderAttributes {
+    (config: getOrderAttributes_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_orderAttribute {
+    getOrderAttributes: z_getOrderAttributes
+    createOrderAttributes: z_createOrderAttributes
+    updateOrderAttributes: z_updateOrderAttributes
+    getCheckoutAttributes: z_getCheckoutAttributes
+    updateCheckoutAttribute: z_updateCheckoutAttribute
+    createCheckoutAttributes: z_createCheckoutAttributes
+  }
+
+  interface createOrderAttributes_args {
+    orderId: string
+  }
+  interface z_createOrderAttributes {
+    (config: createOrderAttributes_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateOrderAttributes_args {
+    orderId: string
+    removeMissing?: string
+  }
+  interface z_updateOrderAttributes {
+    (config: updateOrderAttributes_args, options: api.RequestOptions): Promise
+  }
+
+  interface getFulfillmentInfo_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_getFulfillmentInfo {
+    (config: getFulfillmentInfo_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_fulfillmentInfo {
+    getFulfillmentInfo: z_getFulfillmentInfo
+    setFulFillmentInfo: z_setFulFillmentInfo
+  }
+
+  interface setFulFillmentInfo_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_setFulFillmentInfo {
+    (config: setFulFillmentInfo_args, options: api.RequestOptions): Promise
+  }
+
+  interface getExtendedProperties_args {
+    checkoutId: string
+  }
+  interface z_getExtendedProperties {
+    (config: getExtendedProperties_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_extendedProperty {
+    getExtendedProperties: z_getExtendedProperties
+    addExtendedProperties: z_addExtendedProperties
+    updateExtendedProperty: z_updateExtendedProperty
+    deleteExtendedProperty: z_deleteExtendedProperty
+    updateExtendedProperties: z_updateExtendedProperties
+    deleteExtendedProperties: z_deleteExtendedProperties
+  }
+
+  interface addExtendedProperties_args {
+    checkoutId: string
+  }
+  interface z_addExtendedProperties {
+    (config: addExtendedProperties_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateExtendedProperty_args {
+    key: string
+    responseFields?: string
+  }
+  interface z_updateExtendedProperty {
+    (config: updateExtendedProperty_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteExtendedProperty_args {
+    key: string
+  }
+  interface z_deleteExtendedProperty {
+    (config: deleteExtendedProperty_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateExtendedProperties_args {
+    checkoutId: string
+    upsert?: string
+  }
+  interface z_updateExtendedProperties {
+    (
+      config: updateExtendedProperties_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface deleteExtendedProperties_args {
+    checkoutId: string
+  }
+  interface z_deleteExtendedProperties {
+    (
+      config: deleteExtendedProperties_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface addValidationResult_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_addValidationResult {
+    (config: addValidationResult_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_orderValidationResult {
+    addValidationResult: z_addValidationResult
+    getValidationResults: z_getValidationResults
+  }
+
+  interface getValidationResults_args {
+    orderId: string
+  }
+  interface z_getValidationResults {
+    (config: getValidationResults_args, options: api.RequestOptions): Promise
+  }
+
+  interface performFulfillmentAction_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_performFulfillmentAction {
+    (
+      config: performFulfillmentAction_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface z_fulfillmentAction {
+    performFulfillmentAction: z_performFulfillmentAction
+    resendPackageFulfillmentEmail: z_resendPackageFulfillmentEmail
+  }
+
+  interface resendPackageFulfillmentEmail_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_resendPackageFulfillmentEmail {
+    (
+      config: resendPackageFulfillmentEmail_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface getOrderReturnableItems_args {
+    orderId: string
+    responseFields?: string
+  }
+  interface z_getOrderReturnableItems {
+    (config: getOrderReturnableItems_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_orderReturnableItem {
+    getOrderReturnableItems: z_getOrderReturnableItems
   }
 
   interface getTargetRule_args {
@@ -2175,9 +2174,9 @@ declare namespace api {
   interface z_targetRule {
     getTargetRule: z_getTargetRule
     getTargetRules: z_getTargetRules
-    deleteTargetRule: z_deleteTargetRule
-    updateTargetRule: z_updateTargetRule
     createTargetRule: z_createTargetRule
+    updateTargetRule: z_updateTargetRule
+    deleteTargetRule: z_deleteTargetRule
     validateTargetRule: z_validateTargetRule
   }
 
@@ -2188,11 +2187,11 @@ declare namespace api {
     (config: getTargetRules_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteTargetRule_args {
-    code: string
+  interface createTargetRule_args {
+    responseFields?: string
   }
-  interface z_deleteTargetRule {
-    (config: deleteTargetRule_args, options: api.RequestOptions): Promise
+  interface z_createTargetRule {
+    (config: createTargetRule_args, options: api.RequestOptions): Promise
   }
 
   interface updateTargetRule_args {
@@ -2203,16 +2202,120 @@ declare namespace api {
     (config: updateTargetRule_args, options: api.RequestOptions): Promise
   }
 
-  interface createTargetRule_args {
-    responseFields?: string
+  interface deleteTargetRule_args {
+    code: string
   }
-  interface z_createTargetRule {
-    (config: createTargetRule_args, options: api.RequestOptions): Promise
+  interface z_deleteTargetRule {
+    (config: deleteTargetRule_args, options: api.RequestOptions): Promise
   }
 
   interface validateTargetRule_args {}
   interface z_validateTargetRule {
     (config: validateTargetRule_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_admin {
+    location: z_location
+    locationType: z_locationType
+    locations: z_locations
+    facet: z_facet
+    product: z_product
+    search: z_search
+    category: z_category
+    discount: z_discount
+    couponSet: z_couponSet
+    priceList: z_priceList
+    couponsets: z_couponsets
+    publishingScope: z_publishingScope
+    masterCatalog: z_masterCatalog
+    products: z_products
+    softAllocation: z_softAllocation
+    discountSettings: z_discountSettings
+    productReservation: z_productReservation
+    locationInventory: z_locationInventory
+    attributedefinition: z_attributedefinition
+    discounts: z_discounts
+    pricelists: z_pricelists
+    productSortDefinition: z_productSortDefinition
+    shippingProfile: z_shippingProfile
+    profiles: z_profiles
+    carrierConfiguration: z_carrierConfiguration
+  }
+
+  interface addLocation_args {
+    responseFields?: string
+  }
+  interface z_addLocation {
+    (config: addLocation_args, options: api.RequestOptions): Promise
+  }
+
+  interface getLocations_args {
+    responseFields?: string
+  }
+  interface z_getLocations {
+    (config: getLocations_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateLocation_args {
+    locationCode: string
+    responseFields?: string
+  }
+  interface z_updateLocation {
+    (config: updateLocation_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteLocation_args {
+    locationCode: string
+  }
+  interface z_deleteLocation {
+    (config: deleteLocation_args, options: api.RequestOptions): Promise
+  }
+
+  interface getLocationType_args {
+    locationTypeCode: string
+    responseFields?: string
+  }
+  interface z_getLocationType {
+    (config: getLocationType_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_locationType {
+    getLocationType: z_getLocationType
+    addLocationType: z_addLocationType
+    getLocationTypes: z_getLocationTypes
+    updateLocationType: z_updateLocationType
+    deleteLocationType: z_deleteLocationType
+  }
+
+  interface addLocationType_args {
+    responseFields?: string
+  }
+  interface z_addLocationType {
+    (config: addLocationType_args, options: api.RequestOptions): Promise
+  }
+
+  interface getLocationTypes_args {}
+  interface z_getLocationTypes {
+    (config: getLocationTypes_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateLocationType_args {
+    locationTypeCode: string
+    responseFields?: string
+  }
+  interface z_updateLocationType {
+    (config: updateLocationType_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteLocationType_args {
+    locationTypeCode: string
+  }
+  interface z_deleteLocationType {
+    (config: deleteLocationType_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_locations {
+    attributedefinition: z_attributedefinition
   }
 
   interface z_carts {
@@ -2314,17 +2417,17 @@ declare namespace api {
     fraudScreenResponse: z_fraudScreenResponse
   }
 
-  interface delete_args {
-    cardId: string
+  interface create_args {
+    responseFields?: string
   }
-  interface z_delete {
-    (config: delete_args, options: api.RequestOptions): Promise
+  interface z_create {
+    (config: create_args, options: api.RequestOptions): Promise
   }
 
   interface z_publicCard {
-    delete: z_delete
-    update: z_update
     create: z_create
+    update: z_update
+    delete: z_delete
     getGiftCardBalance: z_getGiftCardBalance
     getUnregisteredGiftCardBalance: z_getUnregisteredGiftCardBalance
   }
@@ -2337,11 +2440,11 @@ declare namespace api {
     (config: update_args, options: api.RequestOptions): Promise
   }
 
-  interface create_args {
-    responseFields?: string
+  interface delete_args {
+    cardId: string
   }
-  interface z_create {
-    (config: create_args, options: api.RequestOptions): Promise
+  interface z_delete {
+    (config: delete_args, options: api.RequestOptions): Promise
   }
 
   interface getGiftCardBalance_args {
@@ -2409,11 +2512,12 @@ declare namespace api {
     (config: getReturnNotes_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteReturnNote_args {
-    noteId: string
+  interface createReturnNote_args {
+    returnId: string
+    responseFields?: string
   }
-  interface z_deleteReturnNote {
-    (config: deleteReturnNote_args, options: api.RequestOptions): Promise
+  interface z_createReturnNote {
+    (config: createReturnNote_args, options: api.RequestOptions): Promise
   }
 
   interface updateReturnNote_args {
@@ -2424,116 +2528,11 @@ declare namespace api {
     (config: updateReturnNote_args, options: api.RequestOptions): Promise
   }
 
-  interface createReturnNote_args {
-    returnId: string
-    responseFields?: string
+  interface deleteReturnNote_args {
+    noteId: string
   }
-  interface z_createReturnNote {
-    (config: createReturnNote_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_admin {
-    location: z_location
-    locationType: z_locationType
-    locations: z_locations
-    facet: z_facet
-    product: z_product
-    search: z_search
-    category: z_category
-    discount: z_discount
-    priceList: z_priceList
-    couponSet: z_couponSet
-    couponsets: z_couponsets
-    publishingScope: z_publishingScope
-    masterCatalog: z_masterCatalog
-    products: z_products
-    softAllocation: z_softAllocation
-    discountSettings: z_discountSettings
-    productReservation: z_productReservation
-    locationInventory: z_locationInventory
-    attributedefinition: z_attributedefinition
-    discounts: z_discounts
-    pricelists: z_pricelists
-    productSortDefinition: z_productSortDefinition
-    shippingProfile: z_shippingProfile
-    profiles: z_profiles
-    carrierConfiguration: z_carrierConfiguration
-  }
-
-  interface addLocation_args {
-    responseFields?: string
-  }
-  interface z_addLocation {
-    (config: addLocation_args, options: api.RequestOptions): Promise
-  }
-
-  interface getLocations_args {
-    responseFields?: string
-  }
-  interface z_getLocations {
-    (config: getLocations_args, options: api.RequestOptions): Promise
-  }
-
-  interface deleteLocation_args {
-    locationCode: string
-  }
-  interface z_deleteLocation {
-    (config: deleteLocation_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateLocation_args {
-    locationCode: string
-    responseFields?: string
-  }
-  interface z_updateLocation {
-    (config: updateLocation_args, options: api.RequestOptions): Promise
-  }
-
-  interface getLocationType_args {
-    locationTypeCode: string
-    responseFields?: string
-  }
-  interface z_getLocationType {
-    (config: getLocationType_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_locationType {
-    getLocationType: z_getLocationType
-    addLocationType: z_addLocationType
-    getLocationTypes: z_getLocationTypes
-    deleteLocationType: z_deleteLocationType
-    updateLocationType: z_updateLocationType
-  }
-
-  interface addLocationType_args {
-    responseFields?: string
-  }
-  interface z_addLocationType {
-    (config: addLocationType_args, options: api.RequestOptions): Promise
-  }
-
-  interface getLocationTypes_args {}
-  interface z_getLocationTypes {
-    (config: getLocationTypes_args, options: api.RequestOptions): Promise
-  }
-
-  interface deleteLocationType_args {
-    locationTypeCode: string
-  }
-  interface z_deleteLocationType {
-    (config: deleteLocationType_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateLocationType_args {
-    locationTypeCode: string
-    responseFields?: string
-  }
-  interface z_updateLocationType {
-    (config: updateLocationType_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_locations {
-    attributedefinition: z_attributedefinition
+  interface z_deleteReturnNote {
+    (config: deleteReturnNote_args, options: api.RequestOptions): Promise
   }
 
   interface z_catalog {
@@ -2600,11 +2599,11 @@ declare namespace api {
     getProduct: z_getProduct
     addProduct: z_addProduct
     getProducts: z_getProducts
-    deleteProduct: z_deleteProduct
     updateProduct: z_updateProduct
+    deleteProduct: z_deleteProduct
     renameProductCodes: z_renameProductCodes
-    addProductInCatalog: z_addProductInCatalog
     getProductInCatalog: z_getProductInCatalog
+    addProductInCatalog: z_addProductInCatalog
     getProductInCatalogs: z_getProductInCatalogs
     updateProductInCatalog: z_updateProductInCatalog
     deleteProductInCatalog: z_deleteProductInCatalog
@@ -2625,13 +2624,6 @@ declare namespace api {
     (config: getProducts_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteProduct_args {
-    productCode: string
-  }
-  interface z_deleteProduct {
-    (config: deleteProduct_args, options: api.RequestOptions): Promise
-  }
-
   interface updateProduct_args {
     productCode: string
     responseFields?: string
@@ -2640,17 +2632,16 @@ declare namespace api {
     (config: updateProduct_args, options: api.RequestOptions): Promise
   }
 
+  interface deleteProduct_args {
+    productCode: string
+  }
+  interface z_deleteProduct {
+    (config: deleteProduct_args, options: api.RequestOptions): Promise
+  }
+
   interface renameProductCodes_args {}
   interface z_renameProductCodes {
     (config: renameProductCodes_args, options: api.RequestOptions): Promise
-  }
-
-  interface addProductInCatalog_args {
-    productCode: string
-    responseFields?: string
-  }
-  interface z_addProductInCatalog {
-    (config: addProductInCatalog_args, options: api.RequestOptions): Promise
   }
 
   interface getProductInCatalog_args {
@@ -2659,6 +2650,14 @@ declare namespace api {
   }
   interface z_getProductInCatalog {
     (config: getProductInCatalog_args, options: api.RequestOptions): Promise
+  }
+
+  interface addProductInCatalog_args {
+    productCode: string
+    responseFields?: string
+  }
+  interface z_addProductInCatalog {
+    (config: addProductInCatalog_args, options: api.RequestOptions): Promise
   }
 
   interface getProductInCatalogs_args {
@@ -2711,13 +2710,6 @@ declare namespace api {
     (config: updateSettings_args, options: api.RequestOptions): Promise
   }
 
-  interface addSearchTuningRule_args {
-    responseFields?: string
-  }
-  interface z_addSearchTuningRule {
-    (config: addSearchTuningRule_args, options: api.RequestOptions): Promise
-  }
-
   interface getSearchTuningRule_args {
     searchTuningRuleCode: string
     responseFields?: string
@@ -2726,11 +2718,18 @@ declare namespace api {
     (config: getSearchTuningRule_args, options: api.RequestOptions): Promise
   }
 
-  interface addSynonymDefinition_args {
+  interface addSearchTuningRule_args {
     responseFields?: string
   }
-  interface z_addSynonymDefinition {
-    (config: addSynonymDefinition_args, options: api.RequestOptions): Promise
+  interface z_addSearchTuningRule {
+    (config: addSearchTuningRule_args, options: api.RequestOptions): Promise
+  }
+
+  interface getSearchTuningRules_args {
+    responseFields?: string
+  }
+  interface z_getSearchTuningRules {
+    (config: getSearchTuningRules_args, options: api.RequestOptions): Promise
   }
 
   interface getSynonymDefinition_args {
@@ -2741,11 +2740,11 @@ declare namespace api {
     (config: getSynonymDefinition_args, options: api.RequestOptions): Promise
   }
 
-  interface getSearchTuningRules_args {
+  interface addSynonymDefinition_args {
     responseFields?: string
   }
-  interface z_getSearchTuningRules {
-    (config: getSearchTuningRules_args, options: api.RequestOptions): Promise
+  interface z_addSynonymDefinition {
+    (config: addSynonymDefinition_args, options: api.RequestOptions): Promise
   }
 
   interface getSynonymDefinitions_args {
@@ -2770,19 +2769,19 @@ declare namespace api {
     (config: deleteSearchTuningRule_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteSynonymDefinition_args {
-    synonymId: string
-  }
-  interface z_deleteSynonymDefinition {
-    (config: deleteSynonymDefinition_args, options: api.RequestOptions): Promise
-  }
-
   interface updateSynonymDefinition_args {
     synonymId: string
     responseFields?: string
   }
   interface z_updateSynonymDefinition {
     (config: updateSynonymDefinition_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteSynonymDefinition_args {
+    synonymId: string
+  }
+  interface z_deleteSynonymDefinition {
+    (config: deleteSynonymDefinition_args, options: api.RequestOptions): Promise
   }
 
   interface getSearchTuningRuleSortFields_args {
@@ -2840,8 +2839,8 @@ declare namespace api {
     addCategory: z_addCategory
     getCategories: z_getCategories
     updateCategory: z_updateCategory
-    deleteCategoryById: z_deleteCategoryById
     getChildCategories: z_getChildCategories
+    deleteCategoryById: z_deleteCategoryById
     addProductsToCategory: z_addProductsToCategory
     validateDynamicExpression: z_validateDynamicExpression
     removeProductsFromCategory: z_removeProductsFromCategory
@@ -2871,20 +2870,20 @@ declare namespace api {
     (config: updateCategory_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteCategoryById_args {
-    categoryId: string
-    reassignToParent?: string
-  }
-  interface z_deleteCategoryById {
-    (config: deleteCategoryById_args, options: api.RequestOptions): Promise
-  }
-
   interface getChildCategories_args {
     categoryId: string
     responseFields?: string
   }
   interface z_getChildCategories {
     (config: getChildCategories_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteCategoryById_args {
+    categoryId: string
+    reassignToParent?: string
+  }
+  interface z_deleteCategoryById {
+    (config: deleteCategoryById_args, options: api.RequestOptions): Promise
   }
 
   interface addProductsToCategory_args {
@@ -2995,83 +2994,6 @@ declare namespace api {
     (config: updateDiscountContent_args, options: api.RequestOptions): Promise
   }
 
-  interface addPriceList_args {
-    responseFields?: string
-  }
-  interface z_addPriceList {
-    (config: addPriceList_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_priceList {
-    addPriceList: z_addPriceList
-    getPriceList: z_getPriceList
-    getPriceLists: z_getPriceLists
-    deletePriceList: z_deletePriceList
-    updatePriceList: z_updatePriceList
-    bulkAddPriceListEntries: z_bulkAddPriceListEntries
-    bulkUpdatePriceListEntries: z_bulkUpdatePriceListEntries
-    bulkDeletePriceListEntries: z_bulkDeletePriceListEntries
-    getResolvedPriceList: z_getResolvedPriceList
-  }
-
-  interface getPriceList_args {
-    priceListCode: string
-    responseFields?: string
-  }
-  interface z_getPriceList {
-    (config: getPriceList_args, options: api.RequestOptions): Promise
-  }
-
-  interface getPriceLists_args {
-    responseFields?: string
-  }
-  interface z_getPriceLists {
-    (config: getPriceLists_args, options: api.RequestOptions): Promise
-  }
-
-  interface deletePriceList_args {
-    priceListCode: string
-    cascadeDeleteEntries?: string
-  }
-  interface z_deletePriceList {
-    (config: deletePriceList_args, options: api.RequestOptions): Promise
-  }
-
-  interface updatePriceList_args {
-    priceListCode: string
-    responseFields?: string
-  }
-  interface z_updatePriceList {
-    (config: updatePriceList_args, options: api.RequestOptions): Promise
-  }
-
-  interface bulkAddPriceListEntries_args {
-    invalidateCache?: string
-  }
-  interface z_bulkAddPriceListEntries {
-    (config: bulkAddPriceListEntries_args, options: api.RequestOptions): Promise
-  }
-
-  interface bulkUpdatePriceListEntries_args {
-    invalidateCache?: string
-  }
-  interface z_bulkUpdatePriceListEntries {
-    (
-      config: bulkUpdatePriceListEntries_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
-  interface bulkDeletePriceListEntries_args {
-    invalidateCache?: string
-  }
-  interface z_bulkDeletePriceListEntries {
-    (
-      config: bulkDeletePriceListEntries_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
   interface getCouponSet_args {
     couponSetCode: string
     responseFields?: string
@@ -3134,6 +3056,83 @@ declare namespace api {
     ): Promise
   }
 
+  interface getPriceList_args {
+    priceListCode: string
+    responseFields?: string
+  }
+  interface z_getPriceList {
+    (config: getPriceList_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_priceList {
+    getPriceList: z_getPriceList
+    addPriceList: z_addPriceList
+    getPriceLists: z_getPriceLists
+    updatePriceList: z_updatePriceList
+    deletePriceList: z_deletePriceList
+    bulkAddPriceListEntries: z_bulkAddPriceListEntries
+    bulkDeletePriceListEntries: z_bulkDeletePriceListEntries
+    bulkUpdatePriceListEntries: z_bulkUpdatePriceListEntries
+    getResolvedPriceList: z_getResolvedPriceList
+  }
+
+  interface addPriceList_args {
+    responseFields?: string
+  }
+  interface z_addPriceList {
+    (config: addPriceList_args, options: api.RequestOptions): Promise
+  }
+
+  interface getPriceLists_args {
+    responseFields?: string
+  }
+  interface z_getPriceLists {
+    (config: getPriceLists_args, options: api.RequestOptions): Promise
+  }
+
+  interface updatePriceList_args {
+    priceListCode: string
+    responseFields?: string
+  }
+  interface z_updatePriceList {
+    (config: updatePriceList_args, options: api.RequestOptions): Promise
+  }
+
+  interface deletePriceList_args {
+    priceListCode: string
+    cascadeDeleteEntries?: string
+  }
+  interface z_deletePriceList {
+    (config: deletePriceList_args, options: api.RequestOptions): Promise
+  }
+
+  interface bulkAddPriceListEntries_args {
+    invalidateCache?: string
+  }
+  interface z_bulkAddPriceListEntries {
+    (config: bulkAddPriceListEntries_args, options: api.RequestOptions): Promise
+  }
+
+  interface bulkDeletePriceListEntries_args {
+    invalidateCache?: string
+  }
+  interface z_bulkDeletePriceListEntries {
+    (
+      config: bulkDeletePriceListEntries_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface bulkUpdatePriceListEntries_args {
+    invalidateCache?: string
+  }
+  interface z_bulkUpdatePriceListEntries {
+    (
+      config: bulkUpdatePriceListEntries_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
   interface z_couponsets {
     coupon: z_coupon
     assignedDiscount: z_assignedDiscount
@@ -3149,17 +3148,10 @@ declare namespace api {
 
   interface z_coupon {
     getCoupon: z_getCoupon
-    addCoupons: z_addCoupons
     getCoupons: z_getCoupons
+    addCoupons: z_addCoupons
     deleteCoupon: z_deleteCoupon
     deleteCoupons: z_deleteCoupons
-  }
-
-  interface addCoupons_args {
-    couponSetCode: string
-  }
-  interface z_addCoupons {
-    (config: addCoupons_args, options: api.RequestOptions): Promise
   }
 
   interface getCoupons_args {
@@ -3168,6 +3160,13 @@ declare namespace api {
   }
   interface z_getCoupons {
     (config: getCoupons_args, options: api.RequestOptions): Promise
+  }
+
+  interface addCoupons_args {
+    couponSetCode: string
+  }
+  interface z_addCoupons {
+    (config: addCoupons_args, options: api.RequestOptions): Promise
   }
 
   interface deleteCoupon_args {
@@ -3211,15 +3210,18 @@ declare namespace api {
     (config: getAssignedDiscounts_args, options: api.RequestOptions): Promise
   }
 
-  interface publishDrafts_args {}
-  interface z_publishDrafts {
-    (config: publishDrafts_args, options: api.RequestOptions): Promise
+  interface getPublishSet_args {
+    publishSetCode: string
+    responseFields?: string
+  }
+  interface z_getPublishSet {
+    (config: getPublishSet_args, options: api.RequestOptions): Promise
   }
 
   interface z_publishingScope {
-    publishDrafts: z_publishDrafts
-    discardDrafts: z_discardDrafts
     getPublishSet: z_getPublishSet
+    discardDrafts: z_discardDrafts
+    publishDrafts: z_publishDrafts
     getPublishSets: z_getPublishSets
     deletePublishSet: z_deletePublishSet
     assignProductsToPublishSet: z_assignProductsToPublishSet
@@ -3230,12 +3232,9 @@ declare namespace api {
     (config: discardDrafts_args, options: api.RequestOptions): Promise
   }
 
-  interface getPublishSet_args {
-    publishSetCode: string
-    responseFields?: string
-  }
-  interface z_getPublishSet {
-    (config: getPublishSet_args, options: api.RequestOptions): Promise
+  interface publishDrafts_args {}
+  interface z_publishDrafts {
+    (config: publishDrafts_args, options: api.RequestOptions): Promise
   }
 
   interface getPublishSets_args {
@@ -3313,8 +3312,8 @@ declare namespace api {
     getExtras: z_getExtras
     updateExtra: z_updateExtra
     deleteExtra: z_deleteExtra
-    addExtraValueLocalizedDeltaPrice: z_addExtraValueLocalizedDeltaPrice
     getExtraValueLocalizedDeltaPrice: z_getExtraValueLocalizedDeltaPrice
+    addExtraValueLocalizedDeltaPrice: z_addExtraValueLocalizedDeltaPrice
     getExtraValueLocalizedDeltaPrices: z_getExtraValueLocalizedDeltaPrices
     updateExtraValueLocalizedDeltaPrice: z_updateExtraValueLocalizedDeltaPrice
     deleteExtraValueLocalizedDeltaPrice: z_deleteExtraValueLocalizedDeltaPrice
@@ -3351,17 +3350,6 @@ declare namespace api {
     (config: deleteExtra_args, options: api.RequestOptions): Promise
   }
 
-  interface addExtraValueLocalizedDeltaPrice_args {
-    value: string
-    responseFields?: string
-  }
-  interface z_addExtraValueLocalizedDeltaPrice {
-    (
-      config: addExtraValueLocalizedDeltaPrice_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
   interface getExtraValueLocalizedDeltaPrice_args {
     currencyCode: string
     responseFields?: string
@@ -3369,6 +3357,17 @@ declare namespace api {
   interface z_getExtraValueLocalizedDeltaPrice {
     (
       config: getExtraValueLocalizedDeltaPrice_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface addExtraValueLocalizedDeltaPrice_args {
+    value: string
+    responseFields?: string
+  }
+  interface z_addExtraValueLocalizedDeltaPrice {
+    (
+      config: addExtraValueLocalizedDeltaPrice_args,
       options: api.RequestOptions
     ): Promise
   }
@@ -3414,28 +3413,28 @@ declare namespace api {
     ): Promise
   }
 
-  interface addOption_args {
-    productTypeId: string
-    responseFields?: string
-  }
-  interface z_addOption {
-    (config: addOption_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_productOption {
-    addOption: z_addOption
-    getOption: z_getOption
-    getOptions: z_getOptions
-    updateOption: z_updateOption
-    deleteOption: z_deleteOption
-  }
-
   interface getOption_args {
     attributeFQN: string
     responseFields?: string
   }
   interface z_getOption {
     (config: getOption_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_productOption {
+    getOption: z_getOption
+    addOption: z_addOption
+    getOptions: z_getOptions
+    updateOption: z_updateOption
+    deleteOption: z_deleteOption
+  }
+
+  interface addOption_args {
+    productTypeId: string
+    responseFields?: string
+  }
+  interface z_addOption {
+    (config: addOption_args, options: api.RequestOptions): Promise
   }
 
   interface getOptions_args {
@@ -3472,8 +3471,8 @@ declare namespace api {
     getProperty: z_getProperty
     addProperty: z_addProperty
     getProperties: z_getProperties
-    deleteProperty: z_deleteProperty
     updateProperty: z_updateProperty
+    deleteProperty: z_deleteProperty
     getPropertyValueLocalizedContent: z_getPropertyValueLocalizedContent
     addPropertyValueLocalizedContent: z_addPropertyValueLocalizedContent
     getPropertyValueLocalizedContents: z_getPropertyValueLocalizedContents
@@ -3497,19 +3496,19 @@ declare namespace api {
     (config: getProperties_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteProperty_args {
-    attributeFQN: string
-  }
-  interface z_deleteProperty {
-    (config: deleteProperty_args, options: api.RequestOptions): Promise
-  }
-
   interface updateProperty_args {
     attributeFQN: string
     responseFields?: string
   }
   interface z_updateProperty {
     (config: updateProperty_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteProperty_args {
+    attributeFQN: string
+  }
+  interface z_deleteProperty {
+    (config: deleteProperty_args, options: api.RequestOptions): Promise
   }
 
   interface getPropertyValueLocalizedContent_args {
@@ -3575,28 +3574,28 @@ declare namespace api {
     ): Promise
   }
 
-  interface addLocationInventory_args {
-    locationCode: string
-    performUpserts?: string
-  }
-  interface z_addLocationInventory {
-    (config: addLocationInventory_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_locationInventory {
-    addLocationInventory: z_addLocationInventory
-    getLocationInventory: z_getLocationInventory
-    getLocationInventories: z_getLocationInventories
-    updateLocationInventory: z_updateLocationInventory
-    deleteLocationInventory: z_deleteLocationInventory
-  }
-
   interface getLocationInventory_args {
     productCode: string
     responseFields?: string
   }
   interface z_getLocationInventory {
     (config: getLocationInventory_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_locationInventory {
+    getLocationInventory: z_getLocationInventory
+    addLocationInventory: z_addLocationInventory
+    getLocationInventories: z_getLocationInventories
+    updateLocationInventory: z_updateLocationInventory
+    deleteLocationInventory: z_deleteLocationInventory
+  }
+
+  interface addLocationInventory_args {
+    locationCode: string
+    performUpserts?: string
+  }
+  interface z_addLocationInventory {
+    (config: addLocationInventory_args, options: api.RequestOptions): Promise
   }
 
   interface getLocationInventories_args {
@@ -3631,17 +3630,12 @@ declare namespace api {
 
   interface z_softAllocation {
     getSoftAllocation: z_getSoftAllocation
-    addSoftAllocations: z_addSoftAllocations
     getSoftAllocations: z_getSoftAllocations
-    deleteSoftAllocation: z_deleteSoftAllocation
+    addSoftAllocations: z_addSoftAllocations
     renewSoftAllocations: z_renewSoftAllocations
+    deleteSoftAllocation: z_deleteSoftAllocation
     updateSoftAllocations: z_updateSoftAllocations
     convertToProductReservation: z_convertToProductReservation
-  }
-
-  interface addSoftAllocations_args {}
-  interface z_addSoftAllocations {
-    (config: addSoftAllocations_args, options: api.RequestOptions): Promise
   }
 
   interface getSoftAllocations_args {
@@ -3651,16 +3645,21 @@ declare namespace api {
     (config: getSoftAllocations_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteSoftAllocation_args {
-    softAllocationId: string
-  }
-  interface z_deleteSoftAllocation {
-    (config: deleteSoftAllocation_args, options: api.RequestOptions): Promise
+  interface addSoftAllocations_args {}
+  interface z_addSoftAllocations {
+    (config: addSoftAllocations_args, options: api.RequestOptions): Promise
   }
 
   interface renewSoftAllocations_args {}
   interface z_renewSoftAllocations {
     (config: renewSoftAllocations_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteSoftAllocation_args {
+    softAllocationId: string
+  }
+  interface z_deleteSoftAllocation {
+    (config: deleteSoftAllocation_args, options: api.RequestOptions): Promise
   }
 
   interface updateSoftAllocations_args {}
@@ -3822,8 +3821,8 @@ declare namespace api {
     getExtra: z_getExtra
     addExtra: z_addExtra
     getExtras: z_getExtras
-    deleteExtra: z_deleteExtra
     updateExtra: z_updateExtra
+    deleteExtra: z_deleteExtra
   }
 
   interface z_productTypeOption {
@@ -3835,11 +3834,11 @@ declare namespace api {
   }
 
   interface z_productTypeProperty {
-    addProperty: z_addProperty
     getProperty: z_getProperty
+    addProperty: z_addProperty
     getProperties: z_getProperties
-    deleteProperty: z_deleteProperty
     updateProperty: z_updateProperty
+    deleteProperty: z_deleteProperty
   }
 
   interface z_attributes {
@@ -3869,18 +3868,11 @@ declare namespace api {
 
   interface z_attributeLocalizedContent {
     addLocalizedContent: z_addLocalizedContent
-    deleteLocalizedContent: z_deleteLocalizedContent
     updateLocalizedContent: z_updateLocalizedContent
+    deleteLocalizedContent: z_deleteLocalizedContent
     updateLocalizedContents: z_updateLocalizedContents
     getAttributeLocalizedContent: z_getAttributeLocalizedContent
     getAttributeLocalizedContents: z_getAttributeLocalizedContents
-  }
-
-  interface deleteLocalizedContent_args {
-    localeCode: string
-  }
-  interface z_deleteLocalizedContent {
-    (config: deleteLocalizedContent_args, options: api.RequestOptions): Promise
   }
 
   interface updateLocalizedContent_args {
@@ -3889,6 +3881,13 @@ declare namespace api {
   }
   interface z_updateLocalizedContent {
     (config: updateLocalizedContent_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteLocalizedContent_args {
+    localeCode: string
+  }
+  interface z_deleteLocalizedContent {
+    (config: deleteLocalizedContent_args, options: api.RequestOptions): Promise
   }
 
   interface updateLocalizedContents_args {
@@ -3934,14 +3933,14 @@ declare namespace api {
     getAttributeVocabularyValue: z_getAttributeVocabularyValue
     addAttributeVocabularyValue: z_addAttributeVocabularyValue
     getAttributeVocabularyValues: z_getAttributeVocabularyValues
-    deleteAttributeVocabularyValue: z_deleteAttributeVocabularyValue
     updateAttributeVocabularyValue: z_updateAttributeVocabularyValue
+    deleteAttributeVocabularyValue: z_deleteAttributeVocabularyValue
     updateAttributeVocabularyValues: z_updateAttributeVocabularyValues
     getAttributeVocabularyValueLocalizedContent: z_getAttributeVocabularyValueLocalizedContent
     addAttributeVocabularyValueLocalizedContent: z_addAttributeVocabularyValueLocalizedContent
     getAttributeVocabularyValueLocalizedContents: z_getAttributeVocabularyValueLocalizedContents
-    deleteAttributeVocabularyValueLocalizedContent: z_deleteAttributeVocabularyValueLocalizedContent
     updateAttributeVocabularyValueLocalizedContent: z_updateAttributeVocabularyValueLocalizedContent
+    deleteAttributeVocabularyValueLocalizedContent: z_deleteAttributeVocabularyValueLocalizedContent
     updateAttributeVocabularyValueLocalizedContents: z_updateAttributeVocabularyValueLocalizedContents
   }
 
@@ -3956,16 +3955,6 @@ declare namespace api {
     ): Promise
   }
 
-  interface deleteAttributeVocabularyValue_args {
-    value: string
-  }
-  interface z_deleteAttributeVocabularyValue {
-    (
-      config: deleteAttributeVocabularyValue_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
   interface updateAttributeVocabularyValue_args {
     value: string
     responseFields?: string
@@ -3973,6 +3962,16 @@ declare namespace api {
   interface z_updateAttributeVocabularyValue {
     (
       config: updateAttributeVocabularyValue_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface deleteAttributeVocabularyValue_args {
+    value: string
+  }
+  interface z_deleteAttributeVocabularyValue {
+    (
+      config: deleteAttributeVocabularyValue_args,
       options: api.RequestOptions
     ): Promise
   }
@@ -4019,16 +4018,6 @@ declare namespace api {
     ): Promise
   }
 
-  interface deleteAttributeVocabularyValueLocalizedContent_args {
-    localeCode: string
-  }
-  interface z_deleteAttributeVocabularyValueLocalizedContent {
-    (
-      config: deleteAttributeVocabularyValueLocalizedContent_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
   interface updateAttributeVocabularyValueLocalizedContent_args {
     localeCode: string
     responseFields?: string
@@ -4036,6 +4025,16 @@ declare namespace api {
   interface z_updateAttributeVocabularyValueLocalizedContent {
     (
       config: updateAttributeVocabularyValueLocalizedContent_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface deleteAttributeVocabularyValueLocalizedContent_args {
+    localeCode: string
+  }
+  interface z_deleteAttributeVocabularyValueLocalizedContent {
+    (
+      config: deleteAttributeVocabularyValueLocalizedContent_args,
       options: api.RequestOptions
     ): Promise
   }
@@ -4270,9 +4269,9 @@ declare namespace api {
   interface z_channelGroup {
     getChannelGroup: z_getChannelGroup
     getChannelGroups: z_getChannelGroups
-    deleteChannelGroup: z_deleteChannelGroup
-    updateChannelGroup: z_updateChannelGroup
     createChannelGroup: z_createChannelGroup
+    updateChannelGroup: z_updateChannelGroup
+    deleteChannelGroup: z_deleteChannelGroup
   }
 
   interface getChannelGroups_args {
@@ -4282,11 +4281,11 @@ declare namespace api {
     (config: getChannelGroups_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteChannelGroup_args {
-    code: string
+  interface createChannelGroup_args {
+    responseFields?: string
   }
-  interface z_deleteChannelGroup {
-    (config: deleteChannelGroup_args, options: api.RequestOptions): Promise
+  interface z_createChannelGroup {
+    (config: createChannelGroup_args, options: api.RequestOptions): Promise
   }
 
   interface updateChannelGroup_args {
@@ -4297,19 +4296,19 @@ declare namespace api {
     (config: updateChannelGroup_args, options: api.RequestOptions): Promise
   }
 
-  interface createChannelGroup_args {
-    responseFields?: string
+  interface deleteChannelGroup_args {
+    code: string
   }
-  interface z_createChannelGroup {
-    (config: createChannelGroup_args, options: api.RequestOptions): Promise
+  interface z_deleteChannelGroup {
+    (config: deleteChannelGroup_args, options: api.RequestOptions): Promise
   }
 
   interface z_checkouts {
     orderItem: z_orderItem
     orderNote: z_orderNote
     destination: z_destination
-    payment: z_payment
     appliedDiscount: z_appliedDiscount
+    payment: z_payment
     orderAttribute: z_orderAttribute
     extendedProperty: z_extendedProperty
   }
@@ -4391,8 +4390,8 @@ declare namespace api {
     getDestination: z_getDestination
     addDestination: z_addDestination
     getDestinations: z_getDestinations
-    removeDestination: z_removeDestination
     updateDestination: z_updateDestination
+    removeDestination: z_removeDestination
   }
 
   interface addDestination_args {
@@ -4410,19 +4409,19 @@ declare namespace api {
     (config: getDestinations_args, options: api.RequestOptions): Promise
   }
 
-  interface removeDestination_args {
-    destinationId: string
-  }
-  interface z_removeDestination {
-    (config: removeDestination_args, options: api.RequestOptions): Promise
-  }
-
   interface updateDestination_args {
     destinationId: string
     responseFields?: string
   }
   interface z_updateDestination {
     (config: updateDestination_args, options: api.RequestOptions): Promise
+  }
+
+  interface removeDestination_args {
+    destinationId: string
+  }
+  interface z_removeDestination {
+    (config: removeDestination_args, options: api.RequestOptions): Promise
   }
 
   interface getCheckoutAttributes_args {
@@ -4454,10 +4453,10 @@ declare namespace api {
     cartSettings: z_cartSettings
     locationUsage: z_locationUsage
     generalSettings: z_generalSettings
-    checkoutSettings: z_checkoutSettings
     application: z_application
-    siteShippingSettings: z_siteShippingSettings
+    checkoutSettings: z_checkoutSettings
     general: z_general
+    siteShippingSettings: z_siteShippingSettings
     shipping: z_shipping
     checkout: z_checkout
   }
@@ -4537,17 +4536,6 @@ declare namespace api {
     (config: updateGeneralSettings_args, options: api.RequestOptions): Promise
   }
 
-  interface getCheckoutSettings_args {
-    responseFields?: string
-  }
-  interface z_getCheckoutSettings {
-    (config: getCheckoutSettings_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_checkoutSettings {
-    getCheckoutSettings: z_getCheckoutSettings
-  }
-
   interface thirdPartyGetApplication_args {
     responseFields?: string
   }
@@ -4565,8 +4553,8 @@ declare namespace api {
     upsertPackageFile: z_upsertPackageFile
     renamePackageFile: z_renamePackageFile
     deletePackageFile: z_deletePackageFile
-    getPackageMetadata: z_getPackageMetadata
     getAppPackageNames: z_getAppPackageNames
+    getPackageMetadata: z_getPackageMetadata
     getPackageFileMetadata: z_getPackageFileMetadata
   }
 
@@ -4580,15 +4568,15 @@ declare namespace api {
     ): Promise
   }
 
-  interface getSiteShippingSettings_args {
+  interface getCheckoutSettings_args {
     responseFields?: string
   }
-  interface z_getSiteShippingSettings {
-    (config: getSiteShippingSettings_args, options: api.RequestOptions): Promise
+  interface z_getCheckoutSettings {
+    (config: getCheckoutSettings_args, options: api.RequestOptions): Promise
   }
 
-  interface z_siteShippingSettings {
-    getSiteShippingSettings: z_getSiteShippingSettings
+  interface z_checkoutSettings {
+    getCheckoutSettings: z_getCheckoutSettings
   }
 
   interface z_general {
@@ -4631,19 +4619,9 @@ declare namespace api {
 
   interface z_customRouteSettings {
     getCustomRouteSettings: z_getCustomRouteSettings
-    updateCustomRouteSettings: z_updateCustomRouteSettings
     createCustomRouteSettings: z_createCustomRouteSettings
+    updateCustomRouteSettings: z_updateCustomRouteSettings
     deleteCustomRouteSettings: z_deleteCustomRouteSettings
-  }
-
-  interface updateCustomRouteSettings_args {
-    responseFields?: string
-  }
-  interface z_updateCustomRouteSettings {
-    (
-      config: updateCustomRouteSettings_args,
-      options: api.RequestOptions
-    ): Promise
   }
 
   interface createCustomRouteSettings_args {
@@ -4656,12 +4634,33 @@ declare namespace api {
     ): Promise
   }
 
+  interface updateCustomRouteSettings_args {
+    responseFields?: string
+  }
+  interface z_updateCustomRouteSettings {
+    (
+      config: updateCustomRouteSettings_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
   interface deleteCustomRouteSettings_args {}
   interface z_deleteCustomRouteSettings {
     (
       config: deleteCustomRouteSettings_args,
       options: api.RequestOptions
     ): Promise
+  }
+
+  interface getSiteShippingSettings_args {
+    responseFields?: string
+  }
+  interface z_getSiteShippingSettings {
+    (config: getSiteShippingSettings_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_siteShippingSettings {
+    getSiteShippingSettings: z_getSiteShippingSettings
   }
 
   interface getOrderHandlingFee_args {
@@ -4968,9 +4967,9 @@ declare namespace api {
   interface z_orderHandlingFeeRules {
     getOrderHandlingFeeRule: z_getOrderHandlingFeeRule
     getOrderHandlingFeeRules: z_getOrderHandlingFeeRules
+    createOrderHandlingFeeRule: z_createOrderHandlingFeeRule
     updateOrderHandlingFeeRule: z_updateOrderHandlingFeeRule
     deleteOrderHandlingFeeRule: z_deleteOrderHandlingFeeRule
-    createOrderHandlingFeeRule: z_createOrderHandlingFeeRule
   }
 
   interface getOrderHandlingFeeRules_args {
@@ -4980,6 +4979,17 @@ declare namespace api {
   interface z_getOrderHandlingFeeRules {
     (
       config: getOrderHandlingFeeRules_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface createOrderHandlingFeeRule_args {
+    profilecode: string
+    responseFields?: string
+  }
+  interface z_createOrderHandlingFeeRule {
+    (
+      config: createOrderHandlingFeeRule_args,
       options: api.RequestOptions
     ): Promise
   }
@@ -5005,17 +5015,6 @@ declare namespace api {
     ): Promise
   }
 
-  interface createOrderHandlingFeeRule_args {
-    profilecode: string
-    responseFields?: string
-  }
-  interface z_createOrderHandlingFeeRule {
-    (
-      config: createOrderHandlingFeeRule_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
   interface getShippingInclusionRule_args {
     id: string
     responseFields?: string
@@ -5031,8 +5030,8 @@ declare namespace api {
     getShippingInclusionRule: z_getShippingInclusionRule
     getShippingInclusionRules: z_getShippingInclusionRules
     createShippingInclusionRule: z_createShippingInclusionRule
-    deleteShippingInclusionRule: z_deleteShippingInclusionRule
     updateShippingInclusionRule: z_updateShippingInclusionRule
+    deleteShippingInclusionRule: z_deleteShippingInclusionRule
   }
 
   interface getShippingInclusionRules_args {
@@ -5057,16 +5056,6 @@ declare namespace api {
     ): Promise
   }
 
-  interface deleteShippingInclusionRule_args {
-    id: string
-  }
-  interface z_deleteShippingInclusionRule {
-    (
-      config: deleteShippingInclusionRule_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
   interface updateShippingInclusionRule_args {
     id: string
     responseFields?: string
@@ -5078,12 +5067,22 @@ declare namespace api {
     ): Promise
   }
 
+  interface deleteShippingInclusionRule_args {
+    id: string
+  }
+  interface z_deleteShippingInclusionRule {
+    (
+      config: deleteShippingInclusionRule_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
   interface z_productHandlingFeeRules {
     getProductHandlingFeeRule: z_getProductHandlingFeeRule
     getProductHandlingFeeRules: z_getProductHandlingFeeRules
-    deleteProductHandlingFeeRule: z_deleteProductHandlingFeeRule
     createProductHandlingFeeRule: z_createProductHandlingFeeRule
     updateProductHandlingFeeRule: z_updateProductHandlingFeeRule
+    deleteProductHandlingFeeRule: z_deleteProductHandlingFeeRule
   }
 
   interface getConfiguration_args {
@@ -5182,8 +5181,8 @@ declare namespace api {
 
   interface platform {
     tenant: z_tenant
-    userData: z_userData
     siteData: z_siteData
+    userData: z_userData
     tenantData: z_tenantData
     appdev: z_appdev
     entityList: z_entityList
@@ -5219,11 +5218,11 @@ declare namespace api {
     (config: getDBValue_args, options: api.RequestOptions): Promise
   }
 
-  interface z_userData {
+  interface z_siteData {
     getDBValue: z_getDBValue
     createDBValue: z_createDBValue
-    deleteDBValue: z_deleteDBValue
     updateDBValue: z_updateDBValue
+    deleteDBValue: z_deleteDBValue
   }
 
   interface createDBValue_args {
@@ -5233,13 +5232,6 @@ declare namespace api {
     (config: createDBValue_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteDBValue_args {
-    dbEntryQuery: string
-  }
-  interface z_deleteDBValue {
-    (config: deleteDBValue_args, options: api.RequestOptions): Promise
-  }
-
   interface updateDBValue_args {
     dbEntryQuery: string
   }
@@ -5247,18 +5239,25 @@ declare namespace api {
     (config: updateDBValue_args, options: api.RequestOptions): Promise
   }
 
-  interface z_siteData {
+  interface deleteDBValue_args {
+    dbEntryQuery: string
+  }
+  interface z_deleteDBValue {
+    (config: deleteDBValue_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_userData {
     getDBValue: z_getDBValue
-    deleteDBValue: z_deleteDBValue
     createDBValue: z_createDBValue
     updateDBValue: z_updateDBValue
+    deleteDBValue: z_deleteDBValue
   }
 
   interface z_tenantData {
     getDBValue: z_getDBValue
     createDBValue: z_createDBValue
-    deleteDBValue: z_deleteDBValue
     updateDBValue: z_updateDBValue
+    deleteDBValue: z_deleteDBValue
   }
 
   interface z_appdev {
@@ -5348,9 +5347,9 @@ declare namespace api {
   interface z_entityList {
     getEntityList: z_getEntityList
     getEntityLists: z_getEntityLists
-    deleteEntityList: z_deleteEntityList
-    updateEntityList: z_updateEntityList
     createEntityList: z_createEntityList
+    updateEntityList: z_updateEntityList
+    deleteEntityList: z_deleteEntityList
   }
 
   interface getEntityLists_args {
@@ -5360,11 +5359,11 @@ declare namespace api {
     (config: getEntityLists_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteEntityList_args {
-    entityListFullName: string
+  interface createEntityList_args {
+    responseFields?: string
   }
-  interface z_deleteEntityList {
-    (config: deleteEntityList_args, options: api.RequestOptions): Promise
+  interface z_createEntityList {
+    (config: createEntityList_args, options: api.RequestOptions): Promise
   }
 
   interface updateEntityList_args {
@@ -5375,11 +5374,11 @@ declare namespace api {
     (config: updateEntityList_args, options: api.RequestOptions): Promise
   }
 
-  interface createEntityList_args {
-    responseFields?: string
+  interface deleteEntityList_args {
+    entityListFullName: string
   }
-  interface z_createEntityList {
-    (config: createEntityList_args, options: api.RequestOptions): Promise
+  interface z_deleteEntityList {
+    (config: deleteEntityList_args, options: api.RequestOptions): Promise
   }
 
   interface z_secureAppData {
@@ -5399,25 +5398,18 @@ declare namespace api {
 
   interface z_referenceData {
     getBehavior: z_getBehavior
-    getCountries: z_getCountries
     getBehaviors: z_getBehaviors
+    getCountries: z_getCountries
     getTimeZones: z_getTimeZones
     getCurrencies: z_getCurrencies
     getAddressSchema: z_getAddressSchema
-    getUnitsOfMeasure: z_getUnitsOfMeasure
-    getContentLocales: z_getContentLocales
     getAddressSchemas: z_getAddressSchemas
+    getContentLocales: z_getContentLocales
+    getUnitsOfMeasure: z_getUnitsOfMeasure
     getTopLevelDomains: z_getTopLevelDomains
     getBehaviorCategory: z_getBehaviorCategory
     getBehaviorCategories: z_getBehaviorCategories
     getCountriesWithStates: z_getCountriesWithStates
-  }
-
-  interface getCountries_args {
-    responseFields?: string
-  }
-  interface z_getCountries {
-    (config: getCountries_args, options: api.RequestOptions): Promise
   }
 
   interface getBehaviors_args {
@@ -5425,6 +5417,13 @@ declare namespace api {
   }
   interface z_getBehaviors {
     (config: getBehaviors_args, options: api.RequestOptions): Promise
+  }
+
+  interface getCountries_args {
+    responseFields?: string
+  }
+  interface z_getCountries {
+    (config: getCountries_args, options: api.RequestOptions): Promise
   }
 
   interface getTimeZones_args {
@@ -5449,11 +5448,11 @@ declare namespace api {
     (config: getAddressSchema_args, options: api.RequestOptions): Promise
   }
 
-  interface getUnitsOfMeasure_args {
+  interface getAddressSchemas_args {
     responseFields?: string
   }
-  interface z_getUnitsOfMeasure {
-    (config: getUnitsOfMeasure_args, options: api.RequestOptions): Promise
+  interface z_getAddressSchemas {
+    (config: getAddressSchemas_args, options: api.RequestOptions): Promise
   }
 
   interface getContentLocales_args {
@@ -5463,11 +5462,11 @@ declare namespace api {
     (config: getContentLocales_args, options: api.RequestOptions): Promise
   }
 
-  interface getAddressSchemas_args {
+  interface getUnitsOfMeasure_args {
     responseFields?: string
   }
-  interface z_getAddressSchemas {
-    (config: getAddressSchemas_args, options: api.RequestOptions): Promise
+  interface z_getUnitsOfMeasure {
+    (config: getUnitsOfMeasure_args, options: api.RequestOptions): Promise
   }
 
   interface getTopLevelDomains_args {
@@ -5530,20 +5529,20 @@ declare namespace api {
     (config: deletePackageFile_args, options: api.RequestOptions): Promise
   }
 
-  interface getPackageMetadata_args {
-    applicationKey: string
-    responseFields?: string
-  }
-  interface z_getPackageMetadata {
-    (config: getPackageMetadata_args, options: api.RequestOptions): Promise
-  }
-
   interface getAppPackageNames_args {
     applicationKey: string
     responseFields?: string
   }
   interface z_getAppPackageNames {
     (config: getAppPackageNames_args, options: api.RequestOptions): Promise
+  }
+
+  interface getPackageMetadata_args {
+    applicationKey: string
+    responseFields?: string
+  }
+  interface z_getPackageMetadata {
+    (config: getPackageMetadata_args, options: api.RequestOptions): Promise
   }
 
   interface getPackageFileMetadata_args {
@@ -5620,8 +5619,8 @@ declare namespace api {
     getViewEntities: z_getViewEntities
     getEntityListView: z_getEntityListView
     getEntityListViews: z_getEntityListViews
-    updateEntityListView: z_updateEntityListView
     createEntityListView: z_createEntityListView
+    updateEntityListView: z_updateEntityListView
     deleteEntityListView: z_deleteEntityListView
     getViewEntityContainer: z_getViewEntityContainer
     getViewEntityContainers: z_getViewEntityContainers
@@ -5651,20 +5650,20 @@ declare namespace api {
     (config: getEntityListViews_args, options: api.RequestOptions): Promise
   }
 
-  interface updateEntityListView_args {
-    viewName: string
-    responseFields?: string
-  }
-  interface z_updateEntityListView {
-    (config: updateEntityListView_args, options: api.RequestOptions): Promise
-  }
-
   interface createEntityListView_args {
     entityListFullName: string
     responseFields?: string
   }
   interface z_createEntityListView {
     (config: createEntityListView_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateEntityListView_args {
+    viewName: string
+    responseFields?: string
+  }
+  interface z_updateEntityListView {
+    (config: updateEntityListView_args, options: api.RequestOptions): Promise
   }
 
   interface deleteEntityListView_args {
@@ -5808,8 +5807,8 @@ declare namespace api {
 
   interface z_tenantAdminUserAuthTicket {
     refreshAuthTicket: z_refreshAuthTicket
-    deleteUserAuthTicket: z_deleteUserAuthTicket
     createUserAuthTicket: z_createUserAuthTicket
+    deleteUserAuthTicket: z_deleteUserAuthTicket
   }
 
   interface deleteUserAuthTicket_args {
@@ -5922,50 +5921,13 @@ declare namespace api {
   }
 
   interface content {
-    documentType: z_documentType
     documentList: z_documentList
+    documentType: z_documentType
     propertyType: z_propertyType
     documentlists: z_documentlists
     publishSetSummary: z_publishSetSummary
     documentListType: z_documentListType
     documentDraftSummary: z_documentDraftSummary
-  }
-
-  interface getDocumentType_args {
-    documentTypeName: string
-    responseFields?: string
-  }
-  interface z_getDocumentType {
-    (config: getDocumentType_args, options: api.RequestOptions): Promise
-  }
-
-  interface z_documentType {
-    getDocumentType: z_getDocumentType
-    getDocumentTypes: z_getDocumentTypes
-    updateDocumentType: z_updateDocumentType
-    createDocumentType: z_createDocumentType
-  }
-
-  interface getDocumentTypes_args {
-    responseFields?: string
-  }
-  interface z_getDocumentTypes {
-    (config: getDocumentTypes_args, options: api.RequestOptions): Promise
-  }
-
-  interface updateDocumentType_args {
-    documentTypeName: string
-    responseFields?: string
-  }
-  interface z_updateDocumentType {
-    (config: updateDocumentType_args, options: api.RequestOptions): Promise
-  }
-
-  interface createDocumentType_args {
-    responseFields?: string
-  }
-  interface z_createDocumentType {
-    (config: createDocumentType_args, options: api.RequestOptions): Promise
   }
 
   interface getDocumentList_args {
@@ -5979,9 +5941,9 @@ declare namespace api {
   interface z_documentList {
     getDocumentList: z_getDocumentList
     getDocumentLists: z_getDocumentLists
-    deleteDocumentList: z_deleteDocumentList
-    updateDocumentList: z_updateDocumentList
     createDocumentList: z_createDocumentList
+    updateDocumentList: z_updateDocumentList
+    deleteDocumentList: z_deleteDocumentList
   }
 
   interface getDocumentLists_args {
@@ -5991,11 +5953,11 @@ declare namespace api {
     (config: getDocumentLists_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteDocumentList_args {
-    documentListName: string
+  interface createDocumentList_args {
+    responseFields?: string
   }
-  interface z_deleteDocumentList {
-    (config: deleteDocumentList_args, options: api.RequestOptions): Promise
+  interface z_createDocumentList {
+    (config: createDocumentList_args, options: api.RequestOptions): Promise
   }
 
   interface updateDocumentList_args {
@@ -6006,11 +5968,48 @@ declare namespace api {
     (config: updateDocumentList_args, options: api.RequestOptions): Promise
   }
 
-  interface createDocumentList_args {
+  interface deleteDocumentList_args {
+    documentListName: string
+  }
+  interface z_deleteDocumentList {
+    (config: deleteDocumentList_args, options: api.RequestOptions): Promise
+  }
+
+  interface getDocumentType_args {
+    documentTypeName: string
     responseFields?: string
   }
-  interface z_createDocumentList {
-    (config: createDocumentList_args, options: api.RequestOptions): Promise
+  interface z_getDocumentType {
+    (config: getDocumentType_args, options: api.RequestOptions): Promise
+  }
+
+  interface z_documentType {
+    getDocumentType: z_getDocumentType
+    getDocumentTypes: z_getDocumentTypes
+    createDocumentType: z_createDocumentType
+    updateDocumentType: z_updateDocumentType
+  }
+
+  interface getDocumentTypes_args {
+    responseFields?: string
+  }
+  interface z_getDocumentTypes {
+    (config: getDocumentTypes_args, options: api.RequestOptions): Promise
+  }
+
+  interface createDocumentType_args {
+    responseFields?: string
+  }
+  interface z_createDocumentType {
+    (config: createDocumentType_args, options: api.RequestOptions): Promise
+  }
+
+  interface updateDocumentType_args {
+    documentTypeName: string
+    responseFields?: string
+  }
+  interface z_updateDocumentType {
+    (config: updateDocumentType_args, options: api.RequestOptions): Promise
   }
 
   interface getPropertyType_args {
@@ -6024,9 +6023,9 @@ declare namespace api {
   interface z_propertyType {
     getPropertyType: z_getPropertyType
     getPropertyTypes: z_getPropertyTypes
-    deletePropertyType: z_deletePropertyType
-    updatePropertyType: z_updatePropertyType
     createPropertyType: z_createPropertyType
+    updatePropertyType: z_updatePropertyType
+    deletePropertyType: z_deletePropertyType
   }
 
   interface getPropertyTypes_args {
@@ -6036,11 +6035,11 @@ declare namespace api {
     (config: getPropertyTypes_args, options: api.RequestOptions): Promise
   }
 
-  interface deletePropertyType_args {
-    propertyTypeName: string
+  interface createPropertyType_args {
+    responseFields?: string
   }
-  interface z_deletePropertyType {
-    (config: deletePropertyType_args, options: api.RequestOptions): Promise
+  interface z_createPropertyType {
+    (config: createPropertyType_args, options: api.RequestOptions): Promise
   }
 
   interface updatePropertyType_args {
@@ -6051,11 +6050,11 @@ declare namespace api {
     (config: updatePropertyType_args, options: api.RequestOptions): Promise
   }
 
-  interface createPropertyType_args {
-    responseFields?: string
+  interface deletePropertyType_args {
+    propertyTypeName: string
   }
-  interface z_createPropertyType {
-    (config: createPropertyType_args, options: api.RequestOptions): Promise
+  interface z_deletePropertyType {
+    (config: deletePropertyType_args, options: api.RequestOptions): Promise
   }
 
   interface z_documentlists {
@@ -6088,8 +6087,8 @@ declare namespace api {
     updateDocument: z_updateDocument
     deleteDocument: z_deleteDocument
     getDocumentContent: z_getDocumentContent
-    deleteDocumentContent: z_deleteDocumentContent
     updateDocumentContent: z_updateDocumentContent
+    deleteDocumentContent: z_deleteDocumentContent
     transformDocumentContent: z_transformDocumentContent
   }
 
@@ -6139,18 +6138,18 @@ declare namespace api {
     (config: getDocumentContent_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteDocumentContent_args {
-    documentId: string
-  }
-  interface z_deleteDocumentContent {
-    (config: deleteDocumentContent_args, options: api.RequestOptions): Promise
-  }
-
   interface updateDocumentContent_args {
     documentId: string
   }
   interface z_updateDocumentContent {
     (config: updateDocumentContent_args, options: api.RequestOptions): Promise
+  }
+
+  interface deleteDocumentContent_args {
+    documentId: string
+  }
+  interface z_deleteDocumentContent {
+    (config: deleteDocumentContent_args, options: api.RequestOptions): Promise
   }
 
   interface transformDocumentContent_args {
@@ -6187,8 +6186,8 @@ declare namespace api {
   interface z_documentTree {
     getTreeDocument: z_getTreeDocument
     getTreeDocumentContent: z_getTreeDocumentContent
-    deleteTreeDocumentContent: z_deleteTreeDocumentContent
     updateTreeDocumentContent: z_updateTreeDocumentContent
+    deleteTreeDocumentContent: z_deleteTreeDocumentContent
     transformTreeDocumentContent: z_transformTreeDocumentContent
   }
 
@@ -6199,17 +6198,6 @@ declare namespace api {
     (config: getTreeDocumentContent_args, options: api.RequestOptions): Promise
   }
 
-  interface deleteTreeDocumentContent_args {
-    documentName: string
-    folderId?: string
-  }
-  interface z_deleteTreeDocumentContent {
-    (
-      config: deleteTreeDocumentContent_args,
-      options: api.RequestOptions
-    ): Promise
-  }
-
   interface updateTreeDocumentContent_args {
     documentName: string
     folderId?: string
@@ -6217,6 +6205,17 @@ declare namespace api {
   interface z_updateTreeDocumentContent {
     (
       config: updateTreeDocumentContent_args,
+      options: api.RequestOptions
+    ): Promise
+  }
+
+  interface deleteTreeDocumentContent_args {
+    documentName: string
+    folderId?: string
+  }
+  interface z_deleteTreeDocumentContent {
+    (
+      config: deleteTreeDocumentContent_args,
       options: api.RequestOptions
     ): Promise
   }
@@ -6323,12 +6322,6 @@ declare namespace api {
     ): Promise
   }
 
-  interface Api {
-    commerce: commerce
-    platform: platform
-    event: event
-    content: content
-  }
   interface Context {
     sharedSecret?: string
     homePod?: string
@@ -6345,22 +6338,35 @@ declare namespace api {
     site: number
   }
   interface RequestOptions {
-    headers?: api.Headers
-    context?: api.Context
+    headers?: Api.Headers
+    context?: Api.Context
     config?: AxiosRequestConfig
     internal?: Boolean
     preserveReqeust?: Boolean
   }
   interface Options {
     apiBasePath?: string
+    requestClient?: function
     hooks: {
       //accepts as the first parameter the request configuration options and should return a modified version
       beforeRequest?: function
       //accepts as the first parameter and should return the promise that will be returned by the request method
       withRequest?: function
       //accepts as the first parameter and should return the response that will occur after the request promise settles
-      afterRequest?: function
+      afterResolve?: function
+      //accepts as the first parameter and should return the error that occurs after the request rejects
+      afterReject?: function
     }
   }
+  export interface api {
+    setContext(context: Api.Context, options?: Api.Options): api
+    commerce: commerce
+    platform: platform
+    event: event
+    content: content
+  }
 }
+
+declare let api: Api.api
+
 export default api
