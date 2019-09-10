@@ -1,10 +1,20 @@
 import constants from './constants'
-import R from './ramda'
+import {
+  curry,
+  flip,
+  assocPath,
+  compose,
+  evolve,
+  pathOr,
+  pick,
+  prop
+} from 'ramda/es'
 import { testIsServer, isObj } from './util'
+import inquirer from 'inquirer'
 
 export default api => {
   let auth = {}
-  let assignKey = R.curry((key, ref, val) => {
+  let assignKey = curry((key, ref, val) => {
     ref[key] = val
     return ref
   })
@@ -12,10 +22,10 @@ export default api => {
 
   const userclaims = 'USERCLAIMS'
   const appclaims = 'APPCLAIMS'
-  let headerType = R.flip(R.prop)(constants.headers)
+  let headerType = flip(prop)(constants.headers)
 
-  let addClaimToRequest = R.curry((type, requestOptions, claim) =>
-    R.assocPath(
+  let addClaimToRequest = curry((type, requestOptions, claim) =>
+    assocPath(
       ['headers', constants.headerPrefix + headerType(type)],
       claim.accessToken,
       requestOptions
@@ -27,10 +37,10 @@ export default api => {
 
   let constructDate = date => new Date(date)
 
-  let setClaim = R.curry((type, auth) =>
-    R.compose(
+  let setClaim = curry((type, auth) =>
+    compose(
       assignKey(type, auth),
-      R.evolve({
+      evolve({
         accessTokenExpiration: constructDate,
         refreshTokenExpiration: constructDate
       })
@@ -39,7 +49,7 @@ export default api => {
   let setUserClaim = setClaim(userclaims)
   let setAppClaim = setClaim(appclaims)
 
-  let getClaim = R.curry((type, auth) => R.pathOr({}, [type], auth))
+  let getClaim = curry((type, auth) => pathOr({}, [type], auth))
 
   let getUserClaim = getClaim(userclaims)
   let getAppClaim = getClaim(appclaims)
@@ -51,132 +61,89 @@ export default api => {
     headers: { Host: 'home.mozu.com' }
   }
 
-  let getAppAccessToken = R.compose(
+  let getAppAccessToken = compose(
     body =>
       api.platform.applications.authTicket.authenticateApp(
         body,
         internalAuthRequest
       ),
-    R.pick(['applicationId', 'sharedSecret'])
+    pick(['applicationId', 'sharedSecret'])
   )
 
-  let refreshAppAccessToken = R.compose(
+  let refreshAppAccessToken = compose(
     body =>
       api.platform.applications.authTicket.refreshAppAuthTicket(
         body,
         internalAuthRequest
       ),
-    R.pick(['refreshToken'])
+    pick(['refreshToken'])
   )
 
-  let getUserAccessToken = R.compose(
+  let getUserAccessToken = compose(
     body =>
       api.platform.developer.developerAdminUserAuthTicket.createDeveloperUserAuthTicket(
-        body,
+        Object.assign(body, {
+          developerAccountId: api.context.developerAccountId
+        }),
         internalAuthRequest
       ),
-    R.pick(['emailAddress', 'password']),
-    R.prop('developerAccount')
+    pick(['emailAddress', 'password']),
+    prop('developerAccount')
   )
 
-  let refreshUserAccessToken = R.compose(
+  let refreshUserAccessToken = compose(
     body =>
       api.platform.developer.developerAdminUserAuthTicket.refreshDeveloperAuthTicket(
-        body,
+        Object.assign(body, {
+          developerAccountId: api.context.developerAccountId
+        }),
         internalAuthRequest
       ),
-    R.pick(['refreshToken'])
+    pick(['refreshToken'])
   )
 
-  // let password
-  // let passwordPrompt = (() => {
-  //   let readline = () => import('readline')
-  //   // let readline = new Function("return import('readline')")
-  //   let userLoginAttempts = 0
-  //   return requestOptions => {
-  //     return (isObj(readline)
-  //       ? Promise.resolve(readline)
-  //       : readline().then(r => {
-  //           readline = r.createInterface({
-  //             input: process.stdin,
-  //             output: process.stdout,
-  //             terminal: true
-  //           })
-  //           readline.on('SIGINT', function() {
-  //             readline.clearLine()
-  //             return process.exit()
-  //           })
-  //           readline._writeToOutput = function(str) {
-  //             // log(arguments)
-  //             if (str.includes(this._prompt)) {
-  //               readline.history.pop()
-  //               readline.output.write(
-  //                 this._prompt +
-  //                   str
-  //                     .replace(this._prompt, '')
-  //                     .replace(/[\r\n]/g, '')
-  //                     .replace(/./g, '*')
-  //               )
-  //               return
-  //             }
-  //             if (str === '\r\n') return
-  //             if (readline.mask) readline.output.write('*')
-  //             else readline.output.write(str)
-  //           }
-  //           let question = readline.question.bind(readline)
-  //           readline.question = (q, cb) => {
-  //             readline.mask = false
-  //             question(q, answer => {
-  //               readline.mask = false
-  //               cb(answer)
-  //             })
-  //             readline.mask = true
-  //           }
-  //           return readline
-  //         })
-  //     )
-  //       .then(readline => {
-  //         return api.newTask((reject, resolve) => {
-  //           readline.question('developer password: ', answer => {
-  //             if (!answer) {
-  //               readline.output.write(
-  //                 "\ni don't think your password is an empty string\n"
-  //               )
-  //               return reject('invalid password')
-  //             }
-  //             readline.write('\n')
-  //             resolve(password)
-  //           })
-  //         })
-  //       })
-  //       .then(password =>
-  //         getUserAccessToken(
-  //           R.assocPath(['developerAccount', 'password'], password, api.context)
-  //         )
-  //       )
-  //       .then(
-  //         R.compose(
-  //           setUserClaim(auth),
-  //           R.prop('data')
-  //         )
-  //       )
-  //       .then(
-  //         R.compose(
-  //           addUserClaimToRequest(requestOptions),
-  //           getUserClaim
-  //         )
-  //       )
-  //       .catch(e => {
-  //         if (e && e.response.status === 401 && userLoginAttempts < 3) {
-  //           userLoginAttempts += 1
-  //           readline.output.write('\ninvalid password. try again?\n')
-  //           return passwordPrompt(requestOptions)
-  //         }
-  //         readline.close()
-  //         return Promise.reject(e)
-  //       })
-  //   }
-  // })()
+  let password
+  let passwordPrompt = (() => {
+    let userLoginAttempts = 0
+    return function prompt(requestOptions) {
+      return inquirer
+        .prompt([
+          {
+            type: 'password',
+            message: 'developer password: ',
+            validate: function(password) {
+              if (!password) return 'i dont think your password is empty'
+            },
+            name: 'password'
+          }
+        ])
+        .then(({ password }) => {
+          return getUserAccessToken(
+            assocPath(['developerAccount', 'password'], password, api.context)
+          )
+        })
+        .then(
+          compose(
+            setUserClaim(auth),
+            prop('data')
+          )
+        )
+        .then(
+          compose(
+            addUserClaimToRequest(requestOptions),
+            getUserClaim
+          )
+        )
+        .catch(e => {
+          if (e && e.response.status === 401 && userLoginAttempts < 3) {
+            userLoginAttempts += 1
+            readline.output.write('\ninvalid password. try again?\n')
+            return prompt(requestOptions)
+          }
+          return Promise.reject(e)
+        })
+    }
+  })()
 
   let authenticate = requestOptions => {
     let appClaim = getAppClaim(auth)
@@ -189,7 +156,10 @@ export default api => {
      */
     // console.log('auth', appClaim)
     if (isServer) {
-      if (appClaim.accessToken || requestOptions.context.sharedSecret) {
+      if (
+        requestOptions.scope !== constants.dev &&
+        (appClaim.accessToken || requestOptions.context.sharedSecret)
+      ) {
         appClaim.valid = validClaim(appClaim)
         appClaim.stale = !appClaim.valid && staleClaim(appClaim)
         if (appClaim.valid)
@@ -198,35 +168,35 @@ export default api => {
           ? refreshAppAccessToken(appClaim)
           : getAppAccessToken(api.context)
               .then(
-                R.compose(
+                compose(
                   setAppClaim(auth),
-                  R.prop('data')
+                  prop('data')
                 )
               )
               .then(
-                R.compose(
+                compose(
                   addAppClaimToRequest(requestOptions),
                   getAppClaim
                 )
               )
       }
-      // if (userClaim.accessToken || requestOptions.context.developerAccount) {
-      //   userClaim.valid = validClaim(userClaim)
-      //   userClaim.stale = !userClaim.valid && staleClaim(userClaim)
-      //   if (!password && requestOptions.context.developerAccount.password)
-      //     password = requestOptions.context.developerAccount.password
-      //   if (userClaim.valid)
-      //     return Promise.resolve(
-      //       addUserClaimToRequest(requestOptions, userClaim)
-      //     )
-      //   return userClaim.stale
-      //     ? refreshUserAccessToken(userClaim)
-      //     : password
-      //     ? Promise.resolve(password)
-      //     : !isServer
-      //     ? Promise.reject('no password for user auth in context')
-      //     : passwordPrompt(requestOptions)
-      // }
+      if (userClaim.accessToken || requestOptions.context.developerAccount) {
+        userClaim.valid = validClaim(userClaim)
+        userClaim.stale = !userClaim.valid && staleClaim(userClaim)
+        if (!password && requestOptions.context.developerAccount.password)
+          password = requestOptions.context.developerAccount.password
+        if (userClaim.valid)
+          return Promise.resolve(
+            addUserClaimToRequest(requestOptions, userClaim)
+          )
+        return userClaim.stale
+          ? refreshUserAccessToken(userClaim)
+          : password
+          ? Promise.resolve(password)
+          : !isServer
+          ? Promise.reject('no password for user auth in context')
+          : passwordPrompt(requestOptions)
+      }
     } else return Promise.resolve(requestOptions)
     return Promise.reject('unable to authenticate')
   }

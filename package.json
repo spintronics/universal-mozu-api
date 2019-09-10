@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.1",
+    "inquirer": "^7.0.0",
     "ramda": "^0.26.1"
   },
   "devDependencies": {

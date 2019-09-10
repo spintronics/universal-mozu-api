@@ -62,5 +62,6 @@ export default {
   capabilityTimeoutInSeconds: 180,
   version: version,
   templateBraceRegex: /\{([^}]+)\}/g,
-  urlTemplateSplitRegex: /[\/\?=\&~]/g
+  urlTemplateSplitRegex: /[\/\?=\&~]/g,
+  dev: 'developer'
 }

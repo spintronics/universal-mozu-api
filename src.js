@@ -1,6 +1,26 @@
 // import axiosClient from 'requestClient'
 import definition from './definition.js'
-import R from './ramda'
+import {
+  reduce,
+  keys,
+  toPairs,
+  values,
+  set,
+  lensProp,
+  merge,
+  compose,
+  join,
+  addIndex,
+  split,
+  replace,
+  curryN,
+  omit,
+  map,
+  propOr,
+  test,
+  match,
+  mergeDeepRight
+} from 'ramda/es'
 import {
   testIsServer,
   ifType,
@@ -45,6 +65,7 @@ const CONSTANTS = Object.freeze({
 
 let api = {
   setContext(context = {}, options = CONSTANTS.defaultOptions) {
+    options = Object.assign({}, CONSTANTS.defaultOptions, options)
     context.homePod =
       context.baseUrl || context.homePod || 'https://home.mozu.com/'
     context.pciPod =
@@ -57,17 +78,17 @@ let api = {
       DATAVIEWMODE: constants.dataViewModes.LIVE
     }
 
-    let normalizedContextKeys = R.reduce(
+    let normalizedContextKeys = reduce(
       (keyMap, key) => {
         keyMap[key.replace(/[^0-9a-zA-Z]/g, '').toUpperCase()] = key
         return keyMap
       },
       {},
-      R.keys(context)
+      keys(context)
     )
 
     //set default headers
-    this.headers = R.reduce(
+    this.headers = reduce(
       (headers, [key, name]) => {
         var value =
           context[normalizedContextKeys[key] || key] || headerDefaults[key]
@@ -75,10 +96,10 @@ let api = {
         return headers
       },
       {},
-      R.toPairs(constants.headers)
+      toPairs(constants.headers)
     )
 
-    api.methods = R.values(constants.verbs).map(v => v.toLowerCase())
+    api.methods = values(constants.verbs).map(v => v.toLowerCase())
 
     if (CONSTANTS.isServer) {
       api.headers['User-Agent'] = `K Isomorphic SDK v${
@@ -88,8 +109,8 @@ let api = {
 
     this.hookMap = CONSTANTS.hooks.reduce(
       (acc, hookName) =>
-        R.set(
-          R.lensProp(hookName),
+        set(
+          lensProp(hookName),
           ifType('Function', options.hooks[hookName], x => x),
           acc
         ),
@@ -98,7 +119,7 @@ let api = {
 
     Object.assign(this, {
       context,
-      options: R.merge(CONSTANTS.defaultOptions, options),
+      options: merge(CONSTANTS.defaultOptions, options),
       definition
     })
 
@@ -119,9 +140,9 @@ api.parseTemplate = (context = {}, template = '', data = {}) => {
    * request.
    */
   let usedKeys = []
-  let url = R.compose(
-    R.join('?'),
-    R.addIndex(R.map)((l, x) =>
+  let url = compose(
+    join('?'),
+    addIndex(map)((l, x) =>
       x
         ? l
             .filter(v => v[1])
@@ -129,9 +150,9 @@ api.parseTemplate = (context = {}, template = '', data = {}) => {
             .join('&')
         : l
     ),
-    R.addIndex(R.map)((c, x) => (x ? c.split('&').map(q => q.split('=')) : c)),
-    R.split('?'),
-    R.replace(constants.templateBraceRegex, str => {
+    addIndex(map)((c, x) => (x ? c.split('&').map(q => q.split('=')) : c)),
+    split('?'),
+    replace(constants.templateBraceRegex, str => {
       let fromContext = str[1] === '+'
       let key = str.slice(1 + fromContext, str.length - 1)
       let value =
@@ -148,7 +169,7 @@ api.parseTemplate = (context = {}, template = '', data = {}) => {
  * requestOptions should be the same as the axios options with the addition
  * of the ability to pass in the context to make testing easier.
  */
-api.request = R.curryN(4, function(
+api.request = curryN(4, function(
   clientPath = [],
   method,
   templateOrId,
@@ -164,13 +185,13 @@ api.request = R.curryN(4, function(
   var { url, usedKeys } = api.parseTemplate(context, templateOrId, data)
 
   if (CONSTANTS.isServer) {
-    var config = R.mergeDeepRight(
+    var config = mergeDeepRight(
       {
         headers: api.headers,
         method,
         url
       },
-      R.omit(['context'], requestOptions)
+      omit(['context'], requestOptions)
     )
     // console.log(api.headers)
 
@@ -179,7 +200,8 @@ api.request = R.curryN(4, function(
         .map(str => str.toLowerCase())
         .includes(method.toLowerCase())
     ) {
-      config.data = R.omit(usedKeys, data)
+      if (requestOptions.body) config.data = requestOptions.body
+      else config.data = omit(usedKeys, data)
     }
 
     if (requestOptions.internal) delete config.headers
@@ -202,7 +224,7 @@ api.request = R.curryN(4, function(
   if (config instanceof Promise) return config
 
   return api
-    .auth(R.merge({ context }, config))
+    .auth(merge({ context }, config))
     .then(config => {
       console.log(config)
       return api.hookMap.withRequest(api.options.requestClient(config))
@@ -219,12 +241,12 @@ api.request = R.curryN(4, function(
 
 //#region expand and build service tree / methods
 let templateReference = definition.reference.template
-let uncompressedServices = R.map(
-  R.compose(
-    R.replace('~', ''),
-    R.join(''),
-    R.map(piece => R.propOr(piece, piece, templateReference)),
-    splitWhenStr(R.test(constants.urlTemplateSplitRegex))
+let uncompressedServices = map(
+  compose(
+    replace('~', ''),
+    join(''),
+    map(piece => propOr(piece, piece, templateReference)),
+    splitWhenStr(test(constants.urlTemplateSplitRegex))
   ),
   uncompressFlattened(definition, CONSTANTS.delimiter)
 )
@@ -234,13 +256,13 @@ let services = crawl(
     if (!obj.url || !obj.method) return obj
     let { url, method } = obj
     let [route, query = ''] = url.split('?')
-    let args = R.match(constants.templateBraceRegex, route)
+    let args = match(constants.templateBraceRegex, route)
       .map(match => {
         let innerMatch = match.substring(1, match.length - 1)
         return innerMatch[0] === '+' ? '' : innerMatch
       })
       .filter(Boolean)
-    let params = R.match(constants.templateBraceRegex, query).map(match => {
+    let params = match(constants.templateBraceRegex, query).map(match => {
       return match.substring(1, match.length - 1)
     })
     let request = api.request(path, method, url)
@@ -262,7 +284,5 @@ Object.assign(api, services)
 api.auth = authenticate(api)
 
 //#endregion expand and build service tree / methods
-
-// api = mixin(api, R.merge(api, services))
 
 export default api

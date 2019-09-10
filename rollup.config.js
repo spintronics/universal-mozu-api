@@ -7,7 +7,7 @@ import pkg from './package.json'
 
 let input = 'src.js'
 
-let external = ['ramda', 'fluture', 'axios']
+let external = ['ramda', 'fluture', 'axios', 'inquirer']
 
 let { main } = pkg
 
@@ -51,31 +51,31 @@ export default [
         sourceMap: false
       })
     ]
-  },
-  {
-    input,
-    output: {
-      name: 'api',
-      compact: false,
-      banner: '//hey mom!',
-      format: 'umd',
-      file: main + '.umd.js',
-      compact: true
-    },
-    plugins: [
-      json(),
-      replace({
-        'process.env.NODE_ENV': JSON.stringify(env)
-      }),
-      resolve({
-        jsnext: true,
-        main: true,
-        browser: true
-      }),
-      babel({ exclude: 'node_modules/**' }),
-      commonjs({
-        sourceMap: false
-      })
-    ]
   }
+  // {
+  //   input,
+  //   output: {
+  //     name: 'api',
+  //     compact: false,
+  //     banner: '//hey mom!',
+  //     format: 'umd',
+  //     file: main + '.umd.js',
+  //     compact: true
+  //   },
+  //   plugins: [
+  //     json(),
+  //     replace({
+  //       'process.env.NODE_ENV': JSON.stringify(env)
+  //     }),
+  //     resolve({
+  //       jsnext: true,
+  //       main: true,
+  //       browser: true
+  //     }),
+  //     babel({ exclude: 'node_modules/**' }),
+  //     commonjs({
+  //       sourceMap: false
+  //     })
+  //   ]
+  // }
 ]

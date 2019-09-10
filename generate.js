@@ -297,6 +297,8 @@ walk('./node_modules/mozu-node-sdk/clients')
                     (acc, key) => acc + key + ':' + key + ';',
                     ''
                   )}
+                  context: Api.Context
+                  options: Api.Options
                 }
               }
               
